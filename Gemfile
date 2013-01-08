@@ -4,6 +4,9 @@ gem 'rails', '3.2.9'
 
 gem 'jquery-rails'
 
+# downgrade rack to whack security warning
+gem 'rack', '1.4.1'
+
 #gem 'sqlite3'
 
 # Gems used only for assets and not required
