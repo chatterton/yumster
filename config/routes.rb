@@ -1,4 +1,8 @@
 Yumster::Application.routes.draw do
+  get "locations/index"
+
+  get "locations/new"
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 
