@@ -10,6 +10,8 @@ gem 'rack', '1.4.1'
 gem 'sass-rails',   '~> 3.2.4'
 gem 'bootstrap-sass', '~> 2.2.2.0'
 
+gem 'thin'
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
@@ -23,6 +25,8 @@ end
 
 group :development, :test do
   gem 'rspec-rails', '2.9.0'
+  gem 'guard-rspec'
+  gem 'rb-fsevent', '~> 0.9.1'
 end
 
 group :test do
