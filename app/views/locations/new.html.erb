@@ -1,2 +1,16 @@
-<h1>Locations#new</h1>
-<p>Find me in app/views/locations/new.html.erb</p>
+<div class="row">
+  <div class="span6 offset2">
+    <h1>Add a location</h1>
+
+    <%= form_for(@location) do |f| %>
+      <%= f.label :latitude %>
+      <%= f.text_field :latitude %>
+      <%= f.label :longitude %>
+      <%= f.text_field :longitude %>
+      <%= f.label :description %>
+      <%= f.text_field :description %>
+      <br />
+      <%= f.submit "Create location", class: "btn btn-large btn-primary" %>
+    <% end %>
+  </div>
+</div>

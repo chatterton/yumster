@@ -3,6 +3,12 @@ class LocationsController < ApplicationController
   end
 
   def new
+    @location = Location.new
+  end
+
+  def create
+    @location = Location.new
+    render 'new'
   end
 
   def show
