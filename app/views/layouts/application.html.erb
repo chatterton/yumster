@@ -7,8 +7,20 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
+  <header class="navbar">
+    <div class="navbar-inner">
+      <a class="brand" href="#">Yumster</a>
+    </div>
+  </header>
+  <div class="container">
+    <%= yield %>
 
-<%= yield %>
-
+    <% if Rails.env.development? %>
+      <div class="row">
+        <br><br>
+        Debug params: <% debug(params) %>
+      </div>
+    <% end %>
+  </div>
 </body>
 </html>
