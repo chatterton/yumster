@@ -2,6 +2,17 @@
   <div class="span6 offset2">
     <h1>Add a location</h1>
 
+    <% if @location.errors.any? %>
+      <div id="error_explanation">
+        <div class="alert alert-error">
+          <ul>
+            <% @location.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
+            <% end %>
+          </ul>
+      </div>
+    <% end %>
+
     <%= form_for(@location) do |f| %>
       <%= f.label :latitude %>
       <%= f.text_field :latitude %>
