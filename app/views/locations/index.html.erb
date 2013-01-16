@@ -1,0 +1,14 @@
+<div class="row">
+  <div class="span6 offset2">
+    <h1>All locations</h1>
+
+    <div><%= link_to "Add a new location", new_location_path %></div>
+    <br>
+    <% @locations.each do |loc| %>
+      Latitude: <%= loc.latitude %><br>
+      Longitude: <%= loc.longitude %><br>
+      Description: <%= loc.description %><br>
+      <br>
+    <% end %>
+  </div>
+</div>
