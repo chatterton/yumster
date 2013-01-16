@@ -8,8 +8,13 @@ class LocationsController < ApplicationController
   end
 
   def create
-    @location = Location.new
-    render 'new'
+    @location = Location.new(params[:location])
+    if @location.save
+      index
+      render 'index'
+    else
+      render 'new'
+    end
   end
 
   def show
