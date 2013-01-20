@@ -14,13 +14,6 @@
   </header>
   <div class="container">
     <%= yield %>
-
-    <% if Rails.env.development? %>
-      <div class="row">
-        <br><br>
-        Debug params: <% debug(params) %>
-      </div>
-    <% end %>
   </div>
 </body>
 </html>
