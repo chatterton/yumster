@@ -27,8 +27,13 @@ end
 
 group :development, :test do
   gem 'rspec-rails', '2.9.0'
+
   gem 'guard-rspec'
   gem 'rb-fsevent', '~> 0.9.1'
+
+  gem 'konacha'
+  gem 'guard-konacha'
+  gem 'sinon-chai-rails'
 end
 
 group :test do
@@ -37,17 +42,3 @@ group :test do
   gem 'factory_girl_rails', '~> 1.4.0'
 end
 
-# To use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'
-
-# To use Jbuilder templates for JSON
-# gem 'jbuilder'
-
-# Use unicorn as the app server
-# gem 'unicorn'
-
-# Deploy with Capistrano
-# gem 'capistrano'
-
-# To use debugger
-# gem 'debugger'
