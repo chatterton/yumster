@@ -1,3 +1,5 @@
+@import 'globals';
+
 .map_container {
   border-width: 1px;
   border-style: solid;
@@ -17,10 +19,8 @@
     max-width: none;
   }
 
-  @mixin respond-to($media) {
-    @if $media == handhelds {
-      height: 200px;
-    }
+  @media screen and (max-width: $breakpoint) {
+    height: 240px;
   }
 }
 
