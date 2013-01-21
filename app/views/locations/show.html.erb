@@ -1,5 +1,6 @@
-<%= gmaps4rails(@json) %>
+<h1><%= @location.description %></h1>
 <br>
-description: <%= @location.description %><br />
-latitude: <%= @location.latitude %><br />
-longitude: <%= @location.longitude %>
+<%= gmaps(@g4r_options) %>
+<br><br>
+location: <%= @location.latitude %>, <%= @location.longitude %>
+<br><br>

@@ -31,7 +31,7 @@ describe "Locations pages" do
     before { visit location_path(location) }
 
     it 'should show the description' do
-      page.should have_content("description: a location")
+      page.should have_content("a location")
     end
   end
 end

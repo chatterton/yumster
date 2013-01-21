@@ -5,6 +5,7 @@ describe "locations/show" do
   before do
     location = stub_model Location, :latitude => 40, :longitude => 42, :description => 'fooo'
     assign(:location, location)
+    assign(:g4r_options, {})
   end
 
   it 'displays lat, long, and description' do
@@ -15,8 +16,6 @@ describe "locations/show" do
   end
 
   it 'shows a map' do
-    map_json = {}
-    assign(:map_json, map_json)
     render
     rendered.should have_selector '.map_container #map'
   end
