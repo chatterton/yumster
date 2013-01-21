@@ -4,11 +4,15 @@
   </div>
 </div>
 <div class="row">
-  <div class="span3 offset1">
-    location: <%= @location.latitude %>, <%= @location.longitude %>
-  </div>
-  <div class="span6">
-    <%= gmaps(@g4r_options) %>
+  <div class="span10 offset1">
+    <div class="row">
+      <div class="span7 pull-right">
+        <%= gmaps(@g4r_options) %>
+      </div>
+      <div class="span3 pull-left">
+        location: <%= @location.latitude %>, <%= @location.longitude %>
+      </div>
+    </div>
   </div>
 </div>
 
