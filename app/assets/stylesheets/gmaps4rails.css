@@ -13,3 +13,8 @@
   width: 800px;
   height: 400px;
 }
+
+/* fix for bootstrap */
+.gmaps4rails_map img {
+  max-width: none;
+}
