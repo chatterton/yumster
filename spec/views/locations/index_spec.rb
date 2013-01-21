@@ -1,14 +1,17 @@
 require 'spec_helper'
 
 describe "locations/index" do
-  it 'displays all entries in @locations' do
-    location1 = double('Location', :description => "desc1").as_null_object
-    location2 = double('Location', :description => "desc2").as_null_object
-    assign(:locations, [location1, location2])
+  before do
+    location1 = FactoryGirl.create(:location) 
+    location2 = FactoryGirl.create(:location) 
+    @locations = [location1, location2]
+    assign(:locations, @locations)
+  end
 
+  it 'links to entries in @locations' do
     render
-
-    rendered.should have_content "desc1"
-    rendered.should have_content "desc2"
+    @locations.each do |loc|
+      rendered.should have_link(loc.description, href: location_path(loc.id))
+    end
   end
 end

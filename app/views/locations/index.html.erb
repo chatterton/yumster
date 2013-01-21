@@ -5,9 +5,9 @@
     <div><%= link_to "Add a new location", new_location_path %></div>
     <br>
     <% @locations.each do |loc| %>
+      <%= link_to loc.description, loc %><br>
       Latitude: <%= loc.latitude %><br>
       Longitude: <%= loc.longitude %><br>
-      Description: <%= loc.description %><br>
       <br>
     <% end %>
   </div>
