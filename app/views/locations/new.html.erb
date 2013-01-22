@@ -27,3 +27,16 @@
     <% end %>
   </div>
 </div>
+<% content_for :scripts do %>
+  <script type="text/javascript" charset="utf-8">
+
+Gmaps.map.callback = function() {
+  google.maps.event.addListener(Gmaps.map.map, 'center_changed', function() {
+    lctn = Gmaps.map.map.getCenter()
+    window.Yumster.Locations.current_location(lctn.lat(), lctn.lng())
+  })
+}
+
+  </script>
+<% end %>
+
