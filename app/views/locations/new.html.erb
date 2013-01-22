@@ -31,8 +31,20 @@
   <script type="text/javascript" charset="utf-8">
 
 Gmaps.map.callback = function() {
+  var pushpin = new google.maps.MarkerImage(
+    "<%= asset_path 'red-pushpin.png' %>",
+    null,
+    null,
+    new google.maps.Point(10, 31),
+    new google.maps.Size(32, 32)
+  )
+  var marker = new google.maps.Marker({
+    map: Gmaps.map.map,
+    icon: pushpin
+  })
   google.maps.event.addListener(Gmaps.map.map, 'center_changed', function() {
     lctn = Gmaps.map.map.getCenter()
+    marker.setPosition(lctn)
     window.Yumster.Locations.current_location(lctn.lat(), lctn.lng())
   })
 }
