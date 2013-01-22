@@ -7,6 +7,7 @@ class LocationsController < ApplicationController
 
   def new
     @location = Location.new
+    @g4r_options = gmaps4rails_detect
   end
 
   def create
@@ -15,13 +16,14 @@ class LocationsController < ApplicationController
       index
       render 'index'
     else
+      @g4r_options = gmaps4rails_detect
       render 'new'
     end
   end
 
   def show
     @location = Location.find(params[:id])
-    @g4r_options = gmaps4rails_opts(@location)
+    @g4r_options = gmaps4rails_location(@location)
   end
 
 end

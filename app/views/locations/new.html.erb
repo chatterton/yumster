@@ -13,6 +13,8 @@
       </div>
     <% end %>
 
+    <%= gmaps(@g4r_options) %>
+
     <%= form_for(@location) do |f| %>
       <%= f.label :latitude %>
       <%= f.text_field :latitude %>
