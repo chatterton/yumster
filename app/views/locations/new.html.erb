@@ -1,32 +1,30 @@
-<div class="row">
-  <div class="span6 offset2">
-    <h1>Add a location</h1>
-
-    <% if @location.errors.any? %>
-      <div id="error_explanation">
-        <div class="alert alert-error">
-          <ul>
-            <% @location.errors.full_messages.each do |msg| %>
-              <li><%= msg %></li>
-            <% end %>
-          </ul>
-      </div>
-    <% end %>
-
-    <%= gmaps(@g4r_options) %>
-
-    <%= form_for(@location) do |f| %>
-      <%= f.label :latitude %>
-      <%= f.text_field :latitude %>
-      <%= f.label :longitude %>
-      <%= f.text_field :longitude %>
-      <%= f.label :description %>
-      <%= f.text_field :description %>
-      <br />
-      <%= f.submit "Create location", class: "btn btn-large btn-primary" %>
-    <% end %>
+<h2>Add a location</h2>
+<% if @location.errors.any? %>
+  <div id="error_explanation">
+    <div class="alert alert-error">
+      <ul>
+        <% @location.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
   </div>
-</div>
+<% end %>
+
+<%= gmaps(@g4r_options) %>
+
+<br>
+<%= form_for(@location) do |f| %>
+  <%= f.label :latitude %>
+  <%= f.text_field :latitude %>
+  <%= f.label :longitude %>
+  <%= f.text_field :longitude %>
+  <%= f.label :description %>
+  <%= f.text_field :description %>
+  <br />
+  <%= f.submit "Create location", class: "btn btn-large btn-primary" %>
+<% end %>
+
 <% content_for :scripts do %>
   <script type="text/javascript" charset="utf-8">
 
@@ -51,4 +49,3 @@ Gmaps.map.callback = function() {
 
   </script>
 <% end %>
-
