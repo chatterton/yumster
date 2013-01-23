@@ -1,6 +1,6 @@
 # Yumster!
 
-Built on Rails 3.2.
+Copyright 2013 Jack Chatterton. Built on Rails 3.2.
 
 ## Database configuration
 
