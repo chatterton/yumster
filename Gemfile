@@ -33,7 +33,6 @@ group :development, :test do
 
   gem 'konacha'
   gem 'guard-konacha'
-  gem 'sinon-chai-rails'
 end
 
 group :test do
