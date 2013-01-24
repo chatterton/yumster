@@ -1,5 +1,4 @@
-<h2>Add a location</h2>
-
+<h2>Add a location<br><small>Move map to position pushpin</small></h2>
 <% if @location.errors.any? %>
   <div id="error_explanation">
     <div class="alert alert-error">
@@ -8,16 +7,45 @@
           <li><%= msg %></li>
         <% end %>
       </ul>
+    </div>
   </div>
 <% end %>
 
+<%= gmaps(@g4r_options) %>
+
+<br>
 <%= form_for(@location) do |f| %>
-  <%= f.label :latitude %>
-  <%= f.text_field :latitude %>
-  <%= f.label :longitude %>
-  <%= f.text_field :longitude %>
+  <%= f.hidden_field :latitude %>
+  <%= f.hidden_field :longitude %>
   <%= f.label :description %>
   <%= f.text_field :description %>
   <br />
   <%= f.submit "Create location", class: "btn btn-large btn-primary" %>
+<% end %>
+
+<% content_for :scripts do %>
+  <script type="text/javascript" charset="utf-8">
+var marker, pushpin
+var center_changed = function() {
+  lctn = Gmaps.map.map.getCenter()
+  marker.setPosition(lctn)
+  window.Yumster.Locations.current_location(lctn.lat(), lctn.lng())
+}
+
+Gmaps.map.callback = function() {
+  pushpin = new google.maps.MarkerImage(
+    "<%= asset_path 'red-pushpin.png' %>",
+    null,
+    null,
+    new google.maps.Point(10, 31),
+    new google.maps.Size(32, 32)
+  )
+  marker = new google.maps.Marker({
+    map: Gmaps.map.map,
+    icon: pushpin
+  })
+  google.maps.event.addListener(Gmaps.map.map, 'center_changed', center_changed)
+}
+
+  </script>
 <% end %>
