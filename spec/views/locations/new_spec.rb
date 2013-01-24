@@ -4,18 +4,21 @@ describe "locations/new" do
   before do
     @location = mock_model Location
     assign(:location, @location)
+    assign(:g4r_options, {})
   end
 
   it 'displays a form with the right fields' do
     render
-
-    # TODO: what is broken here?
-    # rendered.should have_selector("form#new_location")
     rendered.should have_selector("form")
-    rendered.should have_selector("form input#location_latitude[type='text']")
-    rendered.should have_selector("form input#location_longitude[type='text']")
+    rendered.should have_selector("form input#location_latitude[type='hidden']")
+    rendered.should have_selector("form input#location_longitude[type='hidden']")
     rendered.should have_selector("form input#location_description[type='text']")
     rendered.should have_selector("form input[type='submit']")
+  end
+
+  it 'shows a map' do
+    render
+    rendered.should have_selector '.map_container #map'
   end
 
   describe "when there are errors" do
