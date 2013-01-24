@@ -17,8 +17,8 @@ describe "Locations pages" do
     describe "valid form contents" do
       it "should increase the loction count" do
         visit new_location_path
-        fill_in "Latitude", with: 16
-        fill_in "Longitude", with: 17
+        find(:xpath, "//input[@id='location_latitude']").set "16"
+        find(:xpath, "//input[@id='location_longitude']").set "16"
         fill_in "Description", with: "fooood"
         expect { click_button "Create location" }.to change(Location, :count)
       end

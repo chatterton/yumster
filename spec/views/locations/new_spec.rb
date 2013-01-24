@@ -10,8 +10,8 @@ describe "locations/new" do
   it 'displays a form with the right fields' do
     render
     rendered.should have_selector("form")
-    rendered.should have_selector("form input#location_latitude[type='text']")
-    rendered.should have_selector("form input#location_longitude[type='text']")
+    rendered.should have_selector("form input#location_latitude[type='hidden']")
+    rendered.should have_selector("form input#location_longitude[type='hidden']")
     rendered.should have_selector("form input#location_description[type='text']")
     rendered.should have_selector("form input[type='submit']")
   end
