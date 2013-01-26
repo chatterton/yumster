@@ -12,6 +12,9 @@
 <% end %>
 
 <%= gmaps(@g4r_options) %>
+<div style="display: none;">
+  <%= image_tag 'red-pushpin.png', :id => 'pushpin_img' %>
+</div>
 
 <br>
 <%= form_for(@location) do |f| %>
@@ -25,25 +28,16 @@
 
 <% content_for :scripts do %>
   <script type="text/javascript" charset="utf-8">
-var marker, pushpin
+
 var center_changed = function() {
   lctn = Gmaps.map.map.getCenter()
-  marker.setPosition(lctn)
   window.Yumster.Locations.current_location(lctn.lat(), lctn.lng())
 }
 
 Gmaps.map.callback = function() {
-  pushpin = new google.maps.MarkerImage(
-    "<%= asset_path 'red-pushpin.png' %>",
-    null,
-    null,
-    new google.maps.Point(10, 31),
-    new google.maps.Size(32, 32)
-  )
-  marker = new google.maps.Marker({
-    map: Gmaps.map.map,
-    icon: pushpin
-  })
+  var control = document.createElement('div')
+  $(control).append($('#pushpin_img'))
+  Gmaps.map.map.controls[google.maps.ControlPosition.TOP_CENTER].push(control)
   google.maps.event.addListener(Gmaps.map.map, 'center_changed', center_changed)
 }
 

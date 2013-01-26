@@ -12,15 +12,15 @@
 
 .gmaps4rails_map {
   width: 100%;
-  height: 400px;
+  height: $MAP_HEIGHT_DESKTOP;
 
   /* fix for bootstrap */
   img {
     max-width: none;
   }
 
-  @media screen and (max-width: $breakpoint) {
-    height: 240px;
+  @media screen and (max-width: $BREAKPOINT) {
+    height: $MAP_HEIGHT_MOBILE;
   }
 }
 

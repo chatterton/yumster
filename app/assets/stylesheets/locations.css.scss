@@ -1,3 +1,20 @@
+@import 'globals';
+
+/* fix for push-left on div with a left margin from bootstrap */
 .row-fluid .no-left-margin {
   margin-left: 0px;
+}
+
+#pushpin_img {
+  position: absolute;
+  top: $PUSHPIN_MARGIN_DESKTOP;
+  left: -5px; /* magic number that makes it line up Just So */
+
+  /* image is 64 pixels high. resize for retina etc. */
+  height: 32px;
+  width: auto;
+
+  @media screen and (max-width: $BREAKPOINT) {
+    top: $PUSHPIN_MARGIN_MOBILE;
+  }
 }
