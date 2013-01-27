@@ -1,20 +1,23 @@
 require 'spec_helper'
 
 describe Location do
-  subject { @location }
-
   before do
     @location = Location.new(description: 'test desc', latitude: 10, longitude: 101, category: "Plant")
   end
 
-  it "should have the proper attributes" do
-    @location.should respond_to(:description)
+  subject { @location }
+
+  describe "attributes" do
+    it { should respond_to(:description) }
+    it { should respond_to(:latitude) }
+    it { should respond_to(:longitude) }
+    it { should respond_to(:category) }
+  end
+
+  it "should have the proper values" do
     @location.description.should == 'test desc'
-    @location.should respond_to(:latitude)
     @location.latitude.should == 10
-    @location.should respond_to(:longitude)
     @location.longitude.should == 101
-    @location.should respond_to(:category)
     @location.category.should == 'Plant'
   end
 
