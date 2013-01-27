@@ -20,6 +20,8 @@
 <%= form_for(@location) do |f| %>
   <%= f.hidden_field :latitude %>
   <%= f.hidden_field :longitude %>
+  <%= f.label :category %>
+  <%= f.select(:category, Location::CATEGORIES, {:include_blank => 'Select type of location'}) %>
   <%= f.label :description %>
   <%= f.text_field :description %>
   <br />
