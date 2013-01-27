@@ -17,6 +17,7 @@ class Location < ActiveRecord::Base
   }
 
   validates :category, presence: true
-  validates_inclusion_of :category, :in => %w( Plant Dumpster Organization ), :message => "%s is not a valid category"
+  CATEGORIES = %w( Plant Dumpster Organization )
+  validates_inclusion_of :category, :in => CATEGORIES, :message => "%s is not a valid category"
 
 end
