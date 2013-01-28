@@ -11,7 +11,20 @@ Locations = class Locations
     $('input#location_longitude').val(long)
 
   validate: ->
-    $('input#location_submit').attr('disabled', false)
+    $('#new_location').validate
+      rules:
+        location_latitude: { required: true }
+        location_longitude: { required: true }
+        location_category: { required: true }
+        location_description:
+          required: true
+          minlength: 5
+      ignore: ""
+    $("#new_location").removeAttr("novalidate");
+    if $('#new_location').valid()
+      $('input#location_submit').attr('disabled', false)
+    else
+      $('input#location_submit').attr('disabled', true)
 
 $ ->
   window.Yumster.Locations = new Locations
