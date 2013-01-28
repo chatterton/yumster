@@ -1,3 +1,5 @@
+#= require jquery.validate.min
+
 window.Yumster or= {}
 
 Locations = class Locations
