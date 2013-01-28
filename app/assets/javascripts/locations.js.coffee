@@ -1,7 +1,12 @@
 window.Yumster or= {}
 
-window.Yumster.Locations = class Locations
+Locations = class Locations
 
-  @current_location = (lat, long) ->
+  constructor: ->
+
+  current_location: (lat, long) =>
     $('input#location_latitude').val(lat)
     $('input#location_longitude').val(long)
+
+$ ->
+  window.Yumster.Locations = new Locations
