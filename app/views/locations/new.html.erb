@@ -25,7 +25,7 @@
   <%= f.label :description %>
   <%= f.text_field :description %>
   <br />
-  <%= f.submit "Create location", class: "btn btn-large btn-primary" %>
+  <%= f.submit "Create location", class: "btn btn-large btn-primary", id: "location_submit", disabled: true %>
 <% end %>
 
 <% content_for :scripts do %>
