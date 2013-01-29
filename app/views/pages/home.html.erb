@@ -5,8 +5,18 @@
   </div>
   <div class="span8">
     <h1>Yumster!</h1>
+    <br>
     <p>
     Yo dog. This is yumster.
     </p>
+    <br>
+    <div class="row-fluid">
+      <div class="span6 well">
+        <%= link_to "Find nearby locations", locations_path %>
+      </div>
+      <div class="span6 well">
+        <%= link_to "Add a location", new_location_path %>
+      </div>
+    </div>
   </div>
 </div>
