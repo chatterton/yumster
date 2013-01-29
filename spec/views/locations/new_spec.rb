@@ -5,10 +5,10 @@ describe "locations/new" do
     @location = mock_model Location
     assign(:location, @location)
     assign(:g4r_options, {})
+    render
   end
 
   it 'displays a form with the right fields' do
-    render
     rendered.should have_selector("form")
     rendered.should have_selector("form input#location_latitude[type='hidden']")
     rendered.should have_selector("form input#location_longitude[type='hidden']")
@@ -17,8 +17,11 @@ describe "locations/new" do
     rendered.should have_selector("form input[type='submit']")
   end
 
+  it 'starts with a disabled submit button' do
+    rendered.should have_selector('#location_submit[disabled]')
+  end
+
   it 'shows a map' do
-    render
     rendered.should have_selector '.map_container #map'
   end
 
@@ -29,7 +32,6 @@ describe "locations/new" do
     end
     it "displays them to the user" do
       render
-
       rendered.should have_content "error1"
       rendered.should have_content "error2"
     end
