@@ -5,22 +5,26 @@ window.Yumster or= {}
 Locations = class Locations
 
   constructor: ->
+    @setup_validator()
 
-  current_location: (lat, long) =>
+  setup_validator: ->
+    $('#new_location').validate
+      rules:
+        "location[latitude]": { required: true }
+        "location[longitude]": { required: true }
+        "location[category]": { required: true }
+        "location[description]":
+          required: true
+          minlength: 5
+      ignore: "" # validator defaults to ignoring hidden
+    $('#new_location :input').change ->
+      window.Yumster.Locations.validate()
+
+  current_location: (lat, long) ->
     $('input#location_latitude').val(lat)
     $('input#location_longitude').val(long)
 
   validate: ->
-    $('#new_location').validate
-      rules:
-        location_latitude: { required: true }
-        location_longitude: { required: true }
-        location_category: { required: true }
-        location_description:
-          required: true
-          minlength: 5
-      ignore: ""
-    $("#new_location").removeAttr("novalidate");
     if $('#new_location').valid()
       $('input#location_submit').attr('disabled', false)
     else
