@@ -1,10 +1,10 @@
 #= require spec_helper
-#= require locations
+#= require locations_new
 
 describe "window.Yumster.Locations", ->
 
   beforeEach ->
-    @locations = window.Yumster.Locations
+    @locations = window.Yumster.Locations.New
     $('body').append('''
       <form id="new_location">
         <input id="location_latitude" name="location[latitude]" type="hidden" />

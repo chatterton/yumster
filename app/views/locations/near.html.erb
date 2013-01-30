@@ -2,6 +2,14 @@
 <br>
 <%= gmaps(@g4r_options) %>
 <br>
-<p>
-Yep.
-</p>
+
+<% content_for :scripts do %>
+  <script type="text/javascript" charset="utf-8">
+
+Gmaps.map.callback = function() {
+  lctn = Gmaps.map.map.getCenter()
+  window.Yumster.Locations.near(lctn.lat(), lctn.lng())
+}
+
+  </script>
+<% end %>

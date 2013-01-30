@@ -39,7 +39,7 @@
 
 var center_changed = function() {
   lctn = Gmaps.map.map.getCenter()
-  window.Yumster.Locations.current_location(lctn.lat(), lctn.lng())
+  window.Yumster.Locations.New.current_location(lctn.lat(), lctn.lng())
 }
 
 Gmaps.map.callback = function() {
