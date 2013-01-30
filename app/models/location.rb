@@ -4,6 +4,9 @@ class Location < ActiveRecord::Base
   ## Do not run geocoding on every validation
   acts_as_gmappable :process_geocoding => false
 
+  ## for https://github.com/alexreisner/geocoder
+  reverse_geocoded_by :latitude, :longitude
+
   validates :description, presence: true
 
   validates :latitude, presence: true, :numericality => {
