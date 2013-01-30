@@ -1,7 +1,7 @@
 #= require spec_helper
 #= require locations_new
 
-describe "window.Yumster.Locations", ->
+describe "window.Yumster.Locations.New", ->
 
   beforeEach ->
     @locations = window.Yumster.Locations.New

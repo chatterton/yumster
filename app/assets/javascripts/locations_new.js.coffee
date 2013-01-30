@@ -3,7 +3,7 @@
 window.Yumster or= {}
 window.Yumster.Locations or= {}
 
-Locations = class Locations
+LocationsNew = class LocationsNew
 
   constructor: ->
     @setup_validator()
@@ -32,4 +32,4 @@ Locations = class Locations
       $('input#location_submit').attr('disabled', true)
 
 $ ->
-  window.Yumster.Locations.New = new Locations
+  window.Yumster.Locations.New = new LocationsNew
