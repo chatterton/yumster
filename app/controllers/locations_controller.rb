@@ -26,9 +26,8 @@ class LocationsController < ApplicationController
     @g4r_options = gmaps4rails_location(@location)
   end
 
-  respond_to :json
+  respond_to :json, :html
   def near
-    #puts "BAM: #{request.GET}"
     index
     respond_with(@locations)
   end

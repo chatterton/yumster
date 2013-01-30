@@ -37,12 +37,20 @@ describe LocationsController do
       location1 = FactoryGirl.create :location
       location2 = FactoryGirl.create :location
     end
-    context "with legit parameters" do
+    context "when requesting json" do
       it 'returns json' do
         @request.env["HTTP_ACCEPT"] = "application/json"
         get :near, :latitude => "60", :longitude => "70"
         response.should be_success
         response.content_type.should == "application/json"
+      end
+    end
+    context "when requesting html" do
+      it 'returns html' do
+        @request.env["HTTP_ACCEPT"] = "text/html"
+        get :near, :latitude => "60", :longitude => "70"
+        response.should be_success
+        response.content_type.should == "text/html"
       end
     end
   end
