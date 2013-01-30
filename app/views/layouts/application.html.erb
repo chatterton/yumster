@@ -12,7 +12,9 @@
   <div class="container">
     <header class="navbar">
       <div class="navbar-inner">
-        <a class="brand" href="/">Yumster</a>
+        <% if params[:controller] != "pages" and params[:action] != "home" %>
+            <a class="brand" href="/">Yumster</a>
+        <% end %>
       </div>
     </header>
     <%= yield %>
