@@ -34,15 +34,25 @@ describe LocationsController do
 
   describe "GET 'near'" do
     before do
-      location1 = FactoryGirl.create :location
-      location2 = FactoryGirl.create :location
+      location1 = FactoryGirl.create :location, description: "Le Bus Stop", latitude: 47.6202762479463, longitude: -122.303993513106
+      location2 = FactoryGirl.create :location, description: "el portal", latitude: 47.6196396566275, longitude: -122.302057587033
+      location3 = FactoryGirl.create :location, description: "Mac counter at macy's", latitude: 37.7869744260011, longitude: -122.406910526459
     end
     context "when requesting json" do
-      it 'returns json' do
+      before do
         @request.env["HTTP_ACCEPT"] = "application/json"
-        get :near, :latitude => "60", :longitude => "70"
+        get :near, :latitude => "47.6187812537455", :longitude => "-122.302367052115"
+      end
+      it 'returns json' do
         response.should be_success
         response.content_type.should == "application/json"
+      end
+      describe "the response" do
+        it "contains nearby locations but not far away ones" do
+          response.body.should =~ /Le Bus Stop/
+          response.body.should =~ /el portal/
+          response.body.should_not =~ /Mac counter at macy's/
+        end
       end
     end
     context "when requesting html" do

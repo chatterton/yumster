@@ -24,4 +24,7 @@ module LocationsHelper
     g4r_opts[:map_options][:center_on_user] = true
     g4r_opts
   end
+
+  NEARBY_DISTANCE_MI = 0.75
+
 end

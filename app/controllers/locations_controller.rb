@@ -28,8 +28,14 @@ class LocationsController < ApplicationController
 
   respond_to :json, :html
   def near
-    index
-    respond_with(@locations)
+    if(request.format.json?)
+      center_point = [params[:latitude] ||= 0, params[:longitude] ||= 0]
+      box = Geocoder::Calculations.bounding_box(center_point, NEARBY_DISTANCE_MI)
+      @locations = Location.within_bounding_box(box)
+      respond_with(@locations)
+    else
+      render 'near'
+    end
   end
 
 end
