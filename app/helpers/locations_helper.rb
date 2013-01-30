@@ -25,6 +25,12 @@ module LocationsHelper
     g4r_opts
   end
 
+  def gmaps4rails_detect_wide
+    g4r_opts = gmaps4rails_detect
+    g4r_opts[:map_options][:zoom] = 15
+    g4r_opts
+  end
+
   NEARBY_DISTANCE_MI = 0.75
 
 end

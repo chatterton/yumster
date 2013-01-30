@@ -34,6 +34,7 @@ class LocationsController < ApplicationController
       @locations = Location.within_bounding_box(box)
       respond_with(@locations)
     else
+      @g4r_options = gmaps4rails_detect_wide
       render 'near'
     end
   end
