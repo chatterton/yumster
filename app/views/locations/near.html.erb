@@ -2,14 +2,29 @@
 <br>
 <%= gmaps(@g4r_options) %>
 <br>
-
+<div id="locations_container"></div>
+<div id="location_container" style="display: none;">
+  <div class="location well">
+    <a class="location_link" /><br>
+    Category: <span class="location_category"></span><br>
+    <br>
+  </div>
+</div>
 <%= link_to "", near_locations_path, :id => "nearby_ajax_address" %>
 <% content_for :scripts do %>
   <script type="text/javascript" charset="utf-8">
 
+var initial_center_found = false
+var map_idle = function() {
+  if(!initial_center_found) {
+    lctn = Gmaps.map.map.getCenter()
+    window.Yumster.Locations.Near.fillNearbyLocations(lctn.lat(), lctn.lng())
+  }
+  initial_center_found = true
+}
+
 Gmaps.map.callback = function() {
-  lctn = Gmaps.map.map.getCenter()
-  window.Yumster.Locations.near(lctn.lat(), lctn.lng())
+  google.maps.event.addListener(Gmaps.map.map, 'idle', map_idle)
 }
 
   </script>

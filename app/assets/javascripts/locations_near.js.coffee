@@ -5,16 +5,30 @@ class LocationsNear
 
   constructor: ->
 
+  createLocationHTML: (location) ->
+    skeleton = $('#location_container .location').clone()
+    skeleton.find('.location_link').text(location.description)
+    skeleton.find('.location_link').attr('href', "/locations/#{location.id}")
+    skeleton.find('.location_category').text(location.category)
+    skeleton
+
   fillNearbyLocationsSuccess: (data) ->
+    container = $('#locations_container')
+    for location in data
+      loc = window.Yumster.Locations.Near.createLocationHTML(location)
+      loc.appendTo(container)
 
   fillNearbyLocations: (lat, long) ->
     path = $('#nearby_ajax_address').attr("href")
+    path = "#{path}?latitude=#{lat}&longitude=#{long}"
     $.ajax {
       type: "GET"
       url: path
-      accepts: "application/json"
+      dataType: "json"
       success: (data, status, jqxhr) ->
         window.Yumster.Locations.Near.fillNearbyLocationsSuccess(data)
+      error: (data) ->
+        console.log(data)
     }
 
 $ ->
