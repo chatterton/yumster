@@ -35,7 +35,14 @@
 <% end %>
 
 <% content_for :scripts do %>
+  <%= javascript_include_tag 'geolocationmarker.js' %>
   <script type="text/javascript" charset="utf-8">
+
+var add_position_indicator = function() {
+  GeoMarker = new GeolocationMarker()
+  GeoMarker.setCircleOptions({fillColor: '#808080'})
+  GeoMarker.setMap(Gmaps.map.map)
+}
 
 var center_changed = function() {
   lctn = Gmaps.map.map.getCenter()
@@ -47,6 +54,7 @@ Gmaps.map.callback = function() {
   $(control).append($('#pushpin_img'))
   Gmaps.map.map.controls[google.maps.ControlPosition.TOP_CENTER].push(control)
   google.maps.event.addListener(Gmaps.map.map, 'center_changed', center_changed)
+  add_position_indicator()
 }
 
   </script>
