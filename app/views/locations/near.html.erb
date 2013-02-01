@@ -10,15 +10,24 @@
     <br>
   </div>
 </div>
+
 <%= link_to "", near_locations_path, :id => "nearby_ajax_address" %>
 <% content_for :scripts do %>
+  <%= javascript_include_tag 'geolocationmarker.js' %>
   <script type="text/javascript" charset="utf-8">
+
+var add_position_indicator = function() {
+  GeoMarker = new GeolocationMarker()
+  GeoMarker.setCircleOptions({fillColor: '#808080'})
+  GeoMarker.setMap(Gmaps.map.map)
+}
 
 var initial_center_found = false
 var map_idle = function() {
   if(!initial_center_found) {
     lctn = Gmaps.map.map.getCenter()
     window.Yumster.Locations.Near.fillNearbyLocations(lctn.lat(), lctn.lng())
+    add_position_indicator()
   }
   initial_center_found = true
 }
