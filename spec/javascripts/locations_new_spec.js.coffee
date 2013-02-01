@@ -1,10 +1,10 @@
 #= require spec_helper
-#= require locations
+#= require locations_new
 
-describe "window.Yumster.Locations", ->
+describe "window.Yumster.Locations.New", ->
 
   beforeEach ->
-    @locations = window.Yumster.Locations
+    @locations = window.Yumster.Locations.New
     $('body').append('''
       <form id="new_location">
         <input id="location_latitude" name="location[latitude]" type="hidden" />
@@ -25,7 +25,6 @@ describe "window.Yumster.Locations", ->
   describe ('current_location(lat, long)'), ->
     it "updates the form with given latitude and longitude", ->
       @locations.current_location(0.01, 2.03)
-      console.log($('body'))
       $('body').find('#location_latitude').val().should.equal '0.01'
       $('body').find('#location_longitude').val().should.equal '2.03'
 
