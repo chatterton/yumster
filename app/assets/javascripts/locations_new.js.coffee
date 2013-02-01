@@ -1,8 +1,9 @@
 #= require jquery.validate.min
 
 window.Yumster or= {}
+window.Yumster.Locations or= {}
 
-Locations = class Locations
+LocationsNew = class LocationsNew
 
   constructor: ->
     @setup_validator()
@@ -18,7 +19,7 @@ Locations = class Locations
           minlength: 5
       ignore: "" # validator defaults to ignoring hidden
     $('#new_location :input').change ->
-      window.Yumster.Locations.validate()
+      window.Yumster.Locations.New.validate()
 
   current_location: (lat, long) ->
     $('input#location_latitude').val(lat)
@@ -31,4 +32,4 @@ Locations = class Locations
       $('input#location_submit').attr('disabled', true)
 
 $ ->
-  window.Yumster.Locations = new Locations
+  window.Yumster.Locations.New = new LocationsNew

@@ -81,4 +81,8 @@ describe Location do
     end
   end
 
+  describe "geocoding gem" do
+    it { should respond_to(:distance_to) }
+  end
+
 end

@@ -1,4 +1,4 @@
-<h2>Add a location<br><small>Move map to position pushpin</small></h2>
+<h2>Add a location<br><small>Move the map to position the pushpin at the correct location</small></h2>
 <% if @location.errors.any? %>
   <div id="error_explanation">
     <div class="alert alert-error">
@@ -31,7 +31,7 @@
     </div>
   </div>
   <br />
-  <%= f.submit "Create location", class: "btn btn-large btn-primary", id: "location_submit", disabled: true %>
+  <%= f.submit "Create location", class: "btn btn-large", id: "location_submit", disabled: true %>
 <% end %>
 
 <% content_for :scripts do %>
@@ -39,7 +39,7 @@
 
 var center_changed = function() {
   lctn = Gmaps.map.map.getCenter()
-  window.Yumster.Locations.current_location(lctn.lat(), lctn.lng())
+  window.Yumster.Locations.New.current_location(lctn.lat(), lctn.lng())
 }
 
 Gmaps.map.callback = function() {
