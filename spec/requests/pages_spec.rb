@@ -8,7 +8,7 @@ describe "static pages" do
     subject { page }
     it { should have_content 'Yumster' }
     it 'should link to nearby locations' do
-      page.should have_link "Find nearby locations", :href => "/locations"
+      page.should have_link "Find nearby locations", :href => "/locations/near"
     end
     it 'should link to create a location' do
       page.should have_link "Add a location", :href => "/locations/new"
