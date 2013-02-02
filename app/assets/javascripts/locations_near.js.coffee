@@ -18,7 +18,7 @@ class LocationsNear
   fillNearbyLocationsSuccess: (data) ->
     container = $('#locations_container')
     for location in data
-      loc = window.Yumster.Locations.Near.createLocationHTML(location)
+      loc = @createLocationHTML(location)
       loc.appendTo(container)
 
   fillNearbyLocations: (lat, long) ->
@@ -39,11 +39,16 @@ class LocationsNear
     window.History.replaceState {}, null, "?latitude=#{lat.toFixed(6)}&longitude=#{long.toFixed(6)}"
 
   mapIdle: (map) ->
+    foo = @urlParam("foo")
     if(!@initial_center_found)
       lctn = map.getCenter()
       window.Yumster.Locations.Near.fillNearbyLocations(lctn.lat(), lctn.lng())
       window.Yumster.Locations.Near.updateAddressPosition(lctn.lat(), lctn.lng())
       @initial_center_found = true
+
+  urlParam: (name, address = window.location.href) ->
+    results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(address)
+    if results then results[1] else null
 
 $ ->
   window.Yumster.Locations.Near = new LocationsNear

@@ -80,3 +80,11 @@ describe "window.Yumster.Locations.Near", ->
       new_address = window.History.replaceState.getCall(0).args[2]
       new_address.should.have.string("41.111111")
       new_address.should.not.have.string("41.1111111")
+
+  describe "urlParam(name)", ->
+    it "returns parameters from query string", ->
+      address = "http://whatever?foo=ONE&bar=TWO"
+      one = @locations.urlParam("foo", address)
+      one.should.equal("ONE")
+      two = @locations.urlParam("bar", address)
+      two.should.equal("TWO")
