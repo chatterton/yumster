@@ -6,6 +6,7 @@ window.Yumster.Locations or= {}
 class LocationsNear
 
   constructor: ->
+    @initial_center_found = false
 
   createLocationHTML: (location) ->
     skeleton = $('#location_container .location').clone()
@@ -36,6 +37,13 @@ class LocationsNear
   updateAddressPosition: (lat, long) ->
     console.log(window.History)
     window.History.replaceState {}, null, "?latitude=#{lat.toFixed(6)}&longitude=#{long.toFixed(6)}"
+
+  mapIdle: (map) ->
+    if(!@initial_center_found)
+      lctn = map.getCenter()
+      window.Yumster.Locations.Near.fillNearbyLocations(lctn.lat(), lctn.lng())
+      window.Yumster.Locations.Near.updateAddressPosition(lctn.lat(), lctn.lng())
+      @initial_center_found = true
 
 $ ->
   window.Yumster.Locations.Near = new LocationsNear
