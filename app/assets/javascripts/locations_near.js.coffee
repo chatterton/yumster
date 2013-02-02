@@ -1,3 +1,5 @@
+#= require jquery.history.js
+
 window.Yumster or= {}
 window.Yumster.Locations or= {}
 
@@ -30,6 +32,10 @@ class LocationsNear
       error: (data) ->
         console.log(data)
     }
+
+  updateAddressPosition: (lat, long) ->
+    console.log(window.History)
+    window.History.replaceState {}, null, "?latitude=#{lat.toFixed(6)}&longitude=#{long.toFixed(6)}"
 
 $ ->
   window.Yumster.Locations.Near = new LocationsNear

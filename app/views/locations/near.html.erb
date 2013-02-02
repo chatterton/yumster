@@ -28,6 +28,7 @@ var map_idle = function() {
     lctn = Gmaps.map.map.getCenter()
     window.Yumster.Locations.Near.fillNearbyLocations(lctn.lat(), lctn.lng())
     add_position_indicator()
+    window.Yumster.Locations.Near.updateAddressPosition(lctn.lat(), lctn.lng())
   }
   initial_center_found = true
 }

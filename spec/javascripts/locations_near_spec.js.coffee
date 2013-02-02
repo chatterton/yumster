@@ -1,5 +1,6 @@
 #= require spec_helper
 #= require locations_near
+#= require jquery.history.js
 
 describe "window.Yumster.Locations.Near", ->
 
@@ -63,3 +64,19 @@ describe "window.Yumster.Locations.Near", ->
     it "populates an element with the name and link", ->
       @element.html().should.have.string("The Church")
       @element.html().should.have.string("/locations/7")
+
+  describe "updateAddressPosition(lat, long)", ->
+    beforeEach ->
+      sinon.stub window.History, "replaceState"
+    afterEach ->
+      window.History.replaceState.restore()
+    it "updates the address bar with latitude and longitude", ->
+      @locations.updateAddressPosition(41.001, 42.002)
+      new_address = window.History.replaceState.getCall(0).args[2]
+      new_address.should.have.string("41.001")
+      new_address.should.have.string("42.002")
+    it "shortens long floats to six decimal places", ->
+      @locations.updateAddressPosition(41.111111111111, 42.002)
+      new_address = window.History.replaceState.getCall(0).args[2]
+      new_address.should.have.string("41.111111")
+      new_address.should.not.have.string("41.1111111")
