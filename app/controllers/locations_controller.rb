@@ -1,5 +1,5 @@
 class LocationsController < ApplicationController
-  include LocationsHelper
+  include Gmaps4RailsHelper
 
   def index
     @locations = Location.find :all

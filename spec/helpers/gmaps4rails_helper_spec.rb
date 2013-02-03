@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe LocationsHelper do
+describe Gmaps4RailsHelper do
   describe "#gmaps4rails_location" do
     before do
       @location = stub_model Location, :latitude => 40.01, :longitude => 42, :description => 'fooo'
