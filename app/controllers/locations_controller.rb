@@ -28,13 +28,24 @@ class LocationsController < ApplicationController
 
   respond_to :json, :html
   def near
-    if(request.format.json?)
-      center_point = [params[:latitude] ||= 0, params[:longitude] ||= 0]
+    center_point = false
+    if params[:latitude] and params[:longitude]
+      center_point = [params[:latitude], params[:longitude]]
+    end
+    if request.format.json?
+      unless center_point
+        render :text => "No location given", :status => 500
+        return
+      end
       box = Geocoder::Calculations.bounding_box(center_point, NEARBY_DISTANCE_MI)
       @locations = Location.within_bounding_box(box)
       respond_with(@locations)
     else
-      @g4r_options = gmaps4rails_detect_wide
+      if center_point
+        @g4r_options = gmaps4rails_zoomto_wide(center_point[0], center_point[1])
+      else
+        @g4r_options = gmaps4rails_detect_wide
+      end
       render 'near'
     end
   end

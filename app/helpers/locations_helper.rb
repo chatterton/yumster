@@ -31,6 +31,14 @@ module LocationsHelper
     g4r_opts
   end
 
+  def gmaps4rails_zoomto_wide(lat, long)
+    g4r_opts = base_g4r_opts
+    g4r_opts[:map_options][:zoom] = 15
+    g4r_opts[:map_options][:center_latitude] = lat
+    g4r_opts[:map_options][:center_longitude] = long
+    g4r_opts
+  end
+
   NEARBY_DISTANCE_MI = 0.75
 
 end
