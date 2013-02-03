@@ -16,24 +16,22 @@
   <%= javascript_include_tag 'geolocationmarker.js' %>
   <script type="text/javascript" charset="utf-8">
 
+var GeoMarker
 var add_position_indicator = function() {
-  GeoMarker = new GeolocationMarker()
-  GeoMarker.setCircleOptions({fillColor: '#808080'})
-  GeoMarker.setMap(Gmaps.map.map)
+  if(!GeoMarker) {
+    GeoMarker = new GeolocationMarker()
+    GeoMarker.setCircleOptions({fillColor: '#808080'})
+    GeoMarker.setMap(Gmaps.map.map)
+  }
 }
 
-var initial_center_found = false
 var map_idle = function() {
-  if(!initial_center_found) {
-    lctn = Gmaps.map.map.getCenter()
-    window.Yumster.Locations.Near.fillNearbyLocations(lctn.lat(), lctn.lng())
-    add_position_indicator()
-  }
-  initial_center_found = true
+  window.Yumster.Locations.Near.mapIdle(Gmaps.map.map)
 }
 
 Gmaps.map.callback = function() {
   google.maps.event.addListener(Gmaps.map.map, 'idle', map_idle)
+  add_position_indicator()
 }
 
   </script>

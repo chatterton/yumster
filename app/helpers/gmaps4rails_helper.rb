@@ -1,12 +1,12 @@
-module LocationsHelper
+module Gmaps4RailsHelper
 
   def base_g4r_opts
     {
       map_options: {
-        "processing" => "json",
-        "auto_adjust" => true,
-        "auto_zoom" => false,
-        "zoom" => 18
+        :processing => "json",
+        :auto_adjust => true,
+        :auto_zoom => false,
+        :zoom => 18
       }
     }
   end
@@ -28,6 +28,15 @@ module LocationsHelper
   def gmaps4rails_detect_wide
     g4r_opts = gmaps4rails_detect
     g4r_opts[:map_options][:zoom] = 15
+    g4r_opts
+  end
+
+  def gmaps4rails_zoomto_wide(lat, long)
+    g4r_opts = base_g4r_opts
+    g4r_opts[:map_options][:zoom] = 15
+    g4r_opts[:map_options][:auto_zoom] = true
+    g4r_opts[:map_options][:center_latitude] = lat
+    g4r_opts[:map_options][:center_longitude] = long
     g4r_opts
   end
 
