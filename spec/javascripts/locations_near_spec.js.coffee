@@ -65,21 +65,64 @@ describe "window.Yumster.Locations.Near", ->
       @element.html().should.have.string("The Church")
       @element.html().should.have.string("/locations/7")
 
-  describe "updateAddressPosition(lat, long)", ->
+  describe "updateURLLatLong(lat, long)", ->
     beforeEach ->
       sinon.stub window.History, "replaceState"
     afterEach ->
       window.History.replaceState.restore()
     it "updates the address bar with latitude and longitude", ->
-      @locations.updateAddressPosition(41.001, 42.002)
+      @locations.updateURLLatLong(41.001, 42.002)
       new_address = window.History.replaceState.getCall(0).args[2]
       new_address.should.have.string("41.001")
       new_address.should.have.string("42.002")
     it "shortens long floats to six decimal places", ->
-      @locations.updateAddressPosition(41.111111111111, 42.002)
+      @locations.updateURLLatLong(41.111111111111, 42.002)
       new_address = window.History.replaceState.getCall(0).args[2]
       new_address.should.have.string("41.111111")
       new_address.should.not.have.string("41.1111111")
+
+  describe "mapIdle(map)", ->
+    beforeEach ->
+      sinon.spy(window.Yumster.Locations.Near, "updateURLLatLong")
+      sinon.spy(window.Yumster.Locations.Near, "fillNearbyLocations")
+      sinon.stub(@locations, "urlParam")
+      @map =
+        getCenter: ->
+          return {
+            lat: -> 105
+            lng: -> 106
+          }
+      @locations.initial_center_found = false
+    afterEach ->
+      window.Yumster.Locations.Near.updateURLLatLong.restore()
+      window.Yumster.Locations.Near.fillNearbyLocations.restore()
+      @locations.urlParam.restore()
+    context "when coordinates are provided on the query string", ->
+      beforeEach ->
+        @locations.urlParam.withArgs("latitude").returns("999")
+        @locations.urlParam.withArgs("longitude").returns("998")
+        @locations.mapIdle(@map)
+      it "calls fill with those params", ->
+        @locations.fillNearbyLocations.getCall(0).args[0].should.equal 999
+        @locations.fillNearbyLocations.getCall(0).args[1].should.equal 998
+      it "does not call updateurl", ->
+        window.Yumster.Locations.Near.updateURLLatLong.callCount.should.equal 0
+    context "when there are no coordinates provided on the query string", ->
+      beforeEach ->
+        @locations.urlParam.withArgs("latitude").returns(null)
+        @locations.urlParam.withArgs("longitude").returns(null)
+        @locations.mapIdle(@map)
+      it "calls fill with map center lat/long", ->
+        @locations.fillNearbyLocations.getCall(0).args[0].should.equal 105
+        @locations.fillNearbyLocations.getCall(0).args[1].should.equal 106
+      it "calls updateurl with map center lat/long", ->
+        @locations.updateURLLatLong.getCall(0).args[0].should.equal 105
+        @locations.updateURLLatLong.getCall(0).args[1].should.equal 106
+    context "when called a second time", ->
+      it "only calls fill once", ->
+        @locations.mapIdle(@map)
+        @locations.mapIdle(@map)
+        @locations.fillNearbyLocations.callCount.should.equal 1
 
   describe "urlParam(name)", ->
     it "returns parameters from query string", ->
