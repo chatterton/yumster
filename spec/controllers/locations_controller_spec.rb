@@ -54,13 +54,37 @@ describe LocationsController do
           response.body.should_not =~ /Mac counter at macy's/
         end
       end
+      context "without lat / long on query string" do
+        it "returns an error" do
+          get :near
+          response.should_not be_success
+        end
+      end
     end
     context "when requesting html" do
-      it 'returns html' do
+      before do
         @request.env["HTTP_ACCEPT"] = "text/html"
-        get :near, :latitude => "60", :longitude => "70"
+      end
+      it 'returns html' do
+        get :near
         response.should be_success
         response.content_type.should == "text/html"
+      end
+      context "with lat/long on the query string" do
+        it "opens the map at that location" do
+          get :near, :latitude => 60, :longitude => 70
+          opts = assigns(:g4r_options)
+          opts[:map_options][:center_latitude].should == "60"
+          opts[:map_options][:center_longitude].should == "70"
+        end
+      end
+      context "without lat/long on the query string" do
+        it "detects user's position" do
+          get :near
+          opts = assigns(:g4r_options)
+          opts[:map_options][:detect_location].should == true
+          opts[:map_options][:center_on_user].should == true
+        end
       end
     end
   end
