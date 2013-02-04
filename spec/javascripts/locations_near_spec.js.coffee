@@ -42,15 +42,20 @@ describe "window.Yumster.Locations.Near", ->
     beforeEach ->
       locations = [ "loc1", "loc2" ]
       sinon.stub(@locations, "createLocationHTML")
+      sinon.stub(@locations, "addMarkerToMap")
       @locations.createLocationHTML.withArgs("loc1").returns($("<div>OK1</div>"))
       @locations.createLocationHTML.withArgs("loc2").returns($("<div>OK2</div>"))
       @locations.fillNearbyLocationsSuccess(locations)
     afterEach ->
       @locations.createLocationHTML.restore()
+      @locations.addMarkerToMap.restore()
     it "populates #locations_container with locations", ->
       container = $('#locations_container').html()
       container.should.have.string("OK1")
       container.should.have.string("OK2")
+    it "creates markers A and B", ->
+      @locations.addMarkerToMap.firstCall.args[0].should.equal 'A'
+      @locations.addMarkerToMap.secondCall.args[0].should.equal 'B'
     context "when there are more than 20 locations", ->
       beforeEach ->
         locations = ("location #{i}" for i in [1..25])

@@ -7,6 +7,7 @@ class LocationsNear
 
   constructor: ->
     @initial_center_found = false
+    @alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
   createLocationHTML: (location) ->
     skeleton = $('#location_container .location').clone()
@@ -15,11 +16,22 @@ class LocationsNear
     skeleton.find('.location_category').text(location.category)
     skeleton
 
+  # Markers generated with e.g.
+  # http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=E|33EE33|000000
+  addMarkerToMap: (letter, location, map = Gmaps.map.map) ->
+    latlng = new google.maps.LatLng location.latitude, location.longitude
+    marker = new google.maps.Marker {
+      position: latlng
+      map: map
+      icon: "/assets/markers/#{letter}.png"
+    }
+
   fillNearbyLocationsSuccess: (data) ->
     container = $('#locations_container')
     for location, i in data when i < 20
       loc = @createLocationHTML(location)
       loc.appendTo(container)
+      @addMarkerToMap(@alphabet[i], location)
 
   fillNearbyLocations: (lat, long) ->
     path = $('#nearby_ajax_address').attr("href")
@@ -35,7 +47,6 @@ class LocationsNear
     }
 
   updateURLLatLong: (lat, long) ->
-    console.log(window.History)
     window.History.replaceState {}, null, "?latitude=#{lat.toFixed(6)}&longitude=#{long.toFixed(6)}"
 
   mapIdle: (map) ->
