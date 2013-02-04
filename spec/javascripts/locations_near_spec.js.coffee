@@ -51,6 +51,15 @@ describe "window.Yumster.Locations.Near", ->
       container = $('#locations_container').html()
       container.should.have.string("OK1")
       container.should.have.string("OK2")
+    context "when there are more than 20 locations", ->
+      beforeEach ->
+        locations = ("location #{i}" for i in [1..25])
+        @locations.createLocationHTML.reset()
+        @locations.createLocationHTML.returns($("<div />"))
+        @locations.fillNearbyLocationsSuccess(locations)
+      it "only shows the first 20", ->
+        @locations.createLocationHTML.callCount.should.equal 20
+
 
   describe "createLocationHTML(location)", ->
     beforeEach ->

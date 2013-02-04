@@ -17,7 +17,7 @@ class LocationsNear
 
   fillNearbyLocationsSuccess: (data) ->
     container = $('#locations_container')
-    for location in data
+    for location, i in data when i < 20
       loc = @createLocationHTML(location)
       loc.appendTo(container)
 
