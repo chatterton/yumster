@@ -11,8 +11,11 @@ describe "window.Yumster.Locations.Near", ->
       <div id="locations_container"></div>
       <div id="location_container">
         <div class="location well">
-          <a class="location_link" /><br>
-          Category: <span class="location_category"></span><br>
+          <div><img class="location_marker" /></div>
+          <div>
+            <a class="location_link" /><br>
+            Category: <span class="location_category"></span>
+          </div>
           <br>
         </div>
       </div>
@@ -40,11 +43,15 @@ describe "window.Yumster.Locations.Near", ->
 
   describe "fillNearbyLocationsSuccess(data)", ->
     beforeEach ->
-      locations = [ "loc1", "loc2" ]
+      loc1 =
+        check: 1
+      loc2 =
+        check: 2
+      locations = [ loc1, loc2 ]
       sinon.stub(@locations, "createLocationHTML")
       sinon.stub(@locations, "addMarkerToMap")
-      @locations.createLocationHTML.withArgs("loc1").returns($("<div>OK1</div>"))
-      @locations.createLocationHTML.withArgs("loc2").returns($("<div>OK2</div>"))
+      @locations.createLocationHTML.withArgs(loc1).returns($("<div>OK1</div>"))
+      @locations.createLocationHTML.withArgs(loc2).returns($("<div>OK2</div>"))
       @locations.fillNearbyLocationsSuccess(locations)
     afterEach ->
       @locations.createLocationHTML.restore()
@@ -54,8 +61,8 @@ describe "window.Yumster.Locations.Near", ->
       container.should.have.string("OK1")
       container.should.have.string("OK2")
     it "creates markers A and B", ->
-      @locations.addMarkerToMap.firstCall.args[0].should.equal 'A'
-      @locations.addMarkerToMap.secondCall.args[0].should.equal 'B'
+      @locations.addMarkerToMap.firstCall.args[0].icon.should.include 'A.png'
+      @locations.addMarkerToMap.secondCall.args[0].icon.should.include 'B.png'
     context "when there are more than 20 locations", ->
       beforeEach ->
         locations = ("location #{i}" for i in [1..25])
@@ -74,10 +81,13 @@ describe "window.Yumster.Locations.Near", ->
         "id": 7
         "latitude": 47.6187787290335
         "longitude": -122.302739496959
-      @element = @locations.createLocationHTML(location)
+        "icon": "/assets/foo.png"
+      @html = @locations.createLocationHTML(location, "Q").html()
     it "populates an element with the name and link", ->
-      @element.html().should.have.string("The Church")
-      @element.html().should.have.string("/locations/7")
+      @html.should.have.string("The Church")
+      @html.should.have.string("/locations/7")
+    it "shows the marker image", ->
+      @html.should.have.string("/assets/foo.png")
 
   describe "updateURLLatLong(lat, long)", ->
     beforeEach ->

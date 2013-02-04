@@ -14,24 +14,26 @@ class LocationsNear
     skeleton.find('.location_link').text(location.description)
     skeleton.find('.location_link').attr('href', "/locations/#{location.id}")
     skeleton.find('.location_category').text(location.category)
+    skeleton.find('.location_marker').attr('src', location.icon)
     skeleton
 
   # Markers generated with e.g.
   # http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=E|33EE33|000000
-  addMarkerToMap: (letter, location, map = Gmaps.map.map) ->
+  addMarkerToMap: (location, map = Gmaps.map.map) ->
     latlng = new google.maps.LatLng location.latitude, location.longitude
     marker = new google.maps.Marker {
       position: latlng
       map: map
-      icon: "/assets/markers/#{letter}.png"
+      icon: location.icon
     }
 
   fillNearbyLocationsSuccess: (data) ->
     container = $('#locations_container')
     for location, i in data when i < 20
+      location.icon = "/assets/markers/#{@alphabet[i]}.png"
       loc = @createLocationHTML(location)
       loc.appendTo(container)
-      @addMarkerToMap(@alphabet[i], location)
+      @addMarkerToMap(location)
 
   fillNearbyLocations: (lat, long) ->
     path = $('#nearby_ajax_address').attr("href")
