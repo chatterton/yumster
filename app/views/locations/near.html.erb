@@ -40,9 +40,8 @@ var init = function() {
   addPositionIndicator(map)
   var success = function(latitude, longitude) {
     var loc = new google.maps.LatLng(latitude, longitude)
-    console.log("Loc: ", loc)
-    // Center map
-    // Load locations
+    map.setCenter(loc)
+    window.Yumster.Locations.Near.fillNearbyLocations(latitude, longitude)
   }
   var failure = function(error) {
     console.log("Error placing map: ", error)
