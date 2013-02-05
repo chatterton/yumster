@@ -38,6 +38,7 @@ var init = function() {
     mapTypeId: google.maps.MapTypeId.ROADMAP
   })
   addPositionIndicator(map)
+  window.Yumster.Locations.Near.setMap(map)
   var success = function(latitude, longitude) {
     var loc = new google.maps.LatLng(latitude, longitude)
     map.setCenter(loc)

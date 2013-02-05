@@ -9,6 +9,9 @@ class LocationsNear
     @initial_center_found = false
     @alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
+  setMap: (map) ->
+    @map = map
+
   createLocationHTML: (location) ->
     skeleton = $('#location_container .location').clone()
     skeleton.find('.location_link').text(location.description)
@@ -19,11 +22,11 @@ class LocationsNear
 
   # Markers generated with e.g.
   # http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=E|33EE33|000000
-  addMarkerToMap: (location, map = Gmaps.map.map) ->
+  addMarkerToMap: (location) ->
     latlng = new google.maps.LatLng location.latitude, location.longitude
     marker = new google.maps.Marker {
       position: latlng
-      map: map
+      map: @map
       icon: location.icon
     }
 
@@ -50,18 +53,6 @@ class LocationsNear
 
   updateURLLatLong: (lat, long) ->
     window.History.replaceState {}, null, "?latitude=#{lat.toFixed(6)}&longitude=#{long.toFixed(6)}"
-
-  mapIdle: (map) ->
-    unless @initial_center_found
-      latitude = if @urlParam("latitude") then parseFloat(@urlParam("latitude")) else null
-      longitude = if @urlParam("longitude") then parseFloat(@urlParam("longitude")) else null
-      unless latitude and longitude
-        lctn = map.getCenter()
-        latitude = lctn.lat()
-        longitude = lctn.lng()
-        window.Yumster.Locations.Near.updateURLLatLong(latitude, longitude)
-      window.Yumster.Locations.Near.fillNearbyLocations(latitude, longitude)
-      @initial_center_found = true
 
   getMapCenter: (success, failure) ->
     latitude = if @urlParam("latitude") then parseFloat(@urlParam("latitude")) else null
