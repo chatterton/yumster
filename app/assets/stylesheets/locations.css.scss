@@ -18,3 +18,17 @@
     top: $PUSHPIN_MARGIN_MOBILE;
   }
 }
+
+#map_canvas {
+  width: 100%;
+  height: $MAP_HEIGHT_DESKTOP;
+
+  /* fix for bootstrap */
+  img {
+    max-width: none;
+  }
+
+  @media screen and (max-width: $BREAKPOINT) {
+    height: $MAP_HEIGHT_MOBILE;
+  }
+}

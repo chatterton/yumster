@@ -10,7 +10,7 @@ describe "locations/near" do
   subject { rendered }
 
   describe 'it shows a map' do
-    it { should have_selector '.map_container #map' }
+    it { should have_selector '.map_container #map_canvas' }
   end
 
   describe 'has a hidden link to the nearby ajax endpoint' do
