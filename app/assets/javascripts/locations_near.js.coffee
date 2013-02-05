@@ -70,8 +70,14 @@ class LocationsNear
       return success(latitude, longitude)
     @geolocate(success, failure)
 
-  geolocate: ->
-    return [1, 2]
+  geolocate: (success, failure) ->
+    if navigator.geolocation
+      navigator.geolocation.getCurrentPosition (position) ->
+        success(position.coords.latitude, position.coords.longitude)
+      , ->
+        return failure("User did not allow geolocation")
+    else
+      return failure("Browser does not support geolocation")
 
   urlParam: (name, address = window.location.href) ->
     results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(address)

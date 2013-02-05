@@ -38,14 +38,16 @@ var init = function() {
     mapTypeId: google.maps.MapTypeId.ROADMAP
   })
   addPositionIndicator(map)
-  /*
-  var newCenter = window.Yumster.Locations.Near.getMapCenter()
-  if(newCenter) {
-    var loc = google.maps.LatLng(newCenter[0], newCenter[1])
+  var success = function(latitude, longitude) {
+    var loc = new google.maps.LatLng(latitude, longitude)
+    console.log("Loc: ", loc)
     // Center map
     // Load locations
   }
- */
+  var failure = function(error) {
+    console.log("Error placing map: ", error)
+  }
+  window.Yumster.Locations.Near.getMapCenter(success, failure)
 }
 google.maps.event.addDomListener(window, 'load', init)
   </script>
