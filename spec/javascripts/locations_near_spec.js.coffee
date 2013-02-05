@@ -72,7 +72,6 @@ describe "window.Yumster.Locations.Near", ->
       it "only shows the first 20", ->
         @locations.createLocationHTML.callCount.should.equal 20
 
-
   describe "createLocationHTML(location)", ->
     beforeEach ->
       location =
@@ -82,7 +81,7 @@ describe "window.Yumster.Locations.Near", ->
         "latitude": 47.6187787290335
         "longitude": -122.302739496959
         "icon": "/assets/foo.png"
-      @html = @locations.createLocationHTML(location, "Q").html()
+      @html = @locations.createLocationHTML(location).html()
     it "populates an element with the name and link", ->
       @html.should.have.string("The Church")
       @html.should.have.string("/locations/7")
@@ -105,48 +104,60 @@ describe "window.Yumster.Locations.Near", ->
       new_address.should.have.string("41.111111")
       new_address.should.not.have.string("41.1111111")
 
-  describe "mapIdle(map)", ->
+  describe "getMapCenter(success, failure)", ->
     beforeEach ->
-      sinon.spy(window.Yumster.Locations.Near, "updateURLLatLong")
-      sinon.spy(window.Yumster.Locations.Near, "fillNearbyLocations")
       sinon.stub(@locations, "urlParam")
-      @map =
-        getCenter: ->
-          return {
-            lat: -> 105
-            lng: -> 106
-          }
-      @locations.initial_center_found = false
+      sinon.stub(@locations, "geolocate")
+      @success = sinon.spy()
+      @failure = sinon.spy()
     afterEach ->
-      window.Yumster.Locations.Near.updateURLLatLong.restore()
-      window.Yumster.Locations.Near.fillNearbyLocations.restore()
       @locations.urlParam.restore()
+      @locations.geolocate.restore()
     context "when coordinates are provided on the query string", ->
       beforeEach ->
-        @locations.urlParam.withArgs("latitude").returns("999")
-        @locations.urlParam.withArgs("longitude").returns("998")
-        @locations.mapIdle(@map)
-      it "calls fill with those params", ->
-        @locations.fillNearbyLocations.getCall(0).args[0].should.equal 999
-        @locations.fillNearbyLocations.getCall(0).args[1].should.equal 998
-      it "does not call updateurl", ->
-        window.Yumster.Locations.Near.updateURLLatLong.callCount.should.equal 0
-    context "when there are no coordinates provided on the query string", ->
+        @locations.urlParam.withArgs("latitude").returns("15")
+        @locations.urlParam.withArgs("longitude").returns("16")
+      it "calls the success callback on them", ->
+        @locations.getMapCenter(@success, @failure)
+        @success.firstCall.args[0].should.equal 15
+        @success.firstCall.args[1].should.equal 16
+    context "when there are no coordinates", ->
       beforeEach ->
         @locations.urlParam.withArgs("latitude").returns(null)
         @locations.urlParam.withArgs("longitude").returns(null)
-        @locations.mapIdle(@map)
-      it "calls fill with map center lat/long", ->
-        @locations.fillNearbyLocations.getCall(0).args[0].should.equal 105
-        @locations.fillNearbyLocations.getCall(0).args[1].should.equal 106
-      it "calls updateurl with map center lat/long", ->
-        @locations.updateURLLatLong.getCall(0).args[0].should.equal 105
-        @locations.updateURLLatLong.getCall(0).args[1].should.equal 106
-    context "when called a second time", ->
-      it "only calls fill once", ->
-        @locations.mapIdle(@map)
-        @locations.mapIdle(@map)
-        @locations.fillNearbyLocations.callCount.should.equal 1
+      it "calls geolocate with the callbacks", ->
+        @locations.getMapCenter(@success, @failure)
+        @locations.geolocate.callCount.should.equal 1
+        @locations.geolocate.firstCall.args[0].should.equal @success
+        @locations.geolocate.firstCall.args[1].should.equal @failure
+
+  describe "geolocate(success, failure)", ->
+    beforeEach ->
+      @keepFunction = navigator.geolocation.getCurrentPosition
+      @success = sinon.spy()
+      @failure = sinon.spy()
+    afterEach ->
+      navigator.geolocation.getCurrentPosition = @keepFunction
+    context "when the user allows geolocation", ->
+      beforeEach ->
+        navigator.geolocation.getCurrentPosition = (f1, f2) ->
+          f1({
+            coords:
+              latitude: 5
+              longitude: 6
+          })
+      it "calls success on coordinates", ->
+        @locations.geolocate(@success, @failure)
+        @success.callCount.should.equal 1
+        @failure.callCount.should.equal 0
+    context "when the user does not allow geolocation", ->
+      beforeEach ->
+        navigator.geolocation.getCurrentPosition = (f1, f2) ->
+          f2({})
+      it "calls failure callback", ->
+        @locations.geolocate(@success, @failure)
+        @success.callCount.should.equal 0
+        @failure.callCount.should.equal 1
 
   describe "urlParam(name)", ->
     it "returns parameters from query string", ->
