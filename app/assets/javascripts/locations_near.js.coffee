@@ -63,6 +63,16 @@ class LocationsNear
       window.Yumster.Locations.Near.fillNearbyLocations(latitude, longitude)
       @initial_center_found = true
 
+  getMapCenter: (success, failure) ->
+    latitude = if @urlParam("latitude") then parseFloat(@urlParam("latitude")) else null
+    longitude = if @urlParam("longitude") then parseFloat(@urlParam("longitude")) else null
+    if latitude and longitude
+      return success(latitude, longitude)
+    @geolocate(success, failure)
+
+  geolocate: ->
+    return [1, 2]
+
   urlParam: (name, address = window.location.href) ->
     results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(address)
     if results then results[1] else null

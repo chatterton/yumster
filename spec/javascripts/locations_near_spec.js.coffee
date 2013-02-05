@@ -148,6 +148,36 @@ describe "window.Yumster.Locations.Near", ->
         @locations.mapIdle(@map)
         @locations.fillNearbyLocations.callCount.should.equal 1
 
+  describe "getMapCenter(success, failure)", ->
+    beforeEach ->
+      sinon.stub(@locations, "urlParam")
+      sinon.stub(@locations, "geolocate")
+      @success = sinon.spy()
+      @failure = sinon.spy()
+    afterEach ->
+      @locations.urlParam.restore()
+      @locations.geolocate.restore()
+    context "when coordinates are provided on the query string", ->
+      beforeEach ->
+        @locations.urlParam.withArgs("latitude").returns("15")
+        @locations.urlParam.withArgs("longitude").returns("16")
+      it "calls the success callback on them", ->
+        @locations.getMapCenter(@success, @failure)
+        @success.firstCall.args[0].should.equal 15
+        @success.firstCall.args[1].should.equal 16
+    context "when there are no coordinates", ->
+      beforeEach ->
+        @locations.urlParam.withArgs("latitude").returns(null)
+        @locations.urlParam.withArgs("longitude").returns(null)
+      it "calls geolocate with the callbacks", ->
+        @locations.getMapCenter(@success, @failure)
+        @locations.geolocate.callCount.should.equal 1
+        @locations.geolocate.firstCall.args[0].should.equal @success
+        @locations.geolocate.firstCall.args[1].should.equal @failure
+
+  describe "geolocate()", ->
+    
+
   describe "urlParam(name)", ->
     it "returns parameters from query string", ->
       address = "http://whatever?foo=ONE&bar=TWO"
