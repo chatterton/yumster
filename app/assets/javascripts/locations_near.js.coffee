@@ -58,13 +58,13 @@ class LocationsNear
     latitude = if @urlParam("latitude") then parseFloat(@urlParam("latitude")) else null
     longitude = if @urlParam("longitude") then parseFloat(@urlParam("longitude")) else null
     if latitude and longitude
-      return success(latitude, longitude)
+      return success(latitude, longitude, true)
     @geolocate(success, failure)
 
   geolocate: (success, failure) ->
     if navigator.geolocation
       navigator.geolocation.getCurrentPosition (position) ->
-        success(position.coords.latitude, position.coords.longitude)
+        success(position.coords.latitude, position.coords.longitude, false)
       , ->
         return failure("User did not allow geolocation")
     else

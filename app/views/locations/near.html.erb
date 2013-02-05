@@ -39,10 +39,13 @@ var init = function() {
   })
   addPositionIndicator(map)
   window.Yumster.Locations.Near.setMap(map)
-  var success = function(latitude, longitude) {
+  var success = function(latitude, longitude, coordinatesOnURL) {
     var loc = new google.maps.LatLng(latitude, longitude)
     map.setCenter(loc)
     window.Yumster.Locations.Near.fillNearbyLocations(latitude, longitude)
+    if(!coordinatesOnURL) {
+      window.Yumster.Locations.Near.updateURLLatLong(latitude, longitude)
+    }
   }
   var failure = function(error) {
     console.log("Error placing map: ", error)
