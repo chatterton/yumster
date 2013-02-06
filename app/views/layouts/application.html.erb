@@ -17,6 +17,8 @@
         <% end %>
       </div>
     </header>
+    <% unless notice.blank? %><p class="notice"><%= notice %></p><% end %>
+    <% unless alert.blank? %><p class="alert"><%= alert %></p><% end %>
     <%= yield %>
   </div>
   <%= yield :scripts %>
