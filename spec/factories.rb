@@ -5,4 +5,9 @@ FactoryGirl.define do
     longitude 11.4
     category "Dumpster"
   end
+  factory :user do
+    email "somebody@somewhere.edu"
+    username "somebody"
+    password "something"
+  end
 end
