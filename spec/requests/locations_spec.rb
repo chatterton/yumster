@@ -9,13 +9,13 @@ describe "Locations pages" do
       page.should have_selector("form")
     end
     describe "invalid form contents" do
-      it "should not increase the loction count" do
+      it "should not increase the location count" do
         visit new_location_path
         expect { click_button "Create location" }.not_to change(Location, :count)
       end
     end
     describe "valid form contents" do
-      it "should increase the loction count" do
+      it "should increase the location count" do
         visit new_location_path
         find(:xpath, "//input[@id='location_latitude']").set "16"
         find(:xpath, "//input[@id='location_longitude']").set "16"

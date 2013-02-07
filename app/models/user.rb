@@ -1,12 +1,20 @@
 class User < ActiveRecord::Base
-  # Include default devise modules. Others available are:
-  # :token_authenticatable, :confirmable,
-  # :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
          :confirmable
 
-  # Setup accessible (or protected) attributes for your model
-  attr_accessible :email, :password, :password_confirmation, :remember_me
-  # attr_accessible :title, :body
+  attr_accessible :email, :password, :password_confirmation, :remember_me, :username
+
+  validates_presence_of :username
+  validates_uniqueness_of :username
+  validates_length_of :username, :minimum => 3, :maximum => 15
+  validates_format_of :username, :with => /^[A-Za-z\d_]+$/, :message => "can only be alphanumeric, no spaces"
+
+  # Allow username as valid login, per
+  # http://stackoverflow.com/questions/2997179/ror-devise-sign-in-with-username-or-email
+  def self.find_for_database_authentication(conditions={})
+    self.where("username = ?", conditions[:email]).limit(1).first ||
+    self.where("email = ?", conditions[:email]).limit(1).first
+  end
+
 end
