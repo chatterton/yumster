@@ -1,5 +1,39 @@
 require 'spec_helper'
 
 describe User do
-  pending "add some examples to (or delete) #{__FILE__}"
+  before do
+    @user = User.new(
+      email: "test@user.com",
+      password: "whatever",
+      password_confirmation: "whatever",
+      remember_me: true,
+      username: "user999"
+    )
+  end
+
+  subject { @user }
+
+  it { should be_valid }
+
+  describe "username" do
+    it "should be three or more characters" do
+      @user.username = "tw"
+      @user.should_not be_valid
+      @user.username = "thr"
+      @user.should be_valid
+    end
+    it "should be no more than fifteen characters" do
+      @user.username = "16____characters"
+      @user.should_not be_valid
+      @user.username = "15___characters"
+      @user.should be_valid
+    end
+    it "should not accept spaces" do
+      @user.username = "johnny rotten"
+      @user.should_not be_valid
+      @user.username = "johnny_rotten"
+      @user.should be_valid
+    end
+  end
+
 end

@@ -7,5 +7,7 @@ class User < ActiveRecord::Base
 
   validates_presence_of :username
   validates_uniqueness_of :username
+  validates_length_of :username, :minimum => 3, :maximum => 15
+  validates_format_of :username, :with => /^[A-Za-z\d_]+$/, :message => "can only be alphanumeric, no spaces"
 
 end
