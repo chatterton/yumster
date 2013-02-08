@@ -18,6 +18,7 @@ gem "geocoder"
 
 gem "devise"
 
+gem "font-awesome-rails"
 gem "font-awesome-sass-rails"
 
 # Gems used only for assets and not required
