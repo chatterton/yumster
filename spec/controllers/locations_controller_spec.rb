@@ -25,8 +25,9 @@ describe LocationsController do
 
   describe "GET 'index'" do
     it "populates @locations array with all locations" do
-      location1 = FactoryGirl.create :location
-      location2 = FactoryGirl.create :location
+      user = FactoryGirl.create :user
+      location1 = FactoryGirl.create :location, user: user
+      location2 = FactoryGirl.create :location, user: user
       get :index
       assigns(:locations).should == [location1, location2]
     end

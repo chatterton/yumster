@@ -2,7 +2,8 @@ require 'spec_helper'
 
 describe Location do
   before do
-    @location = Location.new(description: 'test desc', latitude: 10, longitude: 101, category: "Plant", user_id:11)
+    @user = FactoryGirl.create(:user)
+    @location = @user.locations.build(description: 'test desc', latitude: 10, longitude: 101, category: "Plant")
   end
 
   subject { @location }
@@ -12,7 +13,7 @@ describe Location do
     it { should respond_to(:latitude) }
     it { should respond_to(:longitude) }
     it { should respond_to(:category) }
-    it { should respond_to(:user_id) }
+    its(:user) { should == @user }
   end
 
   it "should have the proper values" do
@@ -20,7 +21,7 @@ describe Location do
     @location.latitude.should == 10
     @location.longitude.should == 101
     @location.category.should == 'Plant'
-    @location.user_id.should == 11
+    @location.user_id.should == @user.id
   end
 
   describe "when description is not present" do
@@ -87,6 +88,13 @@ describe Location do
     it { should respond_to(:distance_to) }
   end
 
+  describe "access to user_id" do
+    it "should not allow access" do
+      expect do
+        Location.new(user_id: 1111)
+      end.should raise_error
+    end
+  end
   describe "when user_id is not present" do
     before do
       @location.user_id = nil

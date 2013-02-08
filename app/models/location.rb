@@ -1,5 +1,6 @@
 class Location < ActiveRecord::Base
-  attr_accessible :description, :latitude, :longitude, :category, :user_id
+  attr_accessible :description, :latitude, :longitude, :category
+  belongs_to :user
 
   ## Do not run geocoding on every validation
   acts_as_gmappable :process_geocoding => false
