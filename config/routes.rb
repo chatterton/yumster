@@ -1,9 +1,7 @@
 Yumster::Application.routes.draw do
 
   devise_for :users
-  #devise_for :users, :path_prefix => 'd'
-  #resources :users, :only => [:show]
-  match 'users/:username' => 'users#show'
+  get 'users/:username' => 'users#show', :as => 'user'
 
   root :to => 'pages#home'
 

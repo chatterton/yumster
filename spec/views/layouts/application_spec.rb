@@ -1,9 +1,5 @@
 require 'spec_helper'
 
-RSpec.configure do |config|
-  config.include Devise::TestHelpers
-end
-
 describe 'layouts/application' do
   context 'when no user is signed in' do
     before do
@@ -17,11 +13,13 @@ describe 'layouts/application' do
   context 'when a user is signed in' do
     before do
       view.stub(:user_signed_in?).and_return(true)
+      @user = FactoryGirl.create :user, :username => "fred"
+      view.stub(:current_user).and_return(@user)
       render
     end
-    it 'displays a log out link' do
+    it 'displays username linked to the account page' do
       rendered.should_not have_link "Log In", :href => new_user_session_path
-      rendered.should have_link "Log Out", :href => destroy_user_session_path
+      rendered.should have_link @user.username, :href => user_path(@user.username)
     end
   end
 end
