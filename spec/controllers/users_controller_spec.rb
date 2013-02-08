@@ -15,7 +15,8 @@ describe UsersController do
     end
     context "when the user does not exist" do
       it "should return an error" do
-
+        get :show, username:"imposible name"
+        response.status.should == 404
       end
     end
   end
