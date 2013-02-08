@@ -6,12 +6,12 @@ class LocationsController < ApplicationController
   end
 
   def new
-    @location = Location.new
+    @location = current_user.locations.build
     @g4r_options = gmaps4rails_detect
   end
 
   def create
-    @location = Location.new(params[:location])
+    @location = current_user.locations.build(params[:location])
     if @location.save
       index
       render 'index'

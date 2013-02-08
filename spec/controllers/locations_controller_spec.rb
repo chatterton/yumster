@@ -11,6 +11,7 @@ describe LocationsController do
 
   describe "GET 'new'" do
     it "returns http success" do
+      controller.stub(:current_user).and_return(FactoryGirl.create :user)
       get 'new'
       response.should be_success
     end
@@ -18,6 +19,7 @@ describe LocationsController do
 
   describe "POST 'create'" do
     it "returns http success" do
+      controller.stub(:current_user).and_return(FactoryGirl.create :user)
       post 'create'
       response.should be_success
     end
