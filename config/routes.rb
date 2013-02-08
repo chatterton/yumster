@@ -1,6 +1,7 @@
 Yumster::Application.routes.draw do
 
   devise_for :users
+  get 'users/:username' => 'users#show', :as => 'user'
 
   root :to => 'pages#home'
 
