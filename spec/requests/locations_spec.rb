@@ -1,18 +1,26 @@
 require 'spec_helper'
 
+def log_in_a_user
+  user = FactoryGirl.create :user
+  user.confirm!
+  visit new_user_session_path
+  fill_in "user_email", with: user.email
+  fill_in "user_password", with: user.password
+  click_button "Sign in"
+  user
+end
+
 describe "Locations pages" do
-  describe "new page" do
-    it 'should show a form' do
-      LocationsController.any_instance.stub(:current_user).and_return(FactoryGirl.create :user)
-      visit new_location_path
-      page.should have_selector("form")
-    end
-  end
 
   context "when a user is logged in" do
     before do
-      @user = FactoryGirl.create :user
-      LocationsController.any_instance.stub(:current_user).and_return(@user)
+      log_in_a_user
+    end
+    describe "new page" do
+      it 'should show a form' do
+        visit new_location_path
+        page.should have_selector("form")
+      end
     end
     describe "invalid form contents" do
       it "should not increase the location count" do
