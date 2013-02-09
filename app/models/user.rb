@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
          :confirmable
 
   attr_accessible :email, :password, :password_confirmation, :remember_me, :username
+  has_many :locations
 
   validates_presence_of :username
   validates_uniqueness_of :username

@@ -2,11 +2,17 @@ require 'spec_helper'
 
 describe "Locations pages" do
   describe "new page" do
-    before do
-      visit new_location_path
-    end
     it 'should show a form' do
+      LocationsController.any_instance.stub(:current_user).and_return(FactoryGirl.create :user)
+      visit new_location_path
       page.should have_selector("form")
+    end
+  end
+
+  context "when a user is logged in" do
+    before do
+      @user = FactoryGirl.create :user
+      LocationsController.any_instance.stub(:current_user).and_return(@user)
     end
     describe "invalid form contents" do
       it "should not increase the location count" do
