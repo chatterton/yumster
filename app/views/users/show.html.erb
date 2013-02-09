@@ -1,1 +1,5 @@
-<h2>User page</h2>
+<h2><i style="display: inline; vertical-align: baseline;" class="icon-user"></i> <%= @user.username %></h2>
+
+<p>
+... has posted <%= pluralize @user.locations.count, 'location' %>.
+</p>
