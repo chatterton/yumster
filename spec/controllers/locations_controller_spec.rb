@@ -1,5 +1,11 @@
 require 'spec_helper'
 
+def sign_in_user
+  user = FactoryGirl.create :user
+  user.confirm!
+  sign_in user
+end
+
 describe LocationsController do
 
   describe "GET 'index'" do
@@ -10,16 +16,24 @@ describe LocationsController do
   end
 
   describe "GET 'new'" do
-    it "returns http success" do
-      controller.stub(:current_user).and_return(FactoryGirl.create :user)
-      get 'new'
-      response.should be_success
+    context "when there is no user logged in" do
+      it "redirects to login page" do
+        get 'new'
+        response.should redirect_to new_user_session_path
+      end
+    end
+    context "when there is a user logged in" do
+      it "returns http success" do
+        sign_in_user
+        get 'new'
+        response.should be_success
+      end
     end
   end
 
   describe "POST 'create'" do
     it "returns http success" do
-      controller.stub(:current_user).and_return(FactoryGirl.create :user)
+      sign_in_user
       post 'create'
       response.should be_success
     end

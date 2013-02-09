@@ -1,5 +1,6 @@
 class LocationsController < ApplicationController
   include Gmaps4RailsHelper
+  before_filter :authenticate_user!, :only => [:new, :create]
 
   def index
     @locations = Location.find :all
