@@ -22,9 +22,7 @@ describe "users/show" do
   end
 
   context "when a user is signed in" do
-    before do
-      view.stub(:current_user).and_return(@user)
-    end
+    # this is the default from the before block
     it "should show a log out link" do
       render
       rendered.should have_link '', href: destroy_user_session_path
