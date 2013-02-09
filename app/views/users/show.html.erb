@@ -1,9 +1,16 @@
-<h2><i style="display: inline; vertical-align: baseline;" class="icon-user"></i> <%= @user.username %></h2>
+<div class="row-fluid">
+  <div class="span3">
+    <h2><i style="display: inline; vertical-align: baseline;" class="icon-user"></i> <%= @user.username %></h2>
+  </div>
+  <div class="offset7 span2 logout_button">
+    <% if user_signed_in? && @user == current_user %>
+      <small>This is you! </small><br>
+      <%= link_to "Log out", destroy_user_session_path, :method => :delete, :class => 'btn btn-warning' %>
+    <% end %>
+  </div>
+</div>
 
 <p>
 ... has posted <%= pluralize @user.locations.count, 'location' %>.
 </p>
 
-<% if user_signed_in? && @user == current_user %>
-  <%= link_to "Log out", destroy_user_session_path, :method => :delete %>
-<% end %>
