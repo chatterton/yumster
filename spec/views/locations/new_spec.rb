@@ -17,10 +17,6 @@ describe "locations/new" do
     rendered.should have_selector("form input[type='submit']")
   end
 
-  it 'starts with a disabled submit button' do
-    rendered.should have_selector('#location_submit[disabled]')
-  end
-
   it 'shows a map' do
     rendered.should have_selector '.map_container #map'
   end
