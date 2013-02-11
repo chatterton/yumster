@@ -20,7 +20,7 @@ describe "locations/new" do
   end
 
   it 'shows a map' do
-    rendered.should have_selector '.map_container #map'
+    rendered.should have_selector '.map_container #map_canvas'
   end
 
   describe "when there are errors" do

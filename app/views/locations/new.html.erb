@@ -49,6 +49,7 @@
   </div>
 
   <br>
+  <br>
   <div class="row-fluid">
     <div class="span8 form-section-description">
       <%= f.label :category, class: "form-label" do %>
@@ -59,10 +60,13 @@
   </div>
   <div class="row-fluid">
     <div class="offset1 span9">
-      <%= gmaps(@g4r_options) %>
+      <div class="map_container">
+        <div id="map_canvas"></div>
+      </div>
     </div>
   </div>
 
+  <br>
   <br>
   <div class="row-fluid">
     <div class="span8 form-section-description">
@@ -79,6 +83,7 @@
   </div>
 
   <br>
+  <br>
   <div class="row-fluid">
     <div class="span8 form-section-description">
       4 <em>That's it!</em> 
@@ -93,27 +98,46 @@
 <% end %>
 
 <% content_for :scripts do %>
+  <script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
   <%= javascript_include_tag 'geolocationmarker.js' %>
   <script type="text/javascript" charset="utf-8">
 
-var add_position_indicator = function() {
-  GeoMarker = new GeolocationMarker()
-  GeoMarker.setCircleOptions({fillColor: '#808080'})
-  GeoMarker.setMap(Gmaps.map.map)
+var GeoMarker
+var addPositionIndicator = function(map) {
+  if(!GeoMarker) {
+    GeoMarker = new GeolocationMarker()
+    GeoMarker.setCircleOptions({fillColor: '#808080'})
+    GeoMarker.setMap(map)
+  }
 }
 
+var map
 var center_changed = function() {
-  lctn = Gmaps.map.map.getCenter()
+  lctn = map.getCenter()
   window.Yumster.Locations.New.current_location(lctn.lat(), lctn.lng())
 }
 
-Gmaps.map.callback = function() {
+var init = function() {
+  map = new google.maps.Map(document.getElementById('map_canvas'), {
+    zoom: 18,
+    mapTypeId: google.maps.MapTypeId.HYBRID
+  })
+  map.setTilt(0) // turn of 45-degree imagery
+  addPositionIndicator(map)
   var control = document.createElement('div')
   $(control).append($('#pushpin_img'))
-  Gmaps.map.map.controls[google.maps.ControlPosition.TOP_CENTER].push(control)
-  google.maps.event.addListener(Gmaps.map.map, 'center_changed', center_changed)
-  add_position_indicator()
+  map.controls[google.maps.ControlPosition.TOP_CENTER].push(control)
+  google.maps.event.addListener(map, 'center_changed', center_changed)
+  var success = function(latitude, longitude, coordinatesOnURL) {
+    var loc = new google.maps.LatLng(latitude, longitude)
+    map.setCenter(loc)
+  }
+  var failure = function(error) {
+    console.log("Error placing map: ", error)
+  }
+  window.Yumster.Locations.Near.getMapCenter(success, failure)
 }
+google.maps.event.addDomListener(window, 'load', init)
 
   </script>
 <% end %>
