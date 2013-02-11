@@ -1,4 +1,4 @@
-<h2>Add a location<br><small>Move the map to position the pushpin at the correct location</small></h2>
+<h2>Add a location</h2>
 <% if @location.errors.any? %>
   <div id="error_explanation">
     <div class="alert alert-error">
@@ -11,7 +11,6 @@
   </div>
 <% end %>
 
-<%= gmaps(@g4r_options) %>
 <div style="display: none;">
   <%= image_tag 'red-pushpin.png', :id => 'pushpin_img' %>
 </div>
@@ -22,11 +21,11 @@
   <%= f.hidden_field :longitude %>
 
   <div class="row-fluid">
-    <div class="span1">
-      1.
-    </div>
-    <div class="span11">
-      <em>What</em> kind of food resource are you adding?
+    <div class="span1">1.</div>
+    <div class="span7">
+      <%= f.label :category do %>
+      <em>What</em> kind of resource are you adding?
+      <% end %>
     </div>
   </div>
   <div class="row-fluid">
@@ -45,19 +44,50 @@
     <div class="span3">
       <%= f.radio_button :category, 'Organization'%>
       <%= f.label :category_organization do %>
-        A food pantry, church, or other organization that provides free food.
+        A food pantry, church, or other organization that provides free provisions.
       <% end %>
     </div>
   </div>
 
   <div class="row-fluid">
-    <div class="span4">
-      <%= f.label :description %>
+    <div class="span1">2.</div>
+    <div class="span7">
+      <em>Where</em> is the resource located? Move the map to position the
+      pushpin's point over it.
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="offset1 span10">
+      <%= gmaps(@g4r_options) %>
+    </div>
+  </div>
+
+  <div class="row-fluid">
+    <div class="span1">3.</div>
+    <div class="span7">
+      <%= f.label :description do %>
+      <em>How</em> would you describe the resource? For example, "Rosemary
+      bush near the mailbox" or "The dumpster behind the juice factory".
+      <% end %>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="offset1 span5">
       <%= f.text_field :description %>
     </div>
   </div>
-  <br />
-  <%= f.submit "Create location", class: "btn btn-large", id: "location_submit" %>
+
+  <div class="row-fluid">
+    <div class="span1">4.</div>
+    <div class="span11">
+      <em>That's it!</em>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="offset1 span5">
+      <%= f.submit "Create location", class: "btn btn-large", id: "location_submit" %>
+    </div>
+  </div>
 <% end %>
 
 <% content_for :scripts do %>
