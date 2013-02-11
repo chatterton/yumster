@@ -26,7 +26,7 @@ describe "Locations pages" do
         find(:xpath, "//input[@id='location_latitude']").set "16"
         find(:xpath, "//input[@id='location_longitude']").set "16"
         choose "location_category_dumpster"
-        fill_in "Description", with: "fooood"
+        fill_in "location_description", with: "fooood"
         expect { click_button "Create location" }.to change(Location, :count)
       end
     end

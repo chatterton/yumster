@@ -32,3 +32,11 @@
     height: $MAP_HEIGHT_MOBILE;
   }
 }
+
+.form-section-description:first-child:first-letter {
+  font-size: 4em;
+  padding-top: .20em;
+  padding-right: .13em;
+  padding-bottom: .20em;
+  float:left;
+}
