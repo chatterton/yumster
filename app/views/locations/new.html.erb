@@ -20,11 +20,37 @@
 <%= form_for(@location) do |f| %>
   <%= f.hidden_field :latitude %>
   <%= f.hidden_field :longitude %>
+
   <div class="row-fluid">
-    <div class="span4">
-      <%= f.label :category %>
-      <%= f.select(:category, Location::CATEGORIES, {:include_blank => 'Select type of location'}) %>
+    <div class="span1">
+      1.
     </div>
+    <div class="span11">
+      <em>What</em> kind of food resource are you adding?
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="offset1 span3">
+      <%= f.radio_button :category, 'Plant'%>
+      <%= f.label :category_plant do %>
+        A fruit tree, shrub, or anything else that grows.
+      <% end %>
+    </div>
+    <div class="span3">
+      <%= f.radio_button :category, 'Dumpster'%>
+      <%= f.label :category_dumpster do %>
+        A dumpster or other site where good food is regularly left out.
+      <% end %>
+    </div>
+    <div class="span3">
+      <%= f.radio_button :category, 'Organization'%>
+      <%= f.label :category_organization do %>
+        A food pantry, church, or other organization that provides free food.
+      <% end %>
+    </div>
+  </div>
+
+  <div class="row-fluid">
     <div class="span4">
       <%= f.label :description %>
       <%= f.text_field :description %>

@@ -13,7 +13,9 @@ describe "locations/new" do
     rendered.should have_selector("form input#location_latitude[type='hidden']")
     rendered.should have_selector("form input#location_longitude[type='hidden']")
     rendered.should have_selector("form input#location_description[type='text']")
-    rendered.should have_selector("form select#location_category")
+    rendered.should have_selector("form input#location_category_plant[type='radio']")
+    rendered.should have_selector("form input#location_category_dumpster[type='radio']")
+    rendered.should have_selector("form input#location_category_organization[type='radio']")
     rendered.should have_selector("form input[type='submit']")
   end
 
