@@ -1,11 +1,8 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.11'
+gem 'rails', '3.2.12'
 
 gem 'jquery-rails'
-
-# downgrade rack to whack security warning
-gem 'rack', '1.4.1'
 
 gem 'sass-rails',   '~> 3.2.4'
 gem 'bootstrap-sass', '~> 2.2.2.0'
