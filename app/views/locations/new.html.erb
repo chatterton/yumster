@@ -1,17 +1,17 @@
-<h2>Add a location<br><small>Move the map to position the pushpin at the correct location</small></h2>
-<% if @location.errors.any? %>
-  <div id="error_explanation">
-    <div class="alert alert-error">
-      <ul>
-        <% @location.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
-      </ul>
-    </div>
-  </div>
-<% end %>
+<h2>Add a location</h2>
 
-<%= gmaps(@g4r_options) %>
+<div id="error_explanation">
+  <% if @location.errors.any? %>
+  <div class="alert alert-error">
+    <ul>
+      <% @location.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
+  </div>
+  <% end %>
+</div>
+
 <div style="display: none;">
   <%= image_tag 'red-pushpin.png', :id => 'pushpin_img' %>
 </div>
@@ -20,42 +20,125 @@
 <%= form_for(@location) do |f| %>
   <%= f.hidden_field :latitude %>
   <%= f.hidden_field :longitude %>
+
   <div class="row-fluid">
-    <div class="span4">
-      <%= f.label :category %>
-      <%= f.select(:category, Location::CATEGORIES, {:include_blank => 'Select type of location'}) %>
+    <div class="span8 form-section-description">
+      <%= f.label :category, class: "form-label" do %>
+      1 <em>What</em> kind of resource are you adding?
+      <% end %>
     </div>
-    <div class="span4">
-      <%= f.label :description %>
+  </div>
+  <div class="row-fluid">
+    <div class="offset1 span3">
+      <%= f.label :category_plant do %>
+        <%= f.radio_button :category, 'Plant'%>
+        Fruit, herbs, or vegetables that can be reached from a public sidewalk.
+      <% end %>
+    </div>
+    <div class="span3">
+      <%= f.label :category_dumpster do %>
+        <%= f.radio_button :category, 'Dumpster'%>
+        A dumpster or other site where good food is regularly left out.
+      <% end %>
+    </div>
+    <div class="span3">
+      <%= f.label :category_organization do %>
+        <%= f.radio_button :category, 'Organization'%>
+        A food pantry, church, or other organization that provides free provisions.
+      <% end %>
+    </div>
+  </div>
+
+  <br>
+  <br>
+  <div class="row-fluid">
+    <div class="span8 form-section-description">
+      <%= f.label :category, class: "form-label" do %>
+      2 <em>Where</em> is the resource located? Move the map to position the
+      pushpin's point over it.
+      <% end %>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="offset1 span9">
+      <div class="map_container">
+        <div id="map_canvas"></div>
+      </div>
+    </div>
+  </div>
+
+  <br>
+  <br>
+  <div class="row-fluid">
+    <div class="span8 form-section-description">
+      <%= f.label :description do %>
+      3 <em>How</em> would you describe the resource? For example, "Rosemary
+      bush near the mailbox" or "The dumpster behind the juice factory".
+      <% end %>
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="offset1 span5">
       <%= f.text_field :description %>
     </div>
   </div>
-  <br />
-  <%= f.submit "Create location", class: "btn btn-large", id: "location_submit", disabled: true %>
+
+  <br>
+  <br>
+  <div class="row-fluid">
+    <div class="span8 form-section-description">
+      4 <em>That's it!</em> 
+    </div>
+  </div>
+  <div class="row-fluid">
+    <div class="offset1 span5">
+      <%= f.submit "Create location", class: "btn btn-large", id: "location_submit" %>
+    </div>
+  </div>
+
 <% end %>
 
 <% content_for :scripts do %>
+  <script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
   <%= javascript_include_tag 'geolocationmarker.js' %>
   <script type="text/javascript" charset="utf-8">
 
-var add_position_indicator = function() {
-  GeoMarker = new GeolocationMarker()
-  GeoMarker.setCircleOptions({fillColor: '#808080'})
-  GeoMarker.setMap(Gmaps.map.map)
+var GeoMarker
+var addPositionIndicator = function(map) {
+  if(!GeoMarker) {
+    GeoMarker = new GeolocationMarker()
+    GeoMarker.setCircleOptions({fillColor: '#808080'})
+    GeoMarker.setMap(map)
+  }
 }
 
+var map
 var center_changed = function() {
-  lctn = Gmaps.map.map.getCenter()
+  lctn = map.getCenter()
   window.Yumster.Locations.New.current_location(lctn.lat(), lctn.lng())
 }
 
-Gmaps.map.callback = function() {
+var init = function() {
+  map = new google.maps.Map(document.getElementById('map_canvas'), {
+    zoom: 18,
+    mapTypeId: google.maps.MapTypeId.HYBRID
+  })
+  map.setTilt(0) // turn of 45-degree imagery
+  addPositionIndicator(map)
   var control = document.createElement('div')
   $(control).append($('#pushpin_img'))
-  Gmaps.map.map.controls[google.maps.ControlPosition.TOP_CENTER].push(control)
-  google.maps.event.addListener(Gmaps.map.map, 'center_changed', center_changed)
-  add_position_indicator()
+  map.controls[google.maps.ControlPosition.TOP_CENTER].push(control)
+  google.maps.event.addListener(map, 'center_changed', center_changed)
+  var success = function(latitude, longitude, coordinatesOnURL) {
+    var loc = new google.maps.LatLng(latitude, longitude)
+    map.setCenter(loc)
+  }
+  var failure = function(error) {
+    console.log("Error placing map: ", error)
+  }
+  window.Yumster.Locations.Near.getMapCenter(success, failure)
 }
+google.maps.event.addDomListener(window, 'load', init)
 
   </script>
 <% end %>

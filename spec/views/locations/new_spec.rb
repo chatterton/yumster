@@ -13,16 +13,14 @@ describe "locations/new" do
     rendered.should have_selector("form input#location_latitude[type='hidden']")
     rendered.should have_selector("form input#location_longitude[type='hidden']")
     rendered.should have_selector("form input#location_description[type='text']")
-    rendered.should have_selector("form select#location_category")
+    rendered.should have_selector("form input#location_category_plant[type='radio']")
+    rendered.should have_selector("form input#location_category_dumpster[type='radio']")
+    rendered.should have_selector("form input#location_category_organization[type='radio']")
     rendered.should have_selector("form input[type='submit']")
   end
 
-  it 'starts with a disabled submit button' do
-    rendered.should have_selector('#location_submit[disabled]')
-  end
-
   it 'shows a map' do
-    rendered.should have_selector '.map_container #map'
+    rendered.should have_selector '.map_container #map_canvas'
   end
 
   describe "when there are errors" do
