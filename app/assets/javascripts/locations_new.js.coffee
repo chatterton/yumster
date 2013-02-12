@@ -18,18 +18,33 @@ LocationsNew = class LocationsNew
           required: true
           minlength: 5
       ignore: "" # validator defaults to ignoring hidden
-    $('#new_location :input').change ->
-      window.Yumster.Locations.New.validate()
+      errorPlacement: @errorHandler
+      onsubmit: true
+      onfocusout: false
+      onkeyup: false
+      onclick: false
+      invalidHandler: (form, validator) ->
+        $('#error_explanation').empty()
 
   current_location: (lat, long) ->
     $('input#location_latitude').val(lat)
     $('input#location_longitude').val(long)
 
-  validate: ->
-    if $('#new_location').valid()
-      $('input#location_submit').attr('disabled', false)
-    else
-      $('input#location_submit').attr('disabled', true)
+  errorHandler: (error, element) ->
+    problem = error.attr('for')
+    text = switch problem
+      when 'location[category]' then 'Please select the type of location you\'re adding'
+      when 'location_description' then "There is a problem with the site description: #{error.text()}"
+      else 'Our apologies, we encountered a technical problem creating this location. Please try again later.'
+    unless alert_box = $('#alert_box')[0]
+      alert_box = $('<div class="alert alert-error" id="alert_box"></div>')
+      $('#error_explanation').append(alert_box)
+    unless alert_list = $('#alert_list')[0]
+      alert_list = $('<ul id="alert_list"></ul>')
+      alert_box.append(alert_list)
+    alert = $("<li>#{text}</li>")
+    $(alert_list).append(alert)
+    $('html, body').animate({scrollTop:0}, 'slow');
 
 $ ->
   window.Yumster.Locations.New = new LocationsNew

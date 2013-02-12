@@ -6,6 +6,8 @@ describe "window.Yumster.Locations.New", ->
   beforeEach ->
     @locations = window.Yumster.Locations.New
     $('body').append('''
+      <div id="error_explanation">
+      </div>
       <form id="new_location">
         <input id="location_latitude" name="location[latitude]" type="hidden" />
         <input id="location_longitude" name="location[longitude]" type="hidden" />
@@ -22,34 +24,24 @@ describe "window.Yumster.Locations.New", ->
     $('#location_submit').attr('disabled','disabled')
     @locations.setup_validator()
 
-  describe ('current_location(lat, long)'), ->
+  describe 'current_location(lat, long)', ->
     it "updates the form with given latitude and longitude", ->
       @locations.current_location(0.01, 2.03)
       $('body').find('#location_latitude').val().should.equal '0.01'
       $('body').find('#location_longitude').val().should.equal '2.03'
 
-  describe "validate()", ->
+  describe 'errorHandler(error, element)', ->
     beforeEach ->
-      $("#location_latitude").val(1.0001)
-      $("#location_longitude").val(2.0001)
-      $("#location_category").val("Plant")
-      $("#location_description").val("description!")
-    it "enables the submit button when form contents are valid", ->
-      @locations.validate()
-      expect($("#location_submit").attr("disabled")).to.be.undefined
-    it "disables submit when description is blank", ->
-      $("#location_description").val("")
-      @locations.validate()
-      expect($("#location_submit").attr("disabled")).to.equal "disabled"
-    it "disables submit when latitude is blank", ->
-      $("#location_latitude").val("")
-      @locations.validate()
-      expect($("#location_submit").attr("disabled")).to.equal "disabled"
-    it "disables submit when longitude is blank", ->
-      $("#location_longitude").val("")
-      @locations.validate()
-      expect($("#location_submit").attr("disabled")).to.equal "disabled"
-    it "disables submit when category is blank", ->
-      $("#location_category").val(0)
-      @locations.validate()
-      expect($("#location_submit").attr("disabled")).to.equal "disabled"
+      @error1 = $('<input for="location_description">text1</input>')
+      @error2 = $('<input for="location[category]">text2</input>')
+    context 'when there is no error box visible', ->
+      it 'adds the error to the screen', ->
+        @locations.errorHandler(@error1, {})
+        html = $('#error_explanation').html()
+        html.should.have.string "text1"
+    context 'when there is already an error box', ->
+      beforeEach ->
+        @locations.errorHandler(@error1, {})
+      it 'appends the error to the error box', ->
+        @locations.errorHandler(@error2, {})
+        $('#alert_list li').length.should.equal 2
