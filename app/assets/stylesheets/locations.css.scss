@@ -40,3 +40,9 @@
   padding-bottom: .20em;
   float:left;
 }
+
+#location_submit {
+  @media screen and (max-width: $BREAKPOINT) {
+    margin-top: .5em;
+  }
+}
