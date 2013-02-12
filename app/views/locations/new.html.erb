@@ -1,15 +1,16 @@
 <h2>Add a location</h2>
-<% if @location.errors.any? %>
-  <div id="error_explanation">
-    <div class="alert alert-error">
-      <ul>
-        <% @location.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
-      </ul>
-    </div>
+
+<div id="error_explanation">
+  <% if @location.errors.any? %>
+  <div class="alert alert-error">
+    <ul>
+      <% @location.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+    </ul>
   </div>
-<% end %>
+  <% end %>
+</div>
 
 <div style="display: none;">
   <%= image_tag 'red-pushpin.png', :id => 'pushpin_img' %>
