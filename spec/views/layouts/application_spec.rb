@@ -7,7 +7,7 @@ describe 'layouts/application' do
       render
     end
     it 'displays a log in link' do
-      rendered.should have_link "Log In", :href => new_user_session_path
+      rendered.should have_link "Sign in", :href => new_user_session_path
     end
   end
   context 'when a user is signed in' do

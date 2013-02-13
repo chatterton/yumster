@@ -17,7 +17,7 @@
           <% if user_signed_in? %>
             <li> <%= link_to user_path(current_user.username) do %> <i class="icon-user"></i> <%= current_user.username %> <% end %></li>
           <% else %>
-            <li><%= link_to('Log In', new_user_session_path)  %></li>
+            <li><%= link_to('Sign in', new_user_session_path)  %></li>
           <% end %>
         </ul>
       </div>
