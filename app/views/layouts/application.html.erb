@@ -10,12 +10,10 @@
 </head>
 <body>
   <div class="container">
-    <header class="navbar">
-      <div class="navbar-inner">
-        <% if params[:controller] != "pages" and params[:action] != "home" %>
-            <a class="brand" href="/">Yumster</a>
-        <% end %>
-        <ul class="nav pull-right">
+    <header class="brand_header">
+      <a class="brand" href="/"><%= image_tag 'yumster_brand.png', :class => 'brand_image' %></a>
+      <div class="brand_inner">
+        <ul class="brand_nav">
           <% if user_signed_in? %>
             <li> <%= link_to user_path(current_user.username) do %> <i class="icon-user"></i> <%= current_user.username %> <% end %></li>
           <% else %>

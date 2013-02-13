@@ -4,6 +4,7 @@ $iconWhiteSpritePath: '';
 
 @import "bootstrap";
 @import "bootstrap-responsive";
+@import "yumster";
 
 .container {
   margin: 0 auto;
@@ -15,3 +16,39 @@ $iconWhiteSpritePath: '';
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
+
+img.brand_image {
+  width: 120px;
+  float: left;
+}
+
+ul.brand_nav {
+  float: right;
+  list-style: none;
+}
+
+.brand_header {
+  top: 0px;
+  margin-top: 12px;
+  width: 100%;
+  height: 70px;
+}
+
+.brand_inner {
+  height: 31px;
+  border-bottom: 2px solid $COLOR_WELL_WHITE;
+  margin-left: 70px;
+}
+
+/* copied from bootstrap */
+.brand_nav > li > a {
+  padding: 10px 10px 11px;
+  font-size: 14px;
+  color: #542b15;
+}
+.brand_nav > .active > a,
+.brand_nav > .active > a:hover,
+.brand_nav > .active > a:focus {
+  color: $COLOR_TEXT_BROWN;
+}
+
