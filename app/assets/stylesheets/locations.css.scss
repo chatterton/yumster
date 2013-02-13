@@ -1,4 +1,5 @@
 @import 'globals';
+@import 'yumster';
 
 /* fix for push-left on div with a left margin from bootstrap */
 .row-fluid .no-left-margin {
@@ -38,7 +39,14 @@
   padding-top: .20em;
   padding-right: .13em;
   padding-bottom: .20em;
-  float:left;
+  float: left;
+  color: $COLOR_PRIMARY_GREEN;
+}
+
+.form-section-description em {
+  font-weight: bold;
+  font-size: 110%;
+  font-style: normal;
 }
 
 #location_submit {
