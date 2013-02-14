@@ -1,22 +1,19 @@
+<div class="row-fluid">
+  <div class="offset1 span6">
+    <%= image_tag 'yumster_brand_tagline.png', :class => 'brand_tagline' %>
+  </div>
+</div>
+<div class="row-fluid">
+  <div class="offset5 span6 brand_explanation">
+    Yumster helps people discover no-cost food resources nearby. We rely on our users' knowledge of the resources in their neighborhoods.
+  </div>
+</div>
 <br>
 <div class="row-fluid">
-  <div class="span4">
-    <%= image_tag 'love.jpg', :class => 'img-rounded' %>
+  <div class="span6 well">
+    <%= link_to "Find nearby locations", near_locations_path %>
   </div>
-  <div class="span8">
-    <h1>Yumster!</h1>
-    <br>
-    <p>
-    Yo dog. This is yumster.
-    </p>
-    <br>
-    <div class="row-fluid">
-      <div class="span6 well">
-        <%= link_to "Find nearby locations", near_locations_path %>
-      </div>
-      <div class="span6 well">
-        <%= link_to "Add a location", new_location_path %>
-      </div>
-    </div>
+  <div class="span6 well">
+    <%= link_to "Add a location", new_location_path %>
   </div>
 </div>

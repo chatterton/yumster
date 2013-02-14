@@ -13,5 +13,8 @@ describe "static pages" do
     it 'should link to create a location' do
       page.should have_link "Add a location", :href => "/locations/new"
     end
+    it 'should show the big tagline brand image' do
+      page.should have_selector 'img.brand_tagline'
+    end
   end
 end

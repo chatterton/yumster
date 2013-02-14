@@ -1,0 +1,21 @@
+@import 'globals';
+@import 'yumster';
+
+img.brand_tagline {
+  margin-top: -20px;
+  margin-bottom: 20px;
+  @media screen and (max-width: $BREAKPOINT) {
+    height: 120px;
+    margin-top: -30px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.brand_explanation {
+  margin-top: -60px;
+  @media screen and (max-width: $BREAKPOINT) {
+    margin-top: 0px;
+  }
+}
