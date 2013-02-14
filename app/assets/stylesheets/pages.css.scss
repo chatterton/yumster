@@ -14,8 +14,28 @@ img.brand_tagline {
 }
 
 .brand_explanation {
-  margin-top: -60px;
+  margin-top: -50px;
   @media screen and (max-width: $BREAKPOINT) {
-    margin-top: 0px;
+    margin-top: 10px;
   }
+}
+
+.hover_container:hover {
+  color: $COLOR_TEXT_BROWN;
+  cursor: pointer;
+  a {
+    color: $COLOR_TEXT_BROWN;
+    text-decoration: underline;
+  }
+}
+
+img.illustration {
+  width: 135px;
+}
+
+p.breathing-room {
+  padding-top: 14px;
+}
+p.align-right {
+  text-align: right;
 }

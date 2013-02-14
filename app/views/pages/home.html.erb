@@ -1,19 +1,32 @@
 <div class="row-fluid">
-  <div class="offset1 span6">
+  <div class="offset2 span6">
     <%= image_tag 'yumster_brand_tagline.png', :class => 'brand_tagline' %>
   </div>
 </div>
 <div class="row-fluid">
-  <div class="offset5 span6 brand_explanation">
-    Yumster helps people discover no-cost food resources nearby. We rely on our users' knowledge of the resources in their neighborhoods.
+  <div class="offset6 span5">
+    <p class="brand_explanation">
+    Yumster helps you discover no-cost food nearby. We rely on your knowledge of the resources available in your neighborhood.
+    </p>
   </div>
 </div>
 <br>
+<br>
 <div class="row-fluid">
-  <div class="span6 well">
-    <%= link_to "Find nearby locations", near_locations_path %>
+  <div class="offset5 span6 hover_container" onclick="window.location.href = '<%= url_for near_locations_path %>'">
+    <%= image_tag 'illo_dumpster.jpg', :class => 'illustration pull-right' %>
+    <p class="breathing-room align-right">
+    <%= link_to "Find food nearby", near_locations_path %> by determining your position.
+    </p>
   </div>
-  <div class="span6 well">
-    <%= link_to "Add a location", new_location_path %>
+</div>
+<br>
+<br>
+<div class="row-fluid">
+  <div class="offset2 span6 hover_container" onclick="window.location.href = '<%= url_for new_location_path %>'">
+    <%= image_tag 'illo_tree.jpg', :class => 'illustration pull-left' %>
+    <p>
+    <%= link_to "Add a new location", new_location_path %> by placing its location on a map. Fruit and herbs, dumpsters, and public organizations are all fair game!
+    </p>
   </div>
 </div>
