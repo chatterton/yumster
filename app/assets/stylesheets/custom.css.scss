@@ -39,6 +39,10 @@ ul.brand_nav {
   border-bottom: 2px solid $COLOR_WELL_WHITE;
   margin-left: 70px;
 }
+.brand_inner_fp {
+  @extend .brand_inner;
+  margin-left: 0px;
+}
 
 /* copied from bootstrap */
 .brand_nav > li > a {
