@@ -44,6 +44,15 @@ ul.brand_nav {
   margin-left: 0px;
 }
 
+.hover_container:hover {
+  color: $COLOR_TEXT_BROWN;
+  cursor: pointer;
+  a {
+    color: $COLOR_TEXT_BROWN;
+    text-decoration: underline;
+  }
+}
+
 /* copied from bootstrap */
 .brand_nav > li > a {
   padding: 10px 10px 11px;

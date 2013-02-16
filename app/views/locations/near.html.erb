@@ -1,20 +1,18 @@
 <h2>Nearby Locations</h2>
 <br>
-<div class="map_container">
-  <div id="map_canvas"></div>
-</div>
-<br>
-<div id="locations_container"></div>
-<div id="location_container" style="display: none;">
-  <div class="location well">
-    <div style="display: inline;"><img class="location_marker" /></div>
-    <div style="display: inline;">
-      <a class="location_link">link</a><br>
-      Category: <span class="location_category"></span>
+<div class="row-fluid">
+  <div class="span6 pull-right">
+    <div class="map_container">
+      <div id="map_canvas"></div>
     </div>
-    <br>
+  </div>
+  <div class="span6 pull-left no-left-margin">
+    <ul id="nearby_results">
+    </ul>
   </div>
 </div>
+
+
 
 <%= link_to "", near_locations_path, :id => "nearby_ajax_address" %>
 
