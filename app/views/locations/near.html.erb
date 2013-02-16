@@ -1,12 +1,18 @@
 <h2>Nearby Locations</h2>
 <br>
-<div class="map_container">
-  <div id="map_canvas"></div>
+<div class="row-fluid">
+  <div class="span6 pull-right">
+    <div class="map_container">
+      <div id="map_canvas"></div>
+    </div>
+  </div>
+  <div class="span6 pull-left no-left-margin">
+    <ul id="nearby_results">
+    </ul>
+  </div>
 </div>
-<br>
 
-<ul id="nearby_results">
-</ul>
+
 
 <%= link_to "", near_locations_path, :id => "nearby_ajax_address" %>
 
@@ -43,10 +49,6 @@ var init = function() {
     console.log("Error placing map: ", error)
   }
   window.Yumster.Locations.Near.getMapCenter(success, failure)
-
-
-  //var item = window.JST['templates/nearby_location_item']({})
-  //$('#nearby_results').append(item)
 }
 google.maps.event.addDomListener(window, 'load', init)
   </script>

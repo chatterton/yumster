@@ -13,7 +13,6 @@ class LocationsNear
     @map = map
 
   createLocationHTML: (location) ->
-    #@templates['templates/nearby_location_item'](location)
     $(@templates['templates/nearby_location_item'](location))
 
   # Markers generated with e.g.

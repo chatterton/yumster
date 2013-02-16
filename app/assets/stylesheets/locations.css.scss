@@ -34,6 +34,12 @@
   }
 }
 
+.map_container {
+  @media screen and (max-width: $BREAKPOINT) {
+    margin-bottom: 8px;
+  }
+}
+
 .form-section-description:first-child:first-letter {
   font-size: 4em;
   padding-top: .20em;
@@ -62,6 +68,22 @@ li.location_item {
   }
 }
 
+img.location_marker {
+  float: left;
+  padding: 8px;
+}
+
 #nearby_results {
   list-style: none;
+  margin-left: 0px;
+}
+
+p.location_content {
+  padding-top: 6px;
+}
+
+p.location_content .location_tips {
+  font-size: 75%;
+  color: $COLOR_CYAN;
+  float: right;
 }
