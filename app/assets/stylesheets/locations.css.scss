@@ -1,5 +1,6 @@
 @import 'globals';
 @import 'yumster';
+@import 'custom';
 
 /* fix for push-left on div with a left margin from bootstrap */
 .row-fluid .no-left-margin {
@@ -62,6 +63,10 @@
 }
 
 li.location_item {
+  @extend .hover_container;
+  &:hover {
+    background-color: lighten($COLOR_WELL_WHITE, 5%)
+  }
   border-bottom: 2px solid $COLOR_WELL_WHITE;
   &:first-child {
     border-top: 2px solid $COLOR_WELL_WHITE;
@@ -86,4 +91,6 @@ p.location_content .location_tips {
   font-size: 75%;
   color: $COLOR_CYAN;
   float: right;
+  padding-right: 5px;
+  padding-top: 4px;
 }

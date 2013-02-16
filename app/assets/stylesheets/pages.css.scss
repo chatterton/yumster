@@ -14,15 +14,6 @@ img.brand_tagline {
   }
 }
 
-.hover_container:hover {
-  color: $COLOR_TEXT_BROWN;
-  cursor: pointer;
-  a {
-    color: $COLOR_TEXT_BROWN;
-    text-decoration: underline;
-  }
-}
-
 img.illustration {
   @media screen and (max-width: $BREAKPOINT) {
     width: 132px;
