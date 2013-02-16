@@ -5,18 +5,12 @@ img.brand_tagline {
   margin-top: -20px;
   margin-bottom: 20px;
   @media screen and (max-width: $BREAKPOINT) {
-    height: 120px;
+    height: 125px;
     margin-top: -30px;
+    margin-bottom: 0px;
     display: block;
     margin-left: auto;
     margin-right: auto;
-  }
-}
-
-.brand_explanation {
-  margin-top: -50px;
-  @media screen and (max-width: $BREAKPOINT) {
-    margin-top: 10px;
   }
 }
 
@@ -30,12 +24,20 @@ img.brand_tagline {
 }
 
 img.illustration {
-  width: 135px;
+  @media screen and (max-width: $BREAKPOINT) {
+    width: 132px;
+    float: left;
+  }
 }
 
-p.breathing-room {
-  padding-top: 14px;
-}
-p.align-right {
-  text-align: right;
+.main_activity {
+  h4 {
+    text-align: center;
+    a {
+      color: $COLOR_PRIMARY_GREEN;
+    }
+  }
+  @media screen and (max-width: $BREAKPOINT) {
+    margin-bottom: 30px;
+  }
 }
