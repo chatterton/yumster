@@ -157,3 +157,31 @@ describe "window.Yumster.Locations.Near", ->
       $('#map_reload').is('.disabled').should.be.true
       @locations.centerChanged()
       $('#map_reload').is('.disabled').should.not.be.true
+
+  describe "searchHere()", ->
+    beforeEach ->
+      @locations.setMap {
+        getCenter: () ->
+      }
+      sinon.spy(@locations, "fillNearbyLocations")
+      sinon.spy(@locations, "updateURLLatLong")
+      sinon.stub(@locations.map, "getCenter").returns {
+        lat: () -> 666
+        lng: () -> 667
+      }
+      $('#map_reload').removeClass('disabled')
+      @locations.searchHere()
+    afterEach ->
+      @locations.fillNearbyLocations.restore()
+      @locations.updateURLLatLong.restore()
+      @locations.map.getCenter.restore()
+    it "should search for nearby locations", ->
+      @locations.fillNearbyLocations.callCount.should.equal 1
+      @locations.fillNearbyLocations.firstCall.args[0].should.equal 666
+      @locations.fillNearbyLocations.firstCall.args[1].should.equal 667
+    it "should update the URL with the current center", ->
+      @locations.updateURLLatLong.callCount.should.equal 1
+      @locations.updateURLLatLong.firstCall.args[0].should.equal 666
+      @locations.updateURLLatLong.firstCall.args[1].should.equal 667
+    it "should disable the map_reload button", ->
+      $('#map_reload').is('.disabled').should.be.true

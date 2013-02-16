@@ -5,15 +5,13 @@
     <div class="map_container">
       <div id="map_canvas"></div>
     </div>
-    <a class="btn disabled" id="map_reload" href="#"><i class="icon-repeat"></i> Search Here</a>
+    <a class="btn disabled" id="map_reload" href="#" onclick="window.Yumster.Locations.Near.searchHere()"><i class="icon-repeat"></i> Search Here</a>
   </div>
   <div class="span6 pull-left no-left-margin">
     <ul id="nearby_results">
     </ul>
   </div>
 </div>
-
-
 
 <%= link_to "", near_locations_path, :id => "nearby_ajax_address" %>
 

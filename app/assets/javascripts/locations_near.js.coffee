@@ -72,6 +72,12 @@ class LocationsNear
   centerChanged: ->
     $('#map_reload').removeClass('disabled')
 
+  searchHere: ->
+    center = @map.getCenter()
+    @fillNearbyLocations(center.lat(), center.lng())
+    @updateURLLatLong(center.lat(), center.lng())
+    $('#map_reload').addClass('disabled')
+
 $ ->
   window.Yumster.Locations.Near = new LocationsNear
   # make prototype available for testing
