@@ -5,20 +5,13 @@
 describe "window.Yumster.Locations.Near", ->
 
   beforeEach ->
-    @locations = window.Yumster.Locations.Near
+    @templates = {}
+    @locations = new window.Yumster.Locations._Near(@templates)
+    window.Yumster.Locations.Near = @locations
     $('body').append('''
       <a href="/whatever" id="nearby_ajax_address" />
-      <div id="locations_container"></div>
-      <div id="location_container">
-        <div class="location well">
-          <div><img class="location_marker" /></div>
-          <div>
-            <a class="location_link" /><br>
-            Category: <span class="location_category"></span>
-          </div>
-          <br>
-        </div>
-      </div>
+      <ul id="nearby_results">
+      </ul>
     ''')
 
   describe "fillNearbyLocations(lat, long)", ->
@@ -50,14 +43,14 @@ describe "window.Yumster.Locations.Near", ->
       locations = [ loc1, loc2 ]
       sinon.stub(@locations, "createLocationHTML")
       sinon.stub(@locations, "addMarkerToMap")
-      @locations.createLocationHTML.withArgs(loc1).returns($("<div>OK1</div>"))
-      @locations.createLocationHTML.withArgs(loc2).returns($("<div>OK2</div>"))
+      @locations.createLocationHTML.withArgs(loc1).returns($("<li>OK1</li>"))
+      @locations.createLocationHTML.withArgs(loc2).returns($("<li>OK2</li>"))
       @locations.fillNearbyLocationsSuccess(locations)
     afterEach ->
       @locations.createLocationHTML.restore()
       @locations.addMarkerToMap.restore()
-    it "populates #locations_container with locations", ->
-      container = $('#locations_container').html()
+    it "populates #nearby_results with locations", ->
+      container = $('#nearby_results').html()
       container.should.have.string("OK1")
       container.should.have.string("OK2")
     it "creates markers A and B", ->
@@ -74,19 +67,10 @@ describe "window.Yumster.Locations.Near", ->
 
   describe "createLocationHTML(location)", ->
     beforeEach ->
-      location =
-        "category": "Organization"
-        "description": "The Church is an Organization"
-        "id": 7
-        "latitude": 47.6187787290335
-        "longitude": -122.302739496959
-        "icon": "/assets/foo.png"
-      @html = @locations.createLocationHTML(location).html()
-    it "populates an element with the name and link", ->
-      @html.should.have.string("The Church")
-      @html.should.have.string("/locations/7")
-    it "shows the marker image", ->
-      @html.should.have.string("/assets/foo.png")
+      @templates['templates/nearby_location_item'] = sinon.stub().returns("<div></div>")
+      @html = @locations.createLocationHTML(location)
+    it "returns a jquery html object", ->
+      @html.should.be.an.instanceof jQuery
 
   describe "updateURLLatLong(lat, long)", ->
     beforeEach ->

@@ -5,7 +5,7 @@ window.Yumster.Locations or= {}
 
 class LocationsNear
 
-  constructor: ->
+  constructor: (@templates = window.JST) ->
     @initial_center_found = false
     @alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
@@ -13,12 +13,8 @@ class LocationsNear
     @map = map
 
   createLocationHTML: (location) ->
-    skeleton = $('#location_container .location').clone()
-    skeleton.find('.location_link').text(location.description)
-    skeleton.find('.location_link').attr('href', "/locations/#{location.id}")
-    skeleton.find('.location_category').text(location.category)
-    skeleton.find('.location_marker').attr('src', location.icon)
-    skeleton
+    #@templates['templates/nearby_location_item'](location)
+    $(@templates['templates/nearby_location_item'](location))
 
   # Markers generated with e.g.
   # http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=E|33EE33|000000
@@ -31,7 +27,7 @@ class LocationsNear
     }
 
   fillNearbyLocationsSuccess: (data) ->
-    container = $('#locations_container')
+    container = $('#nearby_results')
     for location, i in data when i < 20
       location.icon = "/assets/markers/#{@alphabet[i]}.png"
       loc = @createLocationHTML(location)
@@ -76,3 +72,5 @@ class LocationsNear
 
 $ ->
   window.Yumster.Locations.Near = new LocationsNear
+  # make prototype available for testing
+  window.Yumster.Locations._Near = LocationsNear

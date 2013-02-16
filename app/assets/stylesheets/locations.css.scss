@@ -54,3 +54,14 @@
     margin-top: .5em;
   }
 }
+
+li.location_item {
+  border-bottom: 2px solid $COLOR_WELL_WHITE;
+  &:first-child {
+    border-top: 2px solid $COLOR_WELL_WHITE;
+  }
+}
+
+#nearby_results {
+  list-style: none;
+}

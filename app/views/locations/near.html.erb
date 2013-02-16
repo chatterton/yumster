@@ -4,17 +4,9 @@
   <div id="map_canvas"></div>
 </div>
 <br>
-<div id="locations_container"></div>
-<div id="location_container" style="display: none;">
-  <div class="location well">
-    <div style="display: inline;"><img class="location_marker" /></div>
-    <div style="display: inline;">
-      <a class="location_link">link</a><br>
-      Category: <span class="location_category"></span>
-    </div>
-    <br>
-  </div>
-</div>
+
+<ul id="nearby_results">
+</ul>
 
 <%= link_to "", near_locations_path, :id => "nearby_ajax_address" %>
 
@@ -51,6 +43,10 @@ var init = function() {
     console.log("Error placing map: ", error)
   }
   window.Yumster.Locations.Near.getMapCenter(success, failure)
+
+
+  //var item = window.JST['templates/nearby_location_item']({})
+  //$('#nearby_results').append(item)
 }
 google.maps.event.addDomListener(window, 'load', init)
   </script>
