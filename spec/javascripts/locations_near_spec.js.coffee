@@ -10,6 +10,7 @@ describe "window.Yumster.Locations.Near", ->
     window.Yumster.Locations.Near = @locations
     $('body').append('''
       <a href="/whatever" id="nearby_ajax_address" />
+      <a class="btn disabled" id="map_reload" href="#">button</a>
       <ul id="nearby_results">
       </ul>
     ''')
@@ -150,3 +151,43 @@ describe "window.Yumster.Locations.Near", ->
       one.should.equal("ONE")
       two = @locations.urlParam("bar", address)
       two.should.equal("TWO")
+
+  describe "centerChanged()", ->
+    it "enables the Search Here button", ->
+      $('#map_reload').is('.disabled').should.be.true
+      @locations.centerChanged()
+      $('#map_reload').is('.disabled').should.not.be.true
+
+  describe "searchHere()", ->
+    beforeEach ->
+      @locations.setMap {
+        getCenter: () ->
+      }
+      sinon.spy(@locations, "fillNearbyLocations")
+      sinon.spy(@locations, "updateURLLatLong")
+      sinon.stub(@locations.map, "getCenter").returns {
+        lat: () -> 666
+        lng: () -> 667
+      }
+      $('#map_reload').removeClass('disabled')
+      $('<li>whatever</li>').appendTo('#nearby_results')
+      @locations.searchHere()
+    afterEach ->
+      @locations.fillNearbyLocations.restore()
+      @locations.updateURLLatLong.restore()
+      @locations.map.getCenter.restore()
+    it "should clear the current results list", ->
+      $('#nearby_results').children().length.should.equal 0
+    it "should clear the map", ->
+      ## FIXME: Not sure how to test this ...
+    it "should search for nearby locations", ->
+      @locations.fillNearbyLocations.callCount.should.equal 1
+      @locations.fillNearbyLocations.firstCall.args[0].should.equal 666
+      @locations.fillNearbyLocations.firstCall.args[1].should.equal 667
+    it "should update the URL with the current center", ->
+      @locations.updateURLLatLong.callCount.should.equal 1
+      @locations.updateURLLatLong.firstCall.args[0].should.equal 666
+      @locations.updateURLLatLong.firstCall.args[1].should.equal 667
+    it "should disable the map_reload button", ->
+      $('#map_reload').is('.disabled').should.be.true
+
