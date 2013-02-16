@@ -8,6 +8,7 @@ class LocationsNear
   constructor: (@templates = window.JST) ->
     @initial_center_found = false
     @alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    @markers = []
 
   setMap: (map) ->
     @map = map
@@ -24,6 +25,7 @@ class LocationsNear
       map: @map
       icon: location.icon
     }
+    @markers.push marker
 
   fillNearbyLocationsSuccess: (data) ->
     container = $('#nearby_results')
@@ -75,6 +77,7 @@ class LocationsNear
   searchHere: ->
     center = @map.getCenter()
     $('#nearby_results').empty()
+    marker.setMap(null) for marker in @markers
     @fillNearbyLocations(center.lat(), center.lng())
     @updateURLLatLong(center.lat(), center.lng())
     $('#map_reload').addClass('disabled')

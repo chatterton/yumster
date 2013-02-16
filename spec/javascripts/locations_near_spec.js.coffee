@@ -178,6 +178,8 @@ describe "window.Yumster.Locations.Near", ->
       @locations.map.getCenter.restore()
     it "should clear the current results list", ->
       $('#nearby_results').children().length.should.equal 0
+    it "should clear the map", ->
+      ## FIXME: Not sure how to test this ...
     it "should search for nearby locations", ->
       @locations.fillNearbyLocations.callCount.should.equal 1
       @locations.fillNearbyLocations.firstCall.args[0].should.equal 666
@@ -188,3 +190,4 @@ describe "window.Yumster.Locations.Near", ->
       @locations.updateURLLatLong.firstCall.args[1].should.equal 667
     it "should disable the map_reload button", ->
       $('#map_reload').is('.disabled').should.be.true
+
