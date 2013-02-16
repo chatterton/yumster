@@ -1,5 +1,6 @@
 @import 'globals';
 @import 'yumster';
+@import 'custom';
 
 /* fix for push-left on div with a left margin from bootstrap */
 .row-fluid .no-left-margin {
@@ -34,6 +35,12 @@
   }
 }
 
+.map_container {
+  @media screen and (max-width: $BREAKPOINT) {
+    margin-bottom: 8px;
+  }
+}
+
 .form-section-description:first-child:first-letter {
   font-size: 4em;
   padding-top: .20em;
@@ -53,4 +60,37 @@
   @media screen and (max-width: $BREAKPOINT) {
     margin-top: .5em;
   }
+}
+
+li.location_item {
+  @extend .hover_container;
+  &:hover {
+    background-color: lighten($COLOR_WELL_WHITE, 5%)
+  }
+  border-bottom: 2px solid $COLOR_WELL_WHITE;
+  &:first-child {
+    border-top: 2px solid $COLOR_WELL_WHITE;
+  }
+}
+
+img.location_marker {
+  float: left;
+  padding: 8px;
+}
+
+#nearby_results {
+  list-style: none;
+  margin-left: 0px;
+}
+
+p.location_content {
+  padding-top: 6px;
+}
+
+p.location_content .location_tips {
+  font-size: 75%;
+  color: $COLOR_CYAN;
+  float: right;
+  padding-right: 5px;
+  padding-top: 4px;
 }
