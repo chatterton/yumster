@@ -5,14 +5,13 @@
     <div class="map_container">
       <div id="map_canvas"></div>
     </div>
+    <a class="btn disabled" id="map_reload" href="#" onclick="window.Yumster.Locations.Near.searchHere()"><i class="icon-repeat"></i> Search Here</a>
   </div>
   <div class="span6 pull-left no-left-margin">
     <ul id="nearby_results">
     </ul>
   </div>
 </div>
-
-
 
 <%= link_to "", near_locations_path, :id => "nearby_ajax_address" %>
 
@@ -31,12 +30,15 @@ var addPositionIndicator = function(map) {
 }
 
 var init = function() {
+  // Set up map
   var map = new google.maps.Map(document.getElementById('map_canvas'), {
     zoom: 15,
     mapTypeId: google.maps.MapTypeId.ROADMAP
   })
   addPositionIndicator(map)
   window.Yumster.Locations.Near.setMap(map)
+
+  // Load nearby locations
   var success = function(latitude, longitude, coordinatesOnURL) {
     var loc = new google.maps.LatLng(latitude, longitude)
     map.setCenter(loc)
@@ -49,6 +51,14 @@ var init = function() {
     console.log("Error placing map: ", error)
   }
   window.Yumster.Locations.Near.getMapCenter(success, failure)
+
+  // On map idle, begin listening for map movement
+  google.maps.event.addListener(map, 'idle', function() {
+    google.maps.event.addListener(map, 'center_changed', function() {
+      var center = map.getCenter()
+      window.Yumster.Locations.Near.centerChanged(center.lat(), center.lng())
+    })
+  })
 }
 google.maps.event.addDomListener(window, 'load', init)
   </script>
