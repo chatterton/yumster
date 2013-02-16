@@ -16,7 +16,7 @@ class LocationsNear
     $(@templates['templates/nearby_location_item'](location))
 
   # Markers generated with e.g.
-  # http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=E|33EE33|000000
+  # http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=E|96c941|000000
   addMarkerToMap: (location) ->
     latlng = new google.maps.LatLng location.latitude, location.longitude
     marker = new google.maps.Marker {
