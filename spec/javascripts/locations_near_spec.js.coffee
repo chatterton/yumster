@@ -170,11 +170,14 @@ describe "window.Yumster.Locations.Near", ->
         lng: () -> 667
       }
       $('#map_reload').removeClass('disabled')
+      $('<li>whatever</li>').appendTo('#nearby_results')
       @locations.searchHere()
     afterEach ->
       @locations.fillNearbyLocations.restore()
       @locations.updateURLLatLong.restore()
       @locations.map.getCenter.restore()
+    it "should clear the current results list", ->
+      $('#nearby_results').children().length.should.equal 0
     it "should search for nearby locations", ->
       @locations.fillNearbyLocations.callCount.should.equal 1
       @locations.fillNearbyLocations.firstCall.args[0].should.equal 666

@@ -74,6 +74,7 @@ class LocationsNear
 
   searchHere: ->
     center = @map.getCenter()
+    $('#nearby_results').empty()
     @fillNearbyLocations(center.lat(), center.lng())
     @updateURLLatLong(center.lat(), center.lng())
     $('#map_reload').addClass('disabled')
