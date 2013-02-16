@@ -69,6 +69,9 @@ class LocationsNear
     results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(address)
     if results then results[1] else null
 
+  centerChanged: ->
+    $('#map_reload').removeClass('disabled')
+
 $ ->
   window.Yumster.Locations.Near = new LocationsNear
   # make prototype available for testing

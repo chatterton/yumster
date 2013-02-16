@@ -10,6 +10,7 @@ describe "window.Yumster.Locations.Near", ->
     window.Yumster.Locations.Near = @locations
     $('body').append('''
       <a href="/whatever" id="nearby_ajax_address" />
+      <a class="btn disabled" id="map_reload" href="#">button</a>
       <ul id="nearby_results">
       </ul>
     ''')
@@ -150,3 +151,9 @@ describe "window.Yumster.Locations.Near", ->
       one.should.equal("ONE")
       two = @locations.urlParam("bar", address)
       two.should.equal("TWO")
+
+  describe "centerChanged()", ->
+    it "enables the Search Here button", ->
+      $('#map_reload').is('.disabled').should.be.true
+      @locations.centerChanged()
+      $('#map_reload').is('.disabled').should.not.be.true

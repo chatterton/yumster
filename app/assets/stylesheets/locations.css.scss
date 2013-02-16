@@ -95,7 +95,11 @@ p.location_content .location_tips {
   padding-top: 4px;
 }
 
-.map_reload {
+#map_reload {
   float: right;
   margin-top: 10px;
+  margin-bottom: 10px;
+  @media screen and (max-width: $BREAKPOINT) {
+    margin-top: 8px;
+  }
 }
