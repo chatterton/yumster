@@ -88,7 +88,7 @@ p.location_content {
 }
 
 p.location_content .location_tips {
-  font-size: 75%;
+  font-size: $FONT_SIZE_SMALL;
   color: $COLOR_CYAN;
   float: right;
   padding-right: 5px;
