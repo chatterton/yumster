@@ -6,7 +6,7 @@ img.brand_tagline {
   margin-bottom: 20px;
   @media screen and (max-width: $BREAKPOINT) {
     height: 125px;
-    margin-top: -30px;
+    margin-top: -25px;
     margin-bottom: 0px;
     display: block;
     margin-left: auto;
@@ -22,7 +22,7 @@ img.illustration {
 }
 
 .main_activity {
-  h4 {
+  h3 {
     text-align: center;
     a {
       color: $COLOR_PRIMARY_GREEN;
