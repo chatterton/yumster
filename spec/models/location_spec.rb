@@ -102,4 +102,19 @@ describe Location do
     it { should_not be_valid }
   end
 
+  describe "description length" do
+    it "should be more than four characters" do
+      @location.description = "four"
+      @location.should_not be_valid
+      @location.description = "fiive"
+      @location.should be_valid
+    end
+    it "should be less than 46 characters" do
+      @location.description = "this is a string of 46 characters............."
+      @location.should_not be_valid
+      @location.description = "this is a string of 45 characters............"
+      @location.should be_valid
+    end
+  end
+
 end

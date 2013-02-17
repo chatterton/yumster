@@ -18,6 +18,7 @@ class Location < ActiveRecord::Base
   }
 
   validates :description, presence: true
+  validates_length_of :description, :minimum => 5, :maximum => 45
 
   validates :category, presence: true
   CATEGORIES = %w( Plant Dumpster Organization )
