@@ -105,7 +105,13 @@ p.location_content .location_tips {
 }
 
 #character_count {
-  color: $COLOR_CYAN;
   font-size: $FONT_SIZE_SMALL;
   margin-left: 10px;
+}
+
+.character_count_red {
+  color: $COLOR_APPLE_RED;
+}
+.character_count_green {
+  color: $COLOR_PRIMARY_GREEN;
 }
