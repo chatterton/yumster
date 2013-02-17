@@ -8,13 +8,6 @@ end
 
 describe LocationsController do
 
-  describe "GET 'index'" do
-    it "returns http success" do
-      get 'index'
-      response.should be_success
-    end
-  end
-
   describe "GET 'new'" do
     context "when there is no user logged in" do
       it "redirects to login page" do
@@ -36,16 +29,6 @@ describe LocationsController do
       sign_in_user
       post 'create'
       response.should be_success
-    end
-  end
-
-  describe "GET 'index'" do
-    it "populates @locations array with all locations" do
-      user = FactoryGirl.create :user
-      location1 = FactoryGirl.create :location, user: user
-      location2 = FactoryGirl.create :location, user: user
-      get :index
-      assigns(:locations).should == [location1, location2]
     end
   end
 
