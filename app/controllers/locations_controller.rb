@@ -2,10 +2,6 @@ class LocationsController < ApplicationController
   include Gmaps4RailsHelper
   before_filter :authenticate_user!, :only => [:new, :create]
 
-  def index
-    @locations = Location.find :all
-  end
-
   def new
     @location = current_user.locations.build
     @g4r_options = gmaps4rails_detect
@@ -14,8 +10,7 @@ class LocationsController < ApplicationController
   def create
     @location = current_user.locations.build(params[:location])
     if @location.save
-      index
-      render 'index'
+      redirect_to :action => "show", :id => @location.id
     else
       @g4r_options = gmaps4rails_detect
       render 'new'
