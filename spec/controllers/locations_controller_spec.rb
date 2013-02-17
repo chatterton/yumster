@@ -25,10 +25,24 @@ describe LocationsController do
   end
 
   describe "POST 'create'" do
-    it "returns http success" do
+    before do
       sign_in_user
+    end
+    it "returns http success" do
       post 'create'
       response.should be_success
+    end
+    context "with a valid location" do
+      before do
+        @count = Location.count
+        post 'create', { location: FactoryGirl.attributes_for(:location) }
+      end
+      it "creates a new location" do
+        Location.count.should == @count + 1
+      end
+      it "shows the newly created location" do
+        response.should redirect_to Location.last
+      end
     end
   end
 

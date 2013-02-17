@@ -10,7 +10,7 @@ class LocationsController < ApplicationController
   def create
     @location = current_user.locations.build(params[:location])
     if @location.save
-      render :text => "Ok", :status => 201
+      redirect_to :action => "show", :id => @location.id
     else
       @g4r_options = gmaps4rails_detect
       render 'new'
