@@ -9,6 +9,6 @@ guard 'rspec', :version => 2 do
   watch(%r{^app/views/(.+)/}) { |m| "spec/requests/#{m[1]}_spec.rb" }
 end
 
-guard :konacha do
-    watch(%r{^spec/javascripts/.+_spec(\.js|\.js\.coffee)$})
-end
+#guard :konacha do
+#    watch(%r{^spec/javascripts/.+_spec(\.js|\.js\.coffee)$})
+#end
