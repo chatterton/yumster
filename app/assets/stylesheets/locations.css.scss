@@ -88,7 +88,7 @@ p.location_content {
 }
 
 p.location_content .location_tips {
-  font-size: 75%;
+  font-size: $FONT_SIZE_SMALL;
   color: $COLOR_CYAN;
   float: right;
   padding-right: 5px;
@@ -102,4 +102,16 @@ p.location_content .location_tips {
   @media screen and (max-width: $BREAKPOINT) {
     margin-top: 8px;
   }
+}
+
+#character_count {
+  font-size: $FONT_SIZE_SMALL;
+  margin-left: 10px;
+}
+
+.character_count_red {
+  color: $COLOR_APPLE_RED;
+}
+.character_count_green {
+  color: $COLOR_PRIMARY_GREEN;
 }
