@@ -20,40 +20,48 @@
   <%= javascript_include_tag 'geolocationmarker.js' %>
   <script type="text/javascript" charset="utf-8">
 
+// Load nearby locations
+var map
+var geolocationSuccess = function(latitude, longitude, coordinatesOnURL) {
+  var loc = new google.maps.LatLng(latitude, longitude)
+  map.setCenter(loc)
+  window.Yumster.Locations.Near.fillNearbyLocations(latitude, longitude)
+  if(!coordinatesOnURL) {
+    window.Yumster.Locations.Near.updateURLLatLong(latitude, longitude)
+  }
+}
+
+// Add user's location dot to map
 var GeoMarker
 var addPositionIndicator = function(map) {
   if(!GeoMarker) {
     GeoMarker = new GeolocationMarker()
     GeoMarker.setCircleOptions({fillColor: '#808080'})
     GeoMarker.setMap(map)
+
+    // Listen for new location grom geomarker and recenter map once
+    google.maps.event.addListenerOnce(GeoMarker, 'position_changed', function() {
+      map.setCenter(GeoMarker.getPosition());
+    })
   }
 }
 
 var init = function() {
   // Set up map
-  var map = new google.maps.Map(document.getElementById('map_canvas'), {
+  map = new google.maps.Map(document.getElementById('map_canvas'), {
     zoom: 15,
     mapTypeId: google.maps.MapTypeId.ROADMAP
   })
   addPositionIndicator(map)
   window.Yumster.Locations.Near.setMap(map)
 
-  // Load nearby locations
-  var success = function(latitude, longitude, coordinatesOnURL) {
-    var loc = new google.maps.LatLng(latitude, longitude)
-    map.setCenter(loc)
-    window.Yumster.Locations.Near.fillNearbyLocations(latitude, longitude)
-    if(!coordinatesOnURL) {
-      window.Yumster.Locations.Near.updateURLLatLong(latitude, longitude)
-    }
-  }
   var failure = function(error) {
     console.log("Error placing map: ", error)
   }
-  window.Yumster.Locations.Near.getMapCenter(success, failure)
+  window.Yumster.Locations.Near.getMapCenter(geolocationSuccess, failure)
 
   // On map idle, begin listening for map movement
-  google.maps.event.addListener(map, 'idle', function() {
+  google.maps.event.addListenerOnce(map, 'idle', function() {
     google.maps.event.addListener(map, 'center_changed', function() {
       var center = map.getCenter()
       window.Yumster.Locations.Near.centerChanged(center.lat(), center.lng())
