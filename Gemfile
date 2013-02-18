@@ -28,6 +28,10 @@ group :production, :development do
   gem 'pg', '0.12.2'
 end
 
+group :production do
+  gem 'google-analytics-rails'
+end
+
 group :development, :test do
   gem 'rspec-rails', '2.9.0'
 

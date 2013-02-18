@@ -74,6 +74,7 @@ GEM
       railties (>= 3.1.1)
       sass-rails (>= 3.1.1)
     geocoder (1.1.6)
+    google-analytics-rails (0.0.3)
     guard (1.6.2)
       listen (>= 0.6.0)
       lumberjack (>= 1.0.2)
@@ -217,6 +218,7 @@ DEPENDENCIES
   font-awesome-rails
   font-awesome-sass-rails
   geocoder
+  google-analytics-rails
   guard-konacha
   guard-rspec
   jquery-rails

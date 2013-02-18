@@ -78,3 +78,6 @@ ActionMailer::Base.smtp_settings = {
   :authentication => :plain
 }
 ActionMailer::Base.delivery_method = :smtp
+
+## Google analytics gem
+GA.tracker = "UA-38606818-1"
