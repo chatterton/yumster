@@ -121,9 +121,9 @@ var center_changed = function() {
 var init = function() {
   map = new google.maps.Map(document.getElementById('map_canvas'), {
     zoom: 18,
-    mapTypeId: google.maps.MapTypeId.HYBRID
+    mapTypeId: google.maps.MapTypeId.HYBRID,
+    tilt: 0 // turn of 45-degree imagery
   })
-  map.setTilt(0) // turn of 45-degree imagery
   addPositionIndicator(map)
   var control = document.createElement('div')
   $(control).append($('#pushpin_img'))

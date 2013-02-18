@@ -84,22 +84,6 @@ describe LocationsController do
         response.should be_success
         response.content_type.should == "text/html"
       end
-      context "with lat/long on the query string" do
-        it "opens the map at that location" do
-          get :near, :latitude => 60, :longitude => 70
-          opts = assigns(:g4r_options)
-          opts[:map_options][:center_latitude].should == "60"
-          opts[:map_options][:center_longitude].should == "70"
-        end
-      end
-      context "without lat/long on the query string" do
-        it "detects user's position" do
-          get :near
-          opts = assigns(:g4r_options)
-          opts[:map_options][:detect_location].should == true
-          opts[:map_options][:center_on_user].should == true
-        end
-      end
     end
   end
 

@@ -18,7 +18,7 @@ describe "locations/show" do
 
   it 'shows a map' do
     render
-    rendered.should have_selector '.map_container #map'
+    rendered.should have_selector '.map_container #map_canvas'
   end
 
 end

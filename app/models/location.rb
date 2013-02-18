@@ -2,9 +2,6 @@ class Location < ActiveRecord::Base
   attr_accessible :description, :latitude, :longitude, :category
   belongs_to :user
 
-  ## Do not run geocoding on every validation
-  acts_as_gmappable :process_geocoding => false
-
   ## for https://github.com/alexreisner/geocoder
   reverse_geocoded_by :latitude, :longitude
 

@@ -2,12 +2,47 @@
 <br>
 <div class="row-fluid">
   <div class="span8 pull-right">
-    <%= gmaps(@g4r_options) %>
+    <div class="map_container">
+      <div id="map_canvas"></div>
+    </div>
   </div>
   <div class="span4 pull-left no-left-margin">
-    category: <%= @location.category %><br>
-    lat/long: <%= @location.latitude %>, <%= @location.longitude %>
+    This location is a <%= @location.category %>.<br>
   </div>
 </div>
 
 <br><br>
+
+<% content_for :scripts do %>
+  <script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
+  <%= javascript_include_tag 'geolocationmarker.js' %>
+  <script type="text/javascript" charset="utf-8">
+
+var position = new google.maps.LatLng(<%= @location.latitude %>, <%= @location.longitude %>)
+
+var GeoMarker
+var addPositionIndicator = function(map) {
+  if(!GeoMarker) {
+    GeoMarker = new GeolocationMarker()
+    GeoMarker.setCircleOptions({fillColor: '#808080'})
+    GeoMarker.setMap(map)
+  }
+}
+
+var init = function() {
+  map = new google.maps.Map(document.getElementById('map_canvas'), {
+    zoom: 18,
+    mapTypeId: google.maps.MapTypeId.HYBRID,
+    tilt: 0, // turn of 45-degree imagery
+    center: position
+  })
+  addPositionIndicator(map)
+  marker = new google.maps.Marker({
+    position: position,
+    map: map
+  })
+}
+google.maps.event.addDomListener(window, 'load', init)
+
+  </script>
+<% end %>
