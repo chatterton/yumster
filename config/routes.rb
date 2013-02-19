@@ -12,5 +12,6 @@ Yumster::Application.routes.draw do
   end
 
   get "pages/home"
+  get "pages/about"
 
 end

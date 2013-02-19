@@ -17,4 +17,12 @@ describe "static pages" do
       page.should have_selector 'img.brand_tagline'
     end
   end
+
+  describe "about page" do
+    before do
+      visit '/pages/about'
+    end
+    subject { page }
+    it { should have_content 'About Us' }
+  end
 end
