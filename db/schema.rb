@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130208215520) do
+ActiveRecord::Schema.define(:version => 20130219005522) do
 
   create_table "locations", :force => true do |t|
     t.string   "description"
@@ -23,6 +23,8 @@ ActiveRecord::Schema.define(:version => 20130208215520) do
     t.integer  "user_id"
   end
 
+  add_index "locations", ["latitude"], :name => "index_locations_on_latitude"
+  add_index "locations", ["longitude"], :name => "index_locations_on_longitude"
   add_index "locations", ["user_id"], :name => "index_locations_on_user_id"
 
   create_table "users", :force => true do |t|
