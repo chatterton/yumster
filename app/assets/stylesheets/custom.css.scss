@@ -11,12 +11,6 @@ $iconWhiteSpritePath: '';
   max-width: 800px;
 }
 
-@mixin box_sizing {
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-}
-
 img.brand_image {
   width: 120px;
   float: left;
@@ -25,6 +19,10 @@ img.brand_image {
 ul.brand_nav {
   float: right;
   list-style: none;
+  margin-top: 3px;
+}
+ul.brand_nav li {
+  display: inline;
 }
 
 .brand_header {
@@ -55,9 +53,10 @@ ul.brand_nav {
 
 /* copied from bootstrap */
 .brand_nav > li > a {
-  padding: 10px 10px 11px;
+  padding-left: 10px;
+  padding-right: 10px;
   font-size: 14px;
-  color: #542b15;
+  color: $COLOR_TEXT_BROWN;
 }
 .brand_nav > .active > a,
 .brand_nav > .active > a:hover,
