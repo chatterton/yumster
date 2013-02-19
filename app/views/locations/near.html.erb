@@ -39,9 +39,10 @@ var addPositionIndicator = function(map) {
     GeoMarker.setCircleOptions({fillColor: '#808080'})
     GeoMarker.setMap(map)
 
-    // Listen for new location grom geomarker and recenter map once
+    // Listen for new location from geomarker and reload once
     google.maps.event.addListenerOnce(GeoMarker, 'position_changed', function() {
-      map.setCenter(GeoMarker.getPosition());
+      var latlng = GeoMarker.getPosition()
+      geolocationSuccess(latlng.lat(), latlng.lng(), false)
     })
   }
 }
