@@ -8,10 +8,8 @@ describe "locations/show" do
     assign(:g4r_options, {})
   end
 
-  it 'displays lat, long, category, and description' do
+  it 'displays category and description' do
     render
-    rendered.should =~ /40/
-    rendered.should =~ /42/
     rendered.should =~ /fooo/
     rendered.should =~ /Plant/
   end
