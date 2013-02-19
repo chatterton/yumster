@@ -5,9 +5,8 @@ img.brand_tagline {
   margin-top: -20px;
   margin-bottom: 20px;
   @media screen and (max-width: $BREAKPOINT) {
-    height: 125px;
-    margin-top: -25px;
-    margin-bottom: 0px;
+    width: 90%;
+    margin-bottom: -20px;
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -29,6 +28,21 @@ img.illustration {
     }
   }
   @media screen and (max-width: $BREAKPOINT) {
-    margin-bottom: 30px;
+    clear: left;
+  }
+}
+
+.main_activity h3 {
+  @media screen and (max-width: $BREAKPOINT) {
+    padding-top: 24px;
+  }
+}
+
+.main_activity p {
+  padding-left: 15px;
+  padding-right: 15px;
+  @media screen and (max-width: $BREAKPOINT) {
+    padding-left: 0px;
+    padding-right: 0px;
   }
 }
