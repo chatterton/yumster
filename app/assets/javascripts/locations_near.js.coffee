@@ -34,6 +34,8 @@ class LocationsNear
       loc = @createLocationHTML(location)
       loc.appendTo(container)
       @addMarkerToMap(location)
+    if data.length == 0
+      $(@templates['templates/no_locations_found'](null)).appendTo(container)
 
   fillNearbyLocations: (lat, long) ->
     path = $('#nearby_ajax_address').attr("href")
@@ -77,7 +79,7 @@ class LocationsNear
   searchHere: ->
     center = @map.getCenter()
     $('#nearby_results').empty()
-    marker.setMap(null) for marker in @markers
+    marker.setMap(null) for marker in @markers ## clear all markers
     @fillNearbyLocations(center.lat(), center.lng())
     @updateURLLatLong(center.lat(), center.lng())
     $('#map_reload').addClass('disabled')

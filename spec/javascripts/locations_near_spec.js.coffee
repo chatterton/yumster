@@ -65,6 +65,16 @@ describe "window.Yumster.Locations.Near", ->
         @locations.fillNearbyLocationsSuccess(locations)
       it "only shows the first 20", ->
         @locations.createLocationHTML.callCount.should.equal 20
+    context "when there are zero locations", ->
+      beforeEach ->
+        $('#nearby_results').empty()
+        locations = []
+        @templates['templates/no_locations_found'] = ->
+          '<li>no loc found template</li>'
+        @locations.fillNearbyLocationsSuccess(locations)
+      it "shows a friendly error message", ->
+        container = $('#nearby_results').html()
+        container.should.have.string("no loc found template")
 
   describe "createLocationHTML(location)", ->
     beforeEach ->
@@ -178,8 +188,6 @@ describe "window.Yumster.Locations.Near", ->
       @locations.map.getCenter.restore()
     it "should clear the current results list", ->
       $('#nearby_results').children().length.should.equal 0
-    it "should clear the map", ->
-      ## FIXME: Not sure how to test this ...
     it "should search for nearby locations", ->
       @locations.fillNearbyLocations.callCount.should.equal 1
       @locations.fillNearbyLocations.firstCall.args[0].should.equal 666
