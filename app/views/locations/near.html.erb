@@ -51,6 +51,7 @@ var addPositionIndicator = function(map) {
   }
 }
 
+// Initialize Google Maps v3 API
 var init = function() {
   // Set up map
   map = new google.maps.Map(document.getElementById('map_canvas'), {
@@ -74,5 +75,15 @@ var init = function() {
   })
 }
 google.maps.event.addDomListener(window, 'load', init)
+
+// Bind address search function to button
+$(function() {
+  $('#map_address_button').click(function() {
+    var address = $('#map_address_input').val()
+    window.Yumster.Locations.loadAddress(map, address)
+    $('#map_address_input').val('')
+  })
+})
+
   </script>
 <% end %>
