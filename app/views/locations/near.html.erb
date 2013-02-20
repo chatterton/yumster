@@ -2,10 +2,14 @@
 <br>
 <div class="row-fluid">
   <div class="span6 pull-right">
+    <div class="input-append map_address_search">
+      <input id="map_address_input" type="text" placeholder="Move to an address">
+      <button id="map_address_button" class="btn" type="button">Go</button>
+    </div>
     <div class="map_container">
       <div id="map_canvas"></div>
     </div>
-    <a class="btn disabled" id="map_reload" href="#" onclick="window.Yumster.Locations.Near.searchHere()"><i class="icon-repeat"></i> Search Here</a>
+    <a class="btn disabled" id="map_reload" href="#" onclick="window.Yumster.Locations.Near.searchHere()"><i class="icon-repeat"></i> Redo Search</a>
   </div>
   <div class="span6 pull-left no-left-margin">
     <ul id="nearby_results">
