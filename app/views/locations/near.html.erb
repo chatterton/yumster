@@ -80,7 +80,7 @@ google.maps.event.addDomListener(window, 'load', init)
 $(function() {
   $('#map_address_button').click(function() {
     var address = $('#map_address_input').val()
-    window.Yumster.Locations.loadAddress(map, address)
+    window.Yumster.Locations.loadAddress(address, window.Yumster.Locations.Near.mapCallback)
     $('#map_address_input').val('')
   })
 })

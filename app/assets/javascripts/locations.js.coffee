@@ -1,14 +1,15 @@
 window.Yumster or= {}
+window.Yumster.Locations or= {}
 
 class Locations
 
   constructor: (@geocoder = new google.maps.Geocoder()) ->
-    @mapCallback = null
+    window.Yumster.Locations.mapCallback = null
 
   loadAddress: (address, callback) ->
     unless address and callback
       return
-    @mapCallback = callback
+    window.Yumster.Locations.mapCallback = callback
     @geocoder.geocode { 'address', address }, @loadAddressCallback
 
   loadAddressCallback: (results, status) ->
@@ -18,7 +19,7 @@ class Locations
     unless results.length > 0
       console.log "Error, Google geocoder found no results"
       return
-    @mapCallback(results[0])
+    window.Yumster.Locations.mapCallback(results[0])
 
 $ ->
   unless typeof google is "undefined"

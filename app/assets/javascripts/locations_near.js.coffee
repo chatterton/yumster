@@ -2,6 +2,7 @@
 
 window.Yumster or= {}
 window.Yumster.Locations or= {}
+window.Yumster.Locations.Near or= {}
 
 class LocationsNear
 
@@ -11,7 +12,7 @@ class LocationsNear
     @markers = []
 
   setMap: (map) ->
-    @map = map
+    window.Yumster.Locations.Near.map = map
 
   createLocationHTML: (location) ->
     $(@templates['templates/nearby_location_item'](location))
@@ -22,7 +23,7 @@ class LocationsNear
     latlng = new google.maps.LatLng location.latitude, location.longitude
     marker = new google.maps.Marker {
       position: latlng
-      map: @map
+      map: window.Yumster.Locations.Near.map
       icon: location.icon
     }
     @markers.push marker
@@ -77,12 +78,18 @@ class LocationsNear
     $('#map_reload').removeClass('disabled')
 
   searchHere: ->
-    center = @map.getCenter()
+    center = window.Yumster.Locations.Near.map.getCenter()
     $('#nearby_results').empty()
     marker.setMap(null) for marker in @markers ## clear all markers
     @fillNearbyLocations(center.lat(), center.lng())
     @updateURLLatLong(center.lat(), center.lng())
     $('#map_reload').addClass('disabled')
+
+  mapCallback: (result) ->
+    console.log "yo dog: ",result
+    loc = result.geometry.location
+    window.Yumster.Locations.Near.map.setCenter(loc)
+    window.Yumster.Locations.Near.searchHere()
 
 $ ->
   window.Yumster.Locations.Near = new LocationsNear
