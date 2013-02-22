@@ -86,7 +86,6 @@ class LocationsNear
     $('#map_reload').addClass('disabled')
 
   mapCallback: (result) ->
-    console.log "yo dog: ",result
     loc = result.geometry.location
     window.Yumster.Locations.Near.map.setCenter(loc)
     window.Yumster.Locations.Near.searchHere()

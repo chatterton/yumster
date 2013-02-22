@@ -77,13 +77,18 @@ var init = function() {
 google.maps.event.addDomListener(window, 'load', init)
 
 // Bind address search function to button
+var addressSearchClick = function() {
+  var address = $('#map_address_input').val()
+  window.Yumster.Locations.loadAddress(address, window.Yumster.Locations.Near.mapCallback)
+  $('#map_address_input').val('')
+}
 $(function() {
-  $('#map_address_button').click(function() {
-    var address = $('#map_address_input').val()
-    window.Yumster.Locations.loadAddress(address, window.Yumster.Locations.Near.mapCallback)
-    $('#map_address_input').val('')
-  })
+  $('#map_address_button').click(addressSearchClick())
 })
-
+$('#map_address_input').keydown(function(e){
+  if(e.which == 13) {
+    addressSearchClick()
+  }
+})
   </script>
 <% end %>
