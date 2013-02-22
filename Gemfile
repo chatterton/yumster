@@ -30,6 +30,7 @@ end
 
 group :production do
   gem 'google-analytics-rails'
+  gem 'newrelic_rpm'
 end
 
 group :development, :test do
