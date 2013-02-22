@@ -21,6 +21,17 @@ class Locations
       return
     window.Yumster.Locations.mapCallback(results[0])
 
+  initializeAddressSearch: (inputId, buttonId, addressCallback) ->
+    addressSearchClick = ->
+      address = $(inputId).val()
+      window.Yumster.Locations.loadAddress(address, addressCallback)
+      $(inputId).val('')
+    $(buttonId).click(addressSearchClick())
+    $(inputId).keydown (event) ->
+      if event.which is 13
+        event.preventDefault()
+        addressSearchClick()
+
 $ ->
   unless typeof google is "undefined"
     window.Yumster.Locations = new Locations

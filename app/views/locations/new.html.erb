@@ -64,6 +64,10 @@
       <div class="map_container">
         <div id="map_canvas"></div>
       </div>
+      <div class="input-append map_address_search_bottom">
+        <input id="map_address_input" type="text" placeholder="Move to an address">
+        <button id="map_address_button" class="btn" type="button">Go</button>
+      </div>
     </div>
   </div>
 
@@ -137,8 +141,17 @@ var init = function() {
     console.log("Error placing map: ", error)
   }
   window.Yumster.Locations.Near.getMapCenter(success, failure)
+  window.Yumster.Locations.New.map = map
 }
 google.maps.event.addDomListener(window, 'load', init)
+
+// Bind address search function to button
+$(function() {
+  window.Yumster.Locations.initializeAddressSearch(
+    '#map_address_input',
+    '#map_address_button',
+    window.Yumster.Locations.New.mapCallback)
+})
 
   </script>
 <% end %>
