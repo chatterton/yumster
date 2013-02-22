@@ -68,9 +68,6 @@ li.location_item {
     background-color: lighten($COLOR_WELL_WHITE, 5%)
   }
   border-bottom: 2px solid $COLOR_WELL_WHITE;
-  &:first-child {
-    border-top: 2px solid $COLOR_WELL_WHITE;
-  }
 }
 
 img.location_marker {
@@ -100,8 +97,21 @@ p.location_content .location_tips {
   margin-top: 10px;
   margin-bottom: 10px;
   @media screen and (max-width: $BREAKPOINT) {
-    margin-top: 8px;
+    margin-top: 0px;
   }
+}
+
+.map_address_search {
+  margin-bottom: 10px;
+}
+.map_address_search_bottom {
+  margin-top: 10px;
+}
+#map_address_input {
+  width: 79%;
+}
+#map_address_button {
+  width: 50px;
 }
 
 #character_count {

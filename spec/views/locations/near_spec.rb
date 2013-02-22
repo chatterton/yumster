@@ -3,7 +3,6 @@ require 'spec_helper'
 describe "locations/near" do
 
   before do
-    assign(:g4r_options, {})
     render
   end
 
@@ -15,6 +14,10 @@ describe "locations/near" do
 
   describe 'has a hidden link to the nearby ajax endpoint' do
     it { should have_link "", href: near_locations_path }
+  end
+
+  describe 'has an address search field' do
+    it { should have_css 'input#map_address_input' }
   end
 
 end

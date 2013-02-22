@@ -170,12 +170,12 @@ describe "window.Yumster.Locations.Near", ->
 
   describe "searchHere()", ->
     beforeEach ->
-      @locations.setMap {
+      @map =
         getCenter: () ->
-      }
+      @locations.setMap @map
       sinon.spy(@locations, "fillNearbyLocations")
       sinon.spy(@locations, "updateURLLatLong")
-      sinon.stub(@locations.map, "getCenter").returns {
+      sinon.stub(@map, "getCenter").returns {
         lat: () -> 666
         lng: () -> 667
       }
@@ -185,7 +185,7 @@ describe "window.Yumster.Locations.Near", ->
     afterEach ->
       @locations.fillNearbyLocations.restore()
       @locations.updateURLLatLong.restore()
-      @locations.map.getCenter.restore()
+      @map.getCenter.restore()
     it "should clear the current results list", ->
       $('#nearby_results').children().length.should.equal 0
     it "should search for nearby locations", ->
@@ -199,3 +199,19 @@ describe "window.Yumster.Locations.Near", ->
     it "should disable the map_reload button", ->
       $('#map_reload').is('.disabled').should.be.true
 
+  describe "mapCallback(result)", ->
+    beforeEach ->
+      @location = {}
+      result =
+        geometry:
+          location: @location
+      @map =
+        setCenter: sinon.spy()
+      @locations.setMap @map
+      @locations.searchHere = sinon.spy()
+      @locations.mapCallback(result)
+    it "should move the map to the location", ->
+      @map.setCenter.callCount.should.equal 1
+      @map.setCenter.firstCall.args[0].should.equal @location
+    it "should reload the map in this new location", ->
+      @locations.searchHere.callCount.should.equal 1
