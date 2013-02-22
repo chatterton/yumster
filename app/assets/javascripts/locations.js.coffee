@@ -26,7 +26,8 @@ class Locations
       address = $(inputId).val()
       window.Yumster.Locations.loadAddress(address, addressCallback)
       $(inputId).val('')
-    $(buttonId).click(addressSearchClick())
+    $(buttonId).click ->
+      addressSearchClick()
     $(inputId).keydown (event) ->
       if event.which is 13
         event.preventDefault()
