@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130219005522) do
+ActiveRecord::Schema.define(:version => 20130223021627) do
 
   create_table "locations", :force => true do |t|
     t.string   "description"
@@ -26,6 +26,18 @@ ActiveRecord::Schema.define(:version => 20130219005522) do
   add_index "locations", ["latitude"], :name => "index_locations_on_latitude"
   add_index "locations", ["longitude"], :name => "index_locations_on_longitude"
   add_index "locations", ["user_id"], :name => "index_locations_on_user_id"
+
+  create_table "tips", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "location_id"
+    t.string   "text"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
+  add_index "tips", ["location_id"], :name => "index_tips_on_location_id"
+  add_index "tips", ["user_id", "location_id"], :name => "index_tips_on_user_id_and_location_id", :unique => true
+  add_index "tips", ["user_id"], :name => "index_tips_on_user_id"
 
   create_table "users", :force => true do |t|
     t.string   "email",                  :default => "", :null => false

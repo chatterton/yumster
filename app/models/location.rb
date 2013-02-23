@@ -1,6 +1,8 @@
 class Location < ActiveRecord::Base
   attr_accessible :description, :latitude, :longitude, :category
   belongs_to :user
+  has_many :tips
+  has_many :users, :through => :tips
 
   ## for https://github.com/alexreisner/geocoder
   reverse_geocoded_by :latitude, :longitude
