@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
   attr_accessible :email, :password, :password_confirmation, :remember_me, :username
   has_many :locations
   has_many :tips
+  has_many :tip_locations, :through => :tips, :class_name => 'Location', :source => :location
 
   validates_presence_of :username
   validates_uniqueness_of :username
