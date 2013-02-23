@@ -14,4 +14,6 @@ Yumster::Application.routes.draw do
   get "pages/home"
   get "pages/about"
 
+  resources :tips, :only => [:create, :destroy]
+
 end

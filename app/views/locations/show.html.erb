@@ -1,13 +1,20 @@
 <h2><%= @location.description %></h2>
 <br>
 <div class="row-fluid">
-  <div class="span8 pull-right">
+  <div class="span6 pull-right">
     <div class="map_container">
       <div id="map_canvas"></div>
     </div>
   </div>
-  <div class="span4 pull-left no-left-margin">
+  <div class="span6 pull-left no-left-margin">
     This location is a <%= @location.category %>.<br>
+    <% if user_signed_in? %>
+      <br>
+      Add a tip!<br>
+      <%= form_for(@tip) do |f| %>
+      <% end %>
+    <% end %>
+
   </div>
 </div>
 
