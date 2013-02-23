@@ -20,6 +20,12 @@ describe "locations/show" do
     rendered.should have_selector '.map_container #map_canvas'
   end
 
+  context 'when a user is not signed in' do
+    it 'shows the add tip form' do
+      render
+      rendered.should_not have_selector "form[action='#{tips_path}']"
+    end
+  end
   context 'when a user is signed in' do
     before do
       view.stub(:user_signed_in?).and_return(true)
@@ -28,12 +34,6 @@ describe "locations/show" do
     it 'shows the add tip form' do
       render
       rendered.should have_selector "form[action='#{tips_path}']"
-    end
-  end
-  context 'when a user is not signed in' do
-    it 'shows the add tip form' do
-      render
-      rendered.should_not have_selector "form[action='#{tips_path}']"
     end
   end
 
