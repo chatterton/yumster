@@ -10,8 +10,13 @@
     This location is a <%= @location.category %>.<br>
     <% if user_signed_in? %>
       <br>
-      Add a tip!<br>
-      <%= form_for(@tip) do |f| %>
+      <br>
+      <%= form_for(@location.tips.build) do |f| %>
+        <%= f.hidden_field :location_id, :value => "#{@location.id}" %>
+        <%= f.label :text do %>Add a tip<% end %>
+        <%= f.text_area :text %>
+        <br>
+        <%= f.submit "Done", class: "btn" %>
       <% end %>
     <% end %>
 

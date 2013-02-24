@@ -17,10 +17,6 @@ class LocationsController < ApplicationController
 
   def show
     @location = Location.find(params[:id])
-    if user_signed_in?
-      @tip = current_user.tips.new
-      @tip.location = @location
-    end
   end
 
   respond_to :json, :html
