@@ -3,8 +3,8 @@ require 'spec_helper'
 describe "locations/show" do
 
   before do
-    location = stub_model Location, :latitude => 40, :longitude => 42, :description => 'fooo', :category => "Plant"
-    assign(:location, location)
+    @location = stub_model Location, :latitude => 40, :longitude => 42, :description => 'fooo', :category => "Plant"
+    assign(:location, @location)
     view.stub(:user_signed_in?).and_return(false)
   end
 
@@ -34,6 +34,17 @@ describe "locations/show" do
     it 'shows the add tip form' do
       render
       rendered.should have_selector "form[action='#{tips_path}']"
+    end
+  end
+
+  context "when there are tips" do
+    before do
+      tips = [stub_model(Tip), stub_model(Tip)]
+      @location.stub(:tips).and_return tips
+    end
+    it "renders _tip partial for each" do
+      render
+      expect(view).to render_template(:partial => "_tip", :count => 2)
     end
   end
 
