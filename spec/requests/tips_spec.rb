@@ -44,11 +44,14 @@ describe "Tips pages" do
       it "causes the tip to have a delete button" do
         page.should have_selector "form[action='#{tip_path(@tip)}']"
       end
-      #context "deleting the tip" do
-        #it "no longer shows up on the page" do
-          #page.should_not have_content "some sweet text"
-        #end
-      #end
+      context "deleting the tip" do
+        before do
+          click_button "delete"
+        end
+        it "no longer shows up on the page" do
+          page.should_not have_content "some sweet text"
+        end
+      end
     end
   end
 
