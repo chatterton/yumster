@@ -36,11 +36,16 @@ describe "Tips pages" do
     end
     context "that tip" do
       it "causes the form not to be displayed" do
-
+        page.should_not have_selector "form[action='#{tips_path}']"
       end
-      it "can be deleted" do
+      #it "causes the tip to have a delete button" do
 
-      end
+      #end
+      #context "deleting the tip" do
+        #it "no longer shows up on the page" do
+          #page.should_not have_content "some sweet text"
+        #end
+      #end
     end
   end
 

@@ -5,7 +5,6 @@ describe "locations/show" do
   before do
     location = stub_model Location, :latitude => 40, :longitude => 42, :description => 'fooo', :category => "Plant"
     assign(:location, location)
-    assign(:g4r_options, {})
     view.stub(:user_signed_in?).and_return(false)
   end
 
@@ -29,7 +28,8 @@ describe "locations/show" do
   context 'when a user is signed in' do
     before do
       view.stub(:user_signed_in?).and_return(true)
-      assign(:tip, Tip.new)
+      user = FactoryGirl.create :user
+      view.stub(:current_user).and_return(user)
     end
     it 'shows the add tip form' do
       render
