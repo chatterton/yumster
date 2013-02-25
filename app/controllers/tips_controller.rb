@@ -10,7 +10,9 @@ class TipsController < ApplicationController
   end
 
   def destroy
-
+    tip = Tip.find_by_id(params[:id])
+    tip.destroy
+    redirect_to tip.location
   end
 
 end
