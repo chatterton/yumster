@@ -7,7 +7,11 @@
     </div>
   </div>
   <div class="span6 pull-left no-left-margin">
+    <p>
     This location is a <%= @location.category %>.<br>
+    </p>
+
+    <%# show the tips form if necessary %>
     <% if user_signed_in? %>
       <br>
       <br>
@@ -20,6 +24,13 @@
       <% end %>
     <% end %>
 
+    <p>
+    <%= pluralize(@location.tips.count, 'tip') %>:
+    </p>
+    <ul>
+    <%# show the tips form if necessary %>
+    <%= render @location.tips %>
+    </ul>
   </div>
 </div>
 

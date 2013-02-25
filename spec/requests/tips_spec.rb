@@ -24,4 +24,24 @@ describe "Tips pages" do
     end
   end
 
+  describe "adding a tip" do
+    before do
+      visit location_path(location)
+      fill_in "tip_text", with: "some sweet text"
+      click_button "Done"
+    end
+    it 'shows up on the locations page' do
+      visit location_path(location)
+      page.should have_content "some sweet text"
+    end
+    context "that tip" do
+      it "causes the form not to be displayed" do
+
+      end
+      it "can be deleted" do
+
+      end
+    end
+  end
+
 end
