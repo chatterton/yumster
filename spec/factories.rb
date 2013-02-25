@@ -1,14 +1,14 @@
 FactoryGirl.define do
   factory :location do
-    description "a location"
+    sequence(:description) { |n| "location #{n}" }
     latitude 11.2
     longitude 11.4
     category "Dumpster"
     user
   end
   factory :user do
-    email "somebody@somewhere.edu"
-    username "somebody"
+    sequence(:email) { |n| "email#{n}@nowhere.edu" }
+    sequence(:username) { |n| "user#{n}" }
     password "something"
   end
 end

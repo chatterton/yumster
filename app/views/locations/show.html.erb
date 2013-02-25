@@ -1,13 +1,37 @@
 <h2><%= @location.description %></h2>
 <br>
 <div class="row-fluid">
-  <div class="span8 pull-right">
+  <div class="span6 pull-right">
     <div class="map_container">
       <div id="map_canvas"></div>
     </div>
   </div>
-  <div class="span4 pull-left no-left-margin">
+  <div class="span6 pull-left no-left-margin">
+    <p>
     This location is a <%= @location.category %>.<br>
+    </p>
+
+    <p>
+    <%= pluralize(@location.tips.count, 'tip') %>:
+    </p>
+
+    <%# show the tips form if necessary %>
+    <% if user_signed_in? and current_user.tips.where(:location_id => @location.id).count < 1 %>
+      <%= form_for(@location.tips.build) do |f| %>
+        <%= f.hidden_field :location_id, :value => "#{@location.id}" %>
+        <%= f.label :text do %><small>Add a tip!</small><% end %>
+        <%= f.text_area :text %>
+        <br>
+        <%= f.submit "Done", class: "btn" %>
+      <% end %>
+    <% end %>
+
+    <%# show the list of tips %>
+    <% if @location.tips.count > 0 %>
+      <ul>
+      <%= render @location.tips %>
+      </ul>
+    <% end %>
   </div>
 </div>
 
