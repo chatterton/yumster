@@ -17,7 +17,7 @@
 
     <%# show the tips form if necessary %>
     <% if user_signed_in? and current_user.tips.where(:location_id => @location.id).count < 1 %>
-      <%= form_for(@location.tips.build) do |f| %>
+      <%= form_for(Tip.new) do |f| %>
         <%= f.hidden_field :location_id, :value => "#{@location.id}" %>
         <%= f.label :text do %><small>Add a tip!</small><% end %>
         <%= f.text_area :text %>

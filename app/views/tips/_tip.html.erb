@@ -1,5 +1,5 @@
 <li>
-<span class="tip_text"><%= tip.text %></span>
+<span class="tip_text"><%= raw(h(tip.text).gsub(/\n/, '<br>')) %></span>
 <% if current_user and tip.user == current_user %>
   <%= button_to "delete", tip_path(tip), :method => 'delete', :class => "btn btn-danger btn-mini" %>
 <% end %>

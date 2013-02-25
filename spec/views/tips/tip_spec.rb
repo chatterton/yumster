@@ -20,6 +20,12 @@ describe "tips/_tip" do
     rendered.should =~ /yackety/
   end
 
+  it 'should add linebreaks to the text' do
+    @tip.text = "yackety\nschmackety"
+    render_partial(@tip)
+    rendered.should =~ /yackety<br>schmackety/
+  end
+
   context "when the user created the tip" do
     before do
       @tip.stub(:user).and_return(@current_user)
