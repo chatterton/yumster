@@ -1,11 +1,5 @@
 require 'spec_helper'
 
-def sign_in_user
-  user = FactoryGirl.create :user
-  user.confirm!
-  sign_in user
-end
-
 describe LocationsController do
 
   describe "GET 'new'" do

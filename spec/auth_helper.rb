@@ -1,4 +1,5 @@
 module AuthHelper
+  include Warden::Test::Helpers
 
   def log_in_a_user
     user = FactoryGirl.create :user
@@ -12,6 +13,10 @@ module AuthHelper
     fill_in "user_password", with: user.password
     click_button "Sign in"
     user
+  end
+
+  def log_out_all_users
+    logout
   end
 
 end

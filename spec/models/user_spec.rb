@@ -14,6 +14,7 @@ describe User do
   subject { @user }
 
   it { should be_valid }
+  it { should respond_to(:tip_locations) }
 
   describe "username" do
     it "should be three or more characters" do
