@@ -92,7 +92,7 @@ describe Location do
     it "should not allow access" do
       expect do
         Location.new(user_id: 1111)
-      end.should raise_error
+      end.to raise_error
     end
   end
   describe "when user_id is not present" do
