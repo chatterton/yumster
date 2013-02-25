@@ -40,6 +40,7 @@ describe "locations/show" do
   context "when there are tips" do
     before do
       tips = [stub_model(Tip), stub_model(Tip)]
+      view.stub(:current_user).and_return false
       @location.stub(:tips).and_return tips
     end
     it "renders _tip partial for each" do

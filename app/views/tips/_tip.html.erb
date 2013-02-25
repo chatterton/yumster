@@ -1,3 +1,10 @@
 <li>
 <span class="tip_text"><%= tip.text %></span>
+<% if current_user and tip.user == current_user %>
+  <%= form_for(current_user.tips.find_by_id(tip.id),
+                html: { method: :delete },
+                remote: true) do |f| %>
+    <%= f.submit "delete", class: "btn btn-danger btn-mini" %>
+  <% end %>
+<% end %>
 </li>
