@@ -35,17 +35,23 @@ describe "Tips pages" do
       page.should have_content "some sweet text"
     end
     context "that tip" do
+      before do
+        @tip = Tip.last
+      end
       it "causes the form not to be displayed" do
         page.should_not have_selector "form[action='#{tips_path}']"
       end
-      #it "causes the tip to have a delete button" do
-
-      #end
-      #context "deleting the tip" do
-        #it "no longer shows up on the page" do
-          #page.should_not have_content "some sweet text"
-        #end
-      #end
+      it "causes the tip to have a delete button" do
+        page.should have_selector "form[action='#{tip_path(@tip)}']"
+      end
+      context "deleting the tip" do
+        before do
+          click_button "delete"
+        end
+        it "no longer shows up on the page" do
+          page.should_not have_content "some sweet text"
+        end
+      end
     end
   end
 

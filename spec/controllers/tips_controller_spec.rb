@@ -21,4 +21,36 @@ describe TipsController do
     end
   end
 
+  describe "DELETE 'destroy'" do
+    before do
+      @location = FactoryGirl.create :location
+      @user = sign_in_user
+      @tip = FactoryGirl.create :tip, :user => @user, :location => @location
+    end
+    it "redirects to locations#show" do
+      delete :destroy, id: @tip.id
+      response.should redirect_to @location
+    end
+    it "deletes the tip" do
+      expect{
+        delete :destroy, id: @tip.id 
+      }.to change(Tip, :count).by(-1)
+    end
+    context "when it is another user's tip" do
+      before do
+        @anotheruser = FactoryGirl.create :user
+        @anothertip = FactoryGirl.create :tip, :user => @anotheruser, :location => @location
+      end
+      it "deletes the tip" do
+        expect {
+          delete :destroy, id: @anothertip.id
+        }.not_to change(Tip, :count)
+      end
+      it "raises an error" do
+        delete :destroy, id: @anothertip.id
+        response.response_code.should == 403
+      end
+    end
+  end
+
 end
