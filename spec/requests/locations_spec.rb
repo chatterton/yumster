@@ -33,12 +33,12 @@ describe "Locations pages" do
   end
 
   describe "show page" do
-    let(:location) { FactoryGirl.create(:location) }
+    let(:location) { FactoryGirl.create(:location, :description => "zippy's pizza") }
 
     before { visit location_path(location) }
 
     it 'should show the description' do
-      page.should have_content("a location")
+      page.should have_content("zippy's pizza")
     end
   end
 end
