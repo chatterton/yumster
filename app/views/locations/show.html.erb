@@ -39,20 +39,16 @@
 
 <% content_for :scripts do %>
   <script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
-  <%= javascript_include_tag 'geolocationmarker.js' %>
+  <%= javascript_include_tag 'elastictxt.js' %>
   <script type="text/javascript" charset="utf-8">
 
-var position = new google.maps.LatLng(<%= @location.latitude %>, <%= @location.longitude %>)
-
-var GeoMarker
-var addPositionIndicator = function(map) {
-  if(!GeoMarker) {
-    GeoMarker = new GeolocationMarker()
-    GeoMarker.setCircleOptions({fillColor: '#808080'})
-    GeoMarker.setMap(map)
-  }
+// Add elastic text for tip box
+if ($('#tip_text').length) {
+  new ElasticText({node: document.getElementById('tip_text')});
 }
 
+// Put marker for location on map
+var position = new google.maps.LatLng(<%= @location.latitude %>, <%= @location.longitude %>)
 var init = function() {
   map = new google.maps.Map(document.getElementById('map_canvas'), {
     zoom: 18,

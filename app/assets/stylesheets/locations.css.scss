@@ -78,6 +78,7 @@ img.location_marker {
 #nearby_results {
   list-style: none;
   margin-left: 0px;
+  border-top: 2px solid $COLOR_WELL_WHITE;
 }
 
 p.location_content {
@@ -135,6 +136,7 @@ textarea#tip_text {
 .tip_list {
   list-style: none;
   margin-left: 0px;
+  border-top: 2px solid $COLOR_WELL_WHITE;
 }
 .tip_item {
   border-bottom: 2px solid $COLOR_WELL_WHITE;
