@@ -41,8 +41,9 @@ describe "locations/show" do
   context "when there are tips" do
     before do
       tips = []
-      tips << stub_model(Tip, :user => stub_model(User, :username => "ff"))
-      tips << stub_model(Tip, :user => stub_model(User, :username => "ff"))
+      tip = FactoryGirl.create :tip
+      tip2 = FactoryGirl.create :tip
+      tips = [tip, tip2]
       view.stub(:current_user).and_return false
       assign(:tips, tips)
     end
