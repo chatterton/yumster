@@ -11,20 +11,22 @@
     This location is a <%= @location.category %>.<br>
     </p>
 
-    <p>
-    <%= pluralize(@location.tips.count, 'tip') %>:
-    </p>
-
     <%# show the tips form if necessary %>
     <% if user_signed_in? and current_user.tips.where(:location_id => @location.id).count < 1 %>
+      <br>
       <%= form_for(Tip.new) do |f| %>
         <%= f.hidden_field :location_id, :value => "#{@location.id}" %>
-        <%= f.label :text do %><small>Add a tip!</small><% end %>
-        <%= f.text_area :text %>
+        <%= f.label :text do %><p>Leave a tip here:</p><% end %>
+        <%= f.text_area :text, :maxlength => 200 %>
         <br>
         <%= f.submit "Done", class: "btn" %>
       <% end %>
+      <br>
     <% end %>
+
+    <p>
+    <%= pluralize(@location.tips.count, 'tip') %>
+    </p>
 
     <%# show the list of tips %>
     <% if @tips.count > 0 %>
