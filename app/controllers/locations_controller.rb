@@ -17,6 +17,7 @@ class LocationsController < ApplicationController
 
   def show
     @location = Location.find(params[:id])
+    @tips = Tip.where(:location_id => @location.id).order("created_at asc")
   end
 
   respond_to :json, :html
