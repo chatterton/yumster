@@ -21,7 +21,7 @@ describe 'layouts/application' do
     end
     it 'displays username linked to the account page' do
       rendered.should_not have_link "", :href => new_user_session_path
-      rendered.should have_link @user.username, :href => user_path(@user.username)
+      rendered.should have_link "", :href => user_path(@user.username)
     end
   end
 

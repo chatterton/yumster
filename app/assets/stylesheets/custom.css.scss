@@ -51,6 +51,11 @@ ul.brand_nav li {
   }
 }
 
+li.divider-vertical {
+  background-color: $COLOR_BACKGROUND_WHITE;
+  border-right: 2px solid $COLOR_WELL_WHITE;
+}
+
 /* copied from bootstrap */
 .brand_nav > li > a {
   padding-left: 10px;
