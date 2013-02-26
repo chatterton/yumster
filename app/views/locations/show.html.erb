@@ -11,25 +11,27 @@
     This location is a <%= @location.category %>.<br>
     </p>
 
-    <p>
-    <%= pluralize(@location.tips.count, 'tip') %>:
-    </p>
-
     <%# show the tips form if necessary %>
     <% if user_signed_in? and current_user.tips.where(:location_id => @location.id).count < 1 %>
+      <br>
       <%= form_for(Tip.new) do |f| %>
         <%= f.hidden_field :location_id, :value => "#{@location.id}" %>
-        <%= f.label :text do %><small>Add a tip!</small><% end %>
-        <%= f.text_area :text %>
+        <%= f.label :text do %><p>Leave a tip here:</p><% end %>
+        <%= f.text_area :text, :maxlength => 200 %>
         <br>
         <%= f.submit "Done", class: "btn" %>
       <% end %>
+      <br>
     <% end %>
 
+    <p>
+    <%= pluralize(@location.tips.count, 'tip') %>
+    </p>
+
     <%# show the list of tips %>
-    <% if @location.tips.count > 0 %>
-      <ul>
-      <%= render @location.tips %>
+    <% if @tips.count > 0 %>
+      <ul class="tip_list">
+      <%= render @tips %>
       </ul>
     <% end %>
   </div>
@@ -39,20 +41,16 @@
 
 <% content_for :scripts do %>
   <script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
-  <%= javascript_include_tag 'geolocationmarker.js' %>
+  <%= javascript_include_tag 'elastictxt.js' %>
   <script type="text/javascript" charset="utf-8">
 
-var position = new google.maps.LatLng(<%= @location.latitude %>, <%= @location.longitude %>)
-
-var GeoMarker
-var addPositionIndicator = function(map) {
-  if(!GeoMarker) {
-    GeoMarker = new GeolocationMarker()
-    GeoMarker.setCircleOptions({fillColor: '#808080'})
-    GeoMarker.setMap(map)
-  }
+// Add elastic text for tip box
+if ($('#tip_text').length) {
+  new ElasticText({node: document.getElementById('tip_text')});
 }
 
+// Put marker for location on map
+var position = new google.maps.LatLng(<%= @location.latitude %>, <%= @location.longitude %>)
 var init = function() {
   map = new google.maps.Map(document.getElementById('map_canvas'), {
     zoom: 18,

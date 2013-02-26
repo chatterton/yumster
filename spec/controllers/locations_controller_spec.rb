@@ -40,6 +40,20 @@ describe LocationsController do
     end
   end
 
+  describe "GET 'show'" do
+    before do
+      @loc = FactoryGirl.create :location
+      @tip1 = FactoryGirl.create :tip, location: @loc
+      @tip2 = FactoryGirl.create :tip, location: @loc
+      get :show, :id => @loc.id
+    end
+    it "should assign location and tips" do
+      assigns(:location).should == @loc
+      assigns(:tips).should include(@tip1)
+      assigns(:tips).should include(@tip2)
+    end
+  end
+
   describe "GET 'near'" do
     before do
       location1 = FactoryGirl.create :location, description: "Le Bus Stop", latitude: 47.6202762479463, longitude: -122.303993513106, user_id: 12
