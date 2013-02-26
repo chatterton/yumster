@@ -5,6 +5,7 @@ describe "locations/show" do
   before do
     @location = stub_model Location, :latitude => 40, :longitude => 42, :description => 'fooo', :category => "Plant"
     assign(:location, @location)
+    assign(:tips, [])
     view.stub(:user_signed_in?).and_return(false)
   end
 
@@ -39,9 +40,11 @@ describe "locations/show" do
 
   context "when there are tips" do
     before do
-      tips = [stub_model(Tip), stub_model(Tip)]
+      tips = []
+      tips << stub_model(Tip, :user => stub_model(User, :username => "ff"))
+      tips << stub_model(Tip, :user => stub_model(User, :username => "ff"))
       view.stub(:current_user).and_return false
-      @location.stub(:tips).and_return tips
+      assign(:tips, tips)
     end
     it "renders _tip partial for each" do
       render
