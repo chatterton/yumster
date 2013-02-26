@@ -40,7 +40,6 @@ describe "locations/show" do
 
   context "when there are tips" do
     before do
-      tips = []
       tip = FactoryGirl.create :tip
       tip2 = FactoryGirl.create :tip
       tips = [tip, tip2]
