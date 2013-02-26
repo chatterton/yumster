@@ -1,8 +1,9 @@
-<li>
-<%= link_to tip.user.username, user_path(tip.user.username), :class => "tip_username" %>
-<span class="tip_time"><%= time_ago_in_words(tip.created_at) %> ago.</span><br>
-<span class="tip_text"><%= raw(h(tip.text).gsub(/\n/, '<br>')) %></span>
-<% if current_user and tip.user == current_user %>
-  <%= button_to "delete", tip_path(tip), :method => 'delete', :class => "btn btn-danger btn-mini tip_button" %>
-<% end %>
+<li class="tip_item">
+  <%= link_to tip.user.username, user_path(tip.user.username), :class => "tip_username" %>
+  <span class="tip_time"><%= time_ago_in_words(tip.created_at) %> ago.</span>
+  <br>
+  <p class="tip_text"><%= raw(h(tip.text).gsub(/\n/, '<br>')) %></p>
+  <% if current_user and tip.user == current_user %>
+    <%= button_to "delete", tip_path(tip), :method => 'delete', :class => "btn btn-danger btn-mini tip_button" %>
+  <% end %>
 </li>
