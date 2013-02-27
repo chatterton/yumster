@@ -11,6 +11,17 @@ $iconWhiteSpritePath: '';
   max-width: 800px;
 }
 
+/*
+.brand_gradient {
+  background-image: -ms-linear-gradient(bottom, white 0%, $COLOR_BACKGROUND_WHITE 100%);
+  background-image: -moz-linear-gradient(bottom, white 0%, $COLOR_BACKGROUND_WHITE 100%);
+  background-image: -o-linear-gradient(bottom, white 0%, $COLOR_BACKGROUND_WHITE 100%);
+  background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, white), color-stop(1, $COLOR_BACKGROUND_WHITE));
+  background-image: -webkit-linear-gradient(bottom, white 0%, $COLOR_BACKGROUND_WHITE 100%);
+  background-image: linear-gradient(to top, white 0%, $COLOR_BACKGROUND_WHITE 100%);
+}
+*/
+
 img.brand_image {
   width: 120px;
   float: left;

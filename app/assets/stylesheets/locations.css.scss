@@ -65,7 +65,7 @@
 li.location_item {
   @extend .hover_container;
   &:hover {
-    background-color: lighten($COLOR_WELL_WHITE, 5%)
+    background-color: $COLOR_BACKGROUND_WHITE;
   }
   border-bottom: 2px solid $COLOR_WELL_WHITE;
 }

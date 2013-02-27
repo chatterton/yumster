@@ -10,6 +10,7 @@
 
 <br><br>
 <p>
-... has posted <%= pluralize @user.locations.count, 'location' %>.
+This user has posted <%= pluralize @user.locations.count, 'location' %>
+and <%= pluralize @user.tips.count, 'tip' %>.
 </p>
 
