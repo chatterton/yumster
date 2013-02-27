@@ -119,6 +119,8 @@ describe Location do
 
   describe "reverse geolocation" do
     it { should respond_to(:address) }
+    it { should respond_to(:street) }
+    it { should respond_to(:neighborhood) }
     it { should respond_to(:city) }
     it { should respond_to(:state) }
     it { should respond_to(:state_code) }
@@ -127,25 +129,25 @@ describe Location do
     it { should respond_to(:country_code) }
     context "upon reverse geolocating"do
       before do
+        firstresult = {
+          'address' => 'aaa_address',
+          'city' => 'aaa_city',
+          'state' => 'aaa_state',
+          'state_code' => 'aaa_state_code',
+          'postal_code' => 'aaa_postal_code',
+          'country' => 'aaa_country',
+          'country_code' => 'aaa_country_code'
+        }
         Geocoder.configure(:lookup => :test)
         Geocoder::Lookup::Test.add_stub(
           [10.0, 101.0],
-          [{
-            'address' => 'aaa_address',
-            'city' => 'aaa_city',
-            'state' => 'aaa_state',
-            'state_code' => 'aaa_state_code',
-            'postal_code' => 'aaa_postal_code',
-            'country' => 'aaa_country',
-            'country_code' => 'aaa_country_code'
-          }, {
-            'check' => 'nope'
-          }]
+          [firstresult, {'check' => 'nope'}]
         )
         @location.reverse_geocode()
       end
       it "sets the fields" do
-        @location.address.should == 'aaa_address'
+        ## FIXME: Figure out how to test address_components_of_type
+        @location.address.should == 'aaa_address' 
         @location.city.should == 'aaa_city'
         @location.state.should == 'aaa_state'
         @location.state_code.should == 'aaa_state_code'

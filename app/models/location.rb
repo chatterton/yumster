@@ -1,6 +1,6 @@
 class Location < ActiveRecord::Base
   attr_accessible :description, :latitude, :longitude, :category
-  attr_protected :address, :city, :state, :state_code, :postal_code, :country, :country_code, :user_id
+  attr_protected :address, :street, :city, :state, :state_code, :postal_code, :country, :country_code, :user_id, :neighborhood
   belongs_to :user
   has_many :tips
   has_many :users, :through => :tips
@@ -8,7 +8,19 @@ class Location < ActiveRecord::Base
   ## for https://github.com/alexreisner/geocoder
   reverse_geocoded_by :latitude, :longitude do |loc, results|
     if geo = results.first
-      loc.address = geo.address
+      number = ""
+      neighborhood = ""
+      route = ""
+      if defined? geo.address_components_of_type
+        number = geo.address_components_of_type(:street_number).first['long_name']
+        neighborhood = geo.address_components_of_type(:neighborhood).first['long_name']
+        route = geo.address_components_of_type(:route).first['long_name']
+        loc.street = "#{number} #{geo.route}"
+        loc.address = "#{loc.street}, #{geo.city}, #{geo.state}"
+        loc.neighborhood = neighborhood
+      else
+        loc.address = geo.address
+      end
       loc.city = geo.city
       loc.state = geo.state
       loc.state_code = geo.state_code

@@ -21,15 +21,21 @@ describe "Locations pages" do
       end
     end
     describe "valid form contents" do
-      it "should increase the location count" do
+      before do
         visit new_location_path
         find(:xpath, "//input[@id='location_latitude']").set "16"
         find(:xpath, "//input[@id='location_longitude']").set "16"
         choose "location_category_dumpster"
         fill_in "location_description", with: "fooood"
         Geocoder.configure(:lookup => :test)
-        Geocoder::Lookup::Test.add_stub([16.0, 16.0], [])
+        Geocoder::Lookup::Test.add_stub([16.0, 16.0], [{'address' => '123 Streetname'}])
+      end
+      it "should increase the location count" do
         expect { click_button "Create location" }.to change(Location, :count)
+      end
+      it "reverse geolocates for the address" do
+        click_button "Create location"
+        page.should have_content "123 Streetname"
       end
     end
   end
