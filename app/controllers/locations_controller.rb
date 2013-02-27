@@ -9,6 +9,8 @@ class LocationsController < ApplicationController
   def create
     @location = current_user.locations.build(params[:location])
     if @location.save
+      @location.reverse_geocode
+      @location.save
       redirect_to :action => "show", :id => @location.id
     else
       render 'new'

@@ -3,7 +3,11 @@ require 'spec_helper'
 describe "locations/show" do
 
   before do
-    @location = stub_model Location, :latitude => 40, :longitude => 42, :description => 'fooo', :category => "Plant"
+    @location = stub_model Location,
+      :latitude => 40,
+      :longitude => 42,
+      :description => 'fooo',
+      :category => "Plant"
     assign(:location, @location)
     assign(:tips, [])
     view.stub(:user_signed_in?).and_return(false)
@@ -18,6 +22,16 @@ describe "locations/show" do
   it 'shows a map' do
     render
     rendered.should have_selector '.map_container #map_canvas'
+  end
+
+  context 'when there is an address' do
+    before do
+      @location.stub(:address).and_return('somewheresville, UT')
+    end
+    it 'shows the address' do
+      render
+      rendered.should =~ /somewheresville/
+    end
   end
 
   context 'when a user is not signed in' do
