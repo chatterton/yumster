@@ -23,7 +23,7 @@ describe "static pages" do
       visit '/pages/about'
     end
     subject { page }
-    it { should have_content 'Welcome to Yumster' }
+    it { should have_content 'About Us' }
     it 'should link to twitter' do
       page.should have_link "", :href => "http://twitter.com/yumster_mm"
     end

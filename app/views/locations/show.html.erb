@@ -27,12 +27,11 @@
       <br>
     <% end %>
 
-    <p>
-    <%= pluralize(@location.tips.count, 'tip') %>
-    </p>
-
     <%# show the list of tips %>
     <% if @tips.count > 0 %>
+      <p>
+      <%= pluralize(@tips.count, 'tip') %>
+      </p>
       <ul class="tip_list">
       <%= render @tips %>
       </ul>

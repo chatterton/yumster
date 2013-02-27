@@ -52,6 +52,12 @@ describe "locations/show" do
     end
   end
 
+  context 'when there are no tips' do
+    it 'does not show any mention of tips' do
+      render
+      rendered.should_not =~ / tip/
+    end
+  end
   context "when there are tips" do
     before do
       tip = FactoryGirl.create :tip
@@ -63,6 +69,10 @@ describe "locations/show" do
     it "renders _tip partial for each" do
       render
       expect(view).to render_template(:partial => "_tip", :count => 2)
+    end
+    it 'shows and pluralizes tip count' do
+      render
+      rendered.should =~ /2 tips/
     end
   end
 
