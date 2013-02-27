@@ -80,7 +80,8 @@ class LocationsNear
   searchHere: ->
     center = window.Yumster.Locations.Near.map.getCenter()
     $('#nearby_results').empty()
-    marker.setMap(null) for marker in @markers ## clear all markers
+    while marker = @markers.pop() ## clear all markers
+      marker.setMap(null)
     @fillNearbyLocations(center.lat(), center.lng())
     @updateURLLatLong(center.lat(), center.lng())
     $('#map_reload').addClass('disabled')
