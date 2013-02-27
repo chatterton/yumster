@@ -125,6 +125,35 @@ describe Location do
     it { should respond_to(:postal_code) }
     it { should respond_to(:country) }
     it { should respond_to(:country_code) }
+    context "upon reverse geolocating"do
+      before do
+        Geocoder.configure(:lookup => :test)
+        Geocoder::Lookup::Test.add_stub(
+          [10.0, 101.0],
+          [{
+            'address' => 'aaa_address',
+            'city' => 'aaa_city',
+            'state' => 'aaa_state',
+            'state_code' => 'aaa_state_code',
+            'postal_code' => 'aaa_postal_code',
+            'country' => 'aaa_country',
+            'country_code' => 'aaa_country_code'
+          }, {
+            'check' => 'nope'
+          }]
+        )
+        @location.reverse_geocode()
+      end
+      it "sets the fields" do
+        @location.address.should == 'aaa_address'
+        @location.city.should == 'aaa_city'
+        @location.state.should == 'aaa_state'
+        @location.state_code.should == 'aaa_state_code'
+        @location.postal_code.should == 'aaa_postal_code'
+        @location.country.should == 'aaa_country'
+        @location.country_code.should == 'aaa_country_code'
+      end
+    end
   end
 
 end
