@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130227033807) do
+ActiveRecord::Schema.define(:version => 20130227204459) do
 
   create_table "locations", :force => true do |t|
     t.string   "description"
@@ -29,6 +29,8 @@ ActiveRecord::Schema.define(:version => 20130227033807) do
     t.string   "postal_code"
     t.string   "country"
     t.string   "country_code"
+    t.string   "street"
+    t.string   "neighborhood"
   end
 
   add_index "locations", ["latitude"], :name => "index_locations_on_latitude"

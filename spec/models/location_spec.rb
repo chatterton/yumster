@@ -119,6 +119,8 @@ describe Location do
 
   describe "reverse geolocation" do
     it { should respond_to(:address) }
+    it { should respond_to(:street) }
+    it { should respond_to(:neighborhood) }
     it { should respond_to(:city) }
     it { should respond_to(:state) }
     it { should respond_to(:state_code) }

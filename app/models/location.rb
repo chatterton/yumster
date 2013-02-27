@@ -1,6 +1,6 @@
 class Location < ActiveRecord::Base
   attr_accessible :description, :latitude, :longitude, :category
-  attr_protected :address, :city, :state, :state_code, :postal_code, :country, :country_code, :user_id
+  attr_protected :address, :street, :city, :state, :state_code, :postal_code, :country, :country_code, :user_id, :neighborhood
   belongs_to :user
   has_many :tips
   has_many :users, :through => :tips
