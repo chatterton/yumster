@@ -9,6 +9,8 @@
   <div class="span6 pull-left no-left-margin">
     <p>
     This location is a <%= @location.category %>.
+    </p>
+    <p>
     <% if @location.address %>
     It is located near <%= @location.address %>.
     <% end %>
@@ -16,7 +18,6 @@
 
     <%# show the tips form if necessary %>
     <% if user_signed_in? and current_user.tips.where(:location_id => @location.id).count < 1 %>
-      <br>
       <%= form_for(Tip.new) do |f| %>
         <%= f.hidden_field :location_id, :value => "#{@location.id}" %>
         <%= f.label :text do %><p>Leave a tip here:</p><% end %>
@@ -24,13 +25,12 @@
         <br>
         <%= f.submit "Done", class: "btn" %>
       <% end %>
-      <br>
     <% end %>
 
     <%# show the list of tips %>
     <% if @tips.count > 0 %>
       <p>
-      <%= pluralize(@tips.count, 'tip') %>
+      <%= pluralize(@tips.count, 'tip') %>:
       </p>
       <ul class="tip_list">
       <%= render @tips %>
