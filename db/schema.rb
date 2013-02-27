@@ -11,17 +11,24 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130226023315) do
+ActiveRecord::Schema.define(:version => 20130227033807) do
 
   create_table "locations", :force => true do |t|
     t.string   "description"
     t.float    "latitude"
     t.float    "longitude"
-    t.datetime "created_at",                 :null => false
-    t.datetime "updated_at",                 :null => false
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
     t.string   "category"
     t.integer  "user_id"
-    t.integer  "tips_count",  :default => 0, :null => false
+    t.integer  "tips_count",   :default => 0, :null => false
+    t.string   "address"
+    t.string   "city"
+    t.string   "state"
+    t.string   "state_code"
+    t.string   "postal_code"
+    t.string   "country"
+    t.string   "country_code"
   end
 
   add_index "locations", ["latitude"], :name => "index_locations_on_latitude"

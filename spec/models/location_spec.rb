@@ -117,4 +117,14 @@ describe Location do
     end
   end
 
+  describe "reverse geolocation" do
+    it { should respond_to(:address) }
+    it { should respond_to(:city) }
+    it { should respond_to(:state) }
+    it { should respond_to(:state_code) }
+    it { should respond_to(:postal_code) }
+    it { should respond_to(:country) }
+    it { should respond_to(:country_code) }
+  end
+
 end
