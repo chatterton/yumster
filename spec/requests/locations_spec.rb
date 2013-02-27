@@ -27,6 +27,8 @@ describe "Locations pages" do
         find(:xpath, "//input[@id='location_longitude']").set "16"
         choose "location_category_dumpster"
         fill_in "location_description", with: "fooood"
+        Geocoder.configure(:lookup => :test)
+        Geocoder::Lookup::Test.add_stub([16.0, 16.0], [])
         expect { click_button "Create location" }.to change(Location, :count)
       end
     end
