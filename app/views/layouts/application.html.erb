@@ -31,8 +31,8 @@
         </ul>
       </div>
     </header>
-    <% unless notice.blank? %><p class="notice"><%= notice %></p><% end %>
-    <% unless alert.blank? %><p class="alert"><%= alert %></p><% end %>
+    <% unless notice.blank? %><p class="alert alert-info"><%= notice %></p><br><% end %>
+    <% unless alert.blank? %><p class="alert alert-error"><%= alert %></p><br><% end %>
     <%= yield %>
     <br><br>
   </div>
