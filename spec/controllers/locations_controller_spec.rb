@@ -28,14 +28,24 @@ describe LocationsController do
     end
     context "with a valid location" do
       before do
+        Geocoder.configure(:lookup => :test)
+        Geocoder::Lookup::Test.add_stub(
+          [1.5, 1.8],
+          [{
+            'address' => 'Las Vegas, NV',
+          }]
+        )
         @count = Location.count
-        post 'create', { location: FactoryGirl.attributes_for(:location) }
+        post 'create', { location: FactoryGirl.attributes_for(:location, :latitude => 1.5, :longitude => 1.8) }
       end
       it "creates a new location" do
         Location.count.should == @count + 1
       end
       it "shows the newly created location" do
         response.should redirect_to Location.last
+      end
+      it "reverse geolocates the model" do
+        Location.last.address.should == 'Las Vegas, NV'
       end
     end
   end
