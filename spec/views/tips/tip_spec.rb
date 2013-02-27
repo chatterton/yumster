@@ -31,7 +31,7 @@ describe "tips/_tip" do
       render_partial(@tip2)
     end
     it "should show a delete button" do
-      rendered.should have_selector "form[action='#{tip_path(@tip2)}']"
+      rendered.should have_link "delete", href: tip_path(@tip2)
     end
   end
 
