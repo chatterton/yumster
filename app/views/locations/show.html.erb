@@ -8,7 +8,10 @@
   </div>
   <div class="span6 pull-left no-left-margin">
     <p>
-    This location is a <%= @location.category %>.<br>
+    This location is a <%= @location.category %>.
+    <% if @location.address %>
+    It is located near <%= @location.address %>.
+    <% end %>
     </p>
 
     <%# show the tips form if necessary %>
