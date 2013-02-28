@@ -44,12 +44,14 @@ describe "window.Yumster.Locations.Near", ->
       locations = [ loc1, loc2 ]
       sinon.stub(@locations, "createLocationHTML")
       sinon.stub(@locations, "addMarkerToMap")
+      sinon.stub(@locations, "fitMapToMarkers")
       @locations.createLocationHTML.withArgs(loc1).returns($("<li>OK1</li>"))
       @locations.createLocationHTML.withArgs(loc2).returns($("<li>OK2</li>"))
       @locations.fillNearbyLocationsSuccess(locations)
     afterEach ->
       @locations.createLocationHTML.restore()
       @locations.addMarkerToMap.restore()
+      @locations.fitMapToMarkers.restore()
     it "populates #nearby_results with locations", ->
       container = $('#nearby_results').html()
       container.should.have.string("OK1")
@@ -57,6 +59,10 @@ describe "window.Yumster.Locations.Near", ->
     it "creates markers A and B", ->
       @locations.addMarkerToMap.firstCall.args[0].icon.should.include 'A.png'
       @locations.addMarkerToMap.secondCall.args[0].icon.should.include 'B.png'
+    it "should fit the map to the new marker set", ->
+      @locations.fitMapToMarkers.callCount.should.equal 1
+    it "should disable the map_reload button", ->
+      $('#map_reload').is('.disabled').should.be.true
     context "when there are more than 20 locations", ->
       beforeEach ->
         locations = ("location #{i}" for i in [1..25])
@@ -196,8 +202,26 @@ describe "window.Yumster.Locations.Near", ->
       @locations.updateURLLatLong.callCount.should.equal 1
       @locations.updateURLLatLong.firstCall.args[0].should.equal 666
       @locations.updateURLLatLong.firstCall.args[1].should.equal 667
-    it "should disable the map_reload button", ->
-      $('#map_reload').is('.disabled').should.be.true
+
+  describe "fitMapToMarkers(map, markers)", ->
+    beforeEach ->
+      @map =
+        fitBounds: sinon.spy()
+      @bounds =
+        extend: sinon.spy()
+      m1 =
+        getPosition: () -> "marker1"
+      m2 =
+        getPosition: () -> "marker2"
+      sinon.stub(@locations, 'makeLatLngBounds').returns(@bounds)
+      @locations.fitMapToMarkers(@map, [m1, m2])
+    afterEach ->
+      @locations.makeLatLngBounds.restore()
+    it 'fits map bounds to collection of marker positions', ->
+      @bounds.extend.callCount.should.equal 2
+      @bounds.extend.firstCall.args[0].should.equal "marker1"
+      @bounds.extend.secondCall.args[0].should.equal "marker2"
+      @map.fitBounds.callCount.should.equal 1
 
   describe "mapCallback(result)", ->
     beforeEach ->

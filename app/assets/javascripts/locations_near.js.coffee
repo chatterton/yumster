@@ -35,6 +35,8 @@ class LocationsNear
       loc = @createLocationHTML(location)
       loc.appendTo(container)
       @addMarkerToMap(location)
+    @fitMapToMarkers(window.Yumster.Locations.Near.map, @markers)
+    $('#map_reload').addClass('disabled')
     if data.length == 0
       $(@templates['templates/no_locations_found'](null)).appendTo(container)
 
@@ -84,7 +86,14 @@ class LocationsNear
       marker.setMap(null)
     @fillNearbyLocations(center.lat(), center.lng())
     @updateURLLatLong(center.lat(), center.lng())
-    $('#map_reload').addClass('disabled')
+
+  makeLatLngBounds: () ->
+    new google.maps.LatLngBounds
+
+  fitMapToMarkers: (map, markers) ->
+    bounds = @makeLatLngBounds()
+    bounds.extend(marker.getPosition()) for marker in markers
+    map.fitBounds(bounds)
 
   mapCallback: (result) ->
     loc = result.geometry.location

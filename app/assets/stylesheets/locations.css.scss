@@ -79,6 +79,7 @@ img.location_marker {
   list-style: none;
   margin-left: 0px;
   border-top: 2px solid $COLOR_WELL_WHITE;
+  clear: both; // makes the <ul> stop eating the map
 }
 
 p.location_content {
