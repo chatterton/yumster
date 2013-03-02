@@ -37,32 +37,34 @@ describe "window.Yumster.Locations.Near", ->
 
   describe "fillNearbyLocationsSuccess(data)", ->
     beforeEach ->
-      loc1 =
-        check: 1
-      loc2 =
-        check: 2
-      locations = [ loc1, loc2 ]
       sinon.stub(@locations, "createLocationHTML")
       sinon.stub(@locations, "addMarkerToMap")
       sinon.stub(@locations, "fitMapToMarkers")
-      @locations.createLocationHTML.withArgs(loc1).returns($("<li>OK1</li>"))
-      @locations.createLocationHTML.withArgs(loc2).returns($("<li>OK2</li>"))
-      @locations.fillNearbyLocationsSuccess(locations)
     afterEach ->
       @locations.createLocationHTML.restore()
       @locations.addMarkerToMap.restore()
       @locations.fitMapToMarkers.restore()
-    it "populates #nearby_results with locations", ->
-      container = $('#nearby_results').html()
-      container.should.have.string("OK1")
-      container.should.have.string("OK2")
-    it "creates markers A and B", ->
-      @locations.addMarkerToMap.firstCall.args[0].icon.should.include 'A.png'
-      @locations.addMarkerToMap.secondCall.args[0].icon.should.include 'B.png'
-    it "should fit the map to the new marker set", ->
-      @locations.fitMapToMarkers.callCount.should.equal 1
-    it "should disable the map_reload button", ->
-      $('#map_reload').is('.disabled').should.be.true
+    context "when there are several locations", ->
+      beforeEach ->
+        loc1 =
+          check: 1
+        loc2 =
+          check: 2
+        locations = [ loc1, loc2 ]
+        @locations.createLocationHTML.withArgs(loc1).returns($("<li>OK1</li>"))
+        @locations.createLocationHTML.withArgs(loc2).returns($("<li>OK2</li>"))
+        @locations.fillNearbyLocationsSuccess(locations)
+      it "populates #nearby_results with locations", ->
+        container = $('#nearby_results').html()
+        container.should.have.string("OK1")
+        container.should.have.string("OK2")
+      it "creates markers A and B", ->
+        @locations.addMarkerToMap.firstCall.args[0].icon.should.include 'A.png'
+        @locations.addMarkerToMap.secondCall.args[0].icon.should.include 'B.png'
+      it "should fit the map to the new marker set", ->
+        @locations.fitMapToMarkers.callCount.should.equal 1
+      it "should disable the map_reload button", ->
+        $('#map_reload').is('.disabled').should.be.true
     context "when there are more than 20 locations", ->
       beforeEach ->
         locations = ("location #{i}" for i in [1..25])
@@ -81,6 +83,8 @@ describe "window.Yumster.Locations.Near", ->
       it "shows a friendly error message", ->
         container = $('#nearby_results').html()
         container.should.have.string("no loc found template")
+      it "does not try to fit map to marker set", ->
+        @locations.fitMapToMarkers.callCount.should.equal 0
 
   describe "createLocationHTML(location)", ->
     beforeEach ->

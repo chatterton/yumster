@@ -35,10 +35,11 @@ class LocationsNear
       loc = @createLocationHTML(location)
       loc.appendTo(container)
       @addMarkerToMap(location)
-    @fitMapToMarkers(window.Yumster.Locations.Near.map, @markers)
     $('#map_reload').addClass('disabled')
     if data.length == 0
       $(@templates['templates/no_locations_found'](null)).appendTo(container)
+    else
+      @fitMapToMarkers(window.Yumster.Locations.Near.map, @markers)
 
   fillNearbyLocations: (lat, long) ->
     path = $('#nearby_ajax_address').attr("href")

@@ -70,6 +70,10 @@ li.location_item {
   border-bottom: 2px solid $COLOR_WELL_WHITE;
 }
 
+li.location_item_nohover {
+  border-bottom: 2px solid $COLOR_WELL_WHITE;
+}
+
 img.location_marker {
   float: left;
   padding: 8px;
