@@ -23,16 +23,17 @@ class LocationsController < ApplicationController
 
   respond_to :json, :html
   def near
-    center_point = false
-    if params[:latitude] and params[:longitude]
-      center_point = [params[:latitude], params[:longitude]]
-    end
     if request.format.json?
       unless params[:latitude] and params[:longitude]
         render :text => "No location given", :status => 500
         return
       end
-      @locations = Location.find_near(params[:latitude], params[:longitude], Location::NEARBY_DISTANCE_MI * 2)
+      begin
+        @locations = Location.find_near(params[:latitude], params[:longitude], Location::NEARBY_DISTANCE_MI * 2)
+      rescue Exception => e
+        render :text => e.message, :status => 500
+        return
+      end
       render :json => @locations.to_json(:only => [:id, :description, :latitude, :longitude, :category, :tips_count])
     else
       render 'near'
