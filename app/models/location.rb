@@ -45,4 +45,13 @@ class Location < ActiveRecord::Base
 
   validates :user_id, presence: true
 
+  NEARBY_DISTANCE_MI = 0.75
+
+  def self.find_near(latitude, longitude, box_width)
+    box = Geocoder::Calculations.bounding_box([latitude, longitude], box_width / 2)
+    locations = Location.within_bounding_box(box)
+    return locations
+  end
+
+
 end

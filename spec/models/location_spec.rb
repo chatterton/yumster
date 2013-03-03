@@ -158,4 +158,21 @@ describe Location do
     end
   end
 
+  describe "Location.find_near(latitude, longitude, box_width)" do
+    before do
+      location1 = FactoryGirl.create :location, description: "Le Bus Stop", latitude: 47.6202762479463, longitude: -122.303993513106, user_id: 12
+      location2 = FactoryGirl.create :location, description: "el portal", latitude: 47.6196396566275, longitude: -122.302057587033, user_id: 12
+      location3 = FactoryGirl.create :location, description: "Mac counter at macy's", latitude: 37.7869744260011, longitude: -122.406910526459, user_id: 12
+      @locations = Location.find_near('47.6187812537455', '-122.302367052115', Location::NEARBY_DISTANCE_MI * 2)
+      @json = @locations.to_json
+    end
+    it "contains nearby locations but not far away ones" do
+      @json.should =~ /Le Bus Stop/
+      @json.should =~ /el portal/
+      @json.should_not =~ /Mac counter at macy's/
+    end
+    it "only includes the right data" do
+
+    end
+  end
 end

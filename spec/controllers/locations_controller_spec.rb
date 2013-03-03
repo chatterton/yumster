@@ -79,13 +79,6 @@ describe LocationsController do
         response.should be_success
         response.content_type.should == "application/json"
       end
-      describe "the response" do
-        it "contains nearby locations but not far away ones" do
-          response.body.should =~ /Le Bus Stop/
-          response.body.should =~ /el portal/
-          response.body.should_not =~ /Mac counter at macy's/
-        end
-      end
       context "without lat / long on query string" do
         it "returns an error" do
           get :near
