@@ -171,8 +171,5 @@ describe Location do
       @json.should =~ /el portal/
       @json.should_not =~ /Mac counter at macy's/
     end
-    it "only includes the right data" do
-
-    end
   end
 end

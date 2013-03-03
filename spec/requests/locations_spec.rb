@@ -49,4 +49,40 @@ describe "Locations pages" do
       page.should have_content("zippy's pizza")
     end
   end
+
+  describe "near page json" do
+    before do
+      FactoryGirl.create(:location)
+      get near_locations_path, { :latitude => 11.2, :longitude => 11.4, :format => :json }
+    end
+    it "gets json back" do
+      response.should be_success
+      response.header['Content-Type'].should include 'application/json'
+    end
+    it "only includes the right data" do
+      parsed = JSON.parse(response.body)
+      parsed.length.should == 1
+      location = parsed[0]
+
+      location["id"].should be
+      location["description"].should be
+      location["latitude"].should be
+      location["longitude"].should be
+      location["category"].should be
+      location["tips_count"].should be
+
+      location["address"].should_not be
+      location["city"].should_not be
+      location["country"].should_not be
+      location["neighborhood"].should_not be
+      location["postal_code"].should_not be
+      location["state"].should_not be
+      location["state_code"].should_not be
+      location["street"].should_not be
+      location["user_id"].should_not be
+      location["created_at"].should_not be
+      location["updated_at"].should_not be
+    end
+  end
+
 end

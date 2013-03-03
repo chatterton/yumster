@@ -33,7 +33,7 @@ class LocationsController < ApplicationController
         return
       end
       @locations = Location.find_near(params[:latitude], params[:longitude], Location::NEARBY_DISTANCE_MI * 2)
-      respond_with(@locations)
+      render :json => @locations.to_json(:only => [:id, :description, :latitude, :longitude, :category, :tips_count])
     else
       render 'near'
     end
