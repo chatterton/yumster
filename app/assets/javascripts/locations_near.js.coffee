@@ -46,8 +46,8 @@ class LocationsNear
       @fitMapToMarkers(window.Yumster.Locations.Near.map, @markers)
 
   fillNearbyLocationsFailure: (status, error) ->
-    console.log status
-    console.log error
+    if status is 500 and error is "Too many locations returned"
+      $(@templates['templates/too_many_locations'](null)).appendTo($('#nearby_results'))
 
   fillNearbyLocations: (lat, long) ->
     path = $('#nearby_ajax_address').attr("href")
@@ -59,7 +59,7 @@ class LocationsNear
       success: (data, status, jqxhr) ->
         window.Yumster.Locations.Near.fillNearbyLocationsSuccess(data)
       error: (jqXHR, status, errorThrown) ->
-        window.Yumster.Locations.Near.fillNearbyLocationsFailure(status, errorThrown)
+        window.Yumster.Locations.Near.fillNearbyLocationsFailure(jqXHR.status, jqXHR.responseText)
     }
 
   updateURLLatLong: (lat, long) ->

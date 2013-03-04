@@ -8,6 +8,7 @@ describe "window.Yumster.Locations.Near", ->
     @templates =
       'templates/nearby_location_item': () ->
       'templates/no_locations_found': () ->
+      'templates/too_many_locations': () ->
     @locations = new window.Yumster.Locations._Near(@templates)
     window.Yumster.Locations.Near = @locations
     $('body').append('''
@@ -45,8 +46,7 @@ describe "window.Yumster.Locations.Near", ->
         @server.respond()
       it "calls into the failure method", ->
         @locations.fillNearbyLocationsFailure.callCount.should.equal 1
-        console.log @locations.fillNearbyLocationsFailure.firstCall.args
-        #@locations.fillNearbyLocationsFailure.calledWith("500", "BAM").should.be.ok
+        @locations.fillNearbyLocationsFailure.calledWith(500, "BAM").should.be.ok
 
   describe "fillNearbyLocationsSuccess(data)", ->
     beforeEach ->
@@ -102,6 +102,25 @@ describe "window.Yumster.Locations.Near", ->
         container.should.have.string("no loc found template")
       it "does not try to fit map to marker set", ->
         @locations.fitMapToMarkers.callCount.should.equal 0
+
+  describe "fillNearbyLocationsFailure(status, error)", ->
+    beforeEach ->
+      @container = $('#nearby_results')
+      @container.empty()
+    context "on some random error", ->
+      beforeEach ->
+        @locations.fillNearbyLocationsFailure(501, "yogurt")
+      it "does nothing", ->
+        container = @container.html()
+        container.should.equal ""
+    context "on too many locations error", ->
+      beforeEach ->
+        @templates['templates/too_many_locations'] = ->
+          '<li>toomany</li>'
+        @locations.fillNearbyLocationsFailure(500, "Too many locations returned")
+      it "shows the too many results template", ->
+        container = @container.html()
+        container.should.have.string "toomany"
 
   describe "createLocationHTML(location)", ->
     beforeEach ->
