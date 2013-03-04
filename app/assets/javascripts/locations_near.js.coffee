@@ -41,6 +41,8 @@ class LocationsNear
     else
       @fitMapToMarkers(window.Yumster.Locations.Near.map, @markers)
 
+  fillNearbyLocationsFailure: (status, error) ->
+
   fillNearbyLocations: (lat, long) ->
     path = $('#nearby_ajax_address').attr("href")
     path = "#{path}?latitude=#{lat}&longitude=#{long}"
@@ -50,8 +52,8 @@ class LocationsNear
       dataType: "json"
       success: (data, status, jqxhr) ->
         window.Yumster.Locations.Near.fillNearbyLocationsSuccess(data)
-      error: (data) ->
-        console.log(data)
+      error: (jqXHR, status, errorThrown) ->
+        window.Yumster.Locations.Near.fillNearbyLocationsFailure(status, errorThrown)
     }
 
   updateURLLatLong: (lat, long) ->

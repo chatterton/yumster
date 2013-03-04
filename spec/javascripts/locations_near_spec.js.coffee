@@ -18,13 +18,15 @@ describe "window.Yumster.Locations.Near", ->
   describe "fillNearbyLocations(lat, long)", ->
     beforeEach ->
       @server = sinon.fakeServer.create()
-      @server.respondWith "GET", null, [200, { "Content-Type": "application/json" }, '["whatevah"]']
       sinon.spy(@locations, "fillNearbyLocationsSuccess")
+      sinon.spy(@locations, "fillNearbyLocationsFailure")
     afterEach ->
       @server.restore()
       @locations.fillNearbyLocationsSuccess.restore()
+      @locations.fillNearbyLocationsFailure.restore()
     context "get locations from server", ->
       beforeEach ->
+        @server.respondWith "GET", null, [200, { "Content-Type": "application/json" }, '["whatevah"]']
         @locations.fillNearbyLocations(50, 51)
         @server.respond()
       it "fires an xhr to the server", ->
@@ -34,6 +36,14 @@ describe "window.Yumster.Locations.Near", ->
       it "calls into the success method with data", ->
         sinon.assert.calledOnce(@locations.fillNearbyLocationsSuccess)
         @locations.fillNearbyLocationsSuccess.calledWith(["whatevah"]).should.be.ok
+    context "on server error", ->
+      beforeEach ->
+        @server.respondWith "GET", null, [500, {}, 'BAM']
+        @locations.fillNearbyLocations(50, 51)
+        @server.respond()
+      it "calls into the failure method", ->
+        @locations.fillNearbyLocationsFailure.callCount.should.equal 1
+        @locations.fillNearbyLocationsFailure.calledWith("500", "BAM").should.be.ok
 
   describe "fillNearbyLocationsSuccess(data)", ->
     beforeEach ->
