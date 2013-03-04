@@ -7,9 +7,9 @@ window.Yumster.Locations.Near or= {}
 class LocationsNear
 
   constructor: (@templates = window.JST) ->
-    @initial_center_found = false
     @alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     @markers = []
+    @fitMapToSearchResults = true
 
   setMap: (map) ->
     window.Yumster.Locations.Near.map = map
@@ -43,7 +43,8 @@ class LocationsNear
     if data.length == 0
       $(@templates['templates/no_locations_found'](null)).appendTo(container)
     else
-      @fitMapToMarkers(window.Yumster.Locations.Near.map, @markers)
+      if @fitMapToSearchResults
+        @fitMapToMarkers(window.Yumster.Locations.Near.map, @markers)
 
   fillNearbyLocationsFailure: (status, error) ->
     if status is 500 and error is "Too many locations returned"
@@ -89,6 +90,10 @@ class LocationsNear
     $('#map_reload').removeClass('disabled')
 
   searchHere: ->
+    @fitMapToSearchResults = false
+    @searchMap()
+
+  searchMap: ->
     center = window.Yumster.Locations.Near.map.getCenter()
     $('#nearby_results').empty()
     while marker = @markers.pop() ## clear all markers
@@ -105,9 +110,10 @@ class LocationsNear
     map.fitBounds(bounds)
 
   mapCallback: (result) ->
+    @fitMapToSearchResults = true
     loc = result.geometry.location
     window.Yumster.Locations.Near.map.setCenter(loc)
-    window.Yumster.Locations.Near.searchHere()
+    window.Yumster.Locations.Near.searchMap()
 
 $ ->
   window.Yumster.Locations.Near = new LocationsNear

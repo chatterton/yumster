@@ -67,10 +67,11 @@ describe "window.Yumster.Locations.Near", ->
           check: 1
         loc2 =
           check: 2
-        locations = [ loc1, loc2 ]
+        @loc_array = [ loc1, loc2 ]
         @locations.createLocationHTML.withArgs(loc1).returns($("<li>OK1</li>"))
         @locations.createLocationHTML.withArgs(loc2).returns($("<li>OK2</li>"))
-        @locations.fillNearbyLocationsSuccess(locations)
+        @locations.fitMapToSearchResults = false
+        @locations.fillNearbyLocationsSuccess(@loc_array)
       it "populates #nearby_results with locations", ->
         container = $('#nearby_results').html()
         container.should.have.string("OK1")
@@ -78,8 +79,15 @@ describe "window.Yumster.Locations.Near", ->
       it "creates markers A and B", ->
         @locations.addMarkerToMap.firstCall.args[0].icon.should.include 'A.png'
         @locations.addMarkerToMap.secondCall.args[0].icon.should.include 'B.png'
-      it "should fit the map to the new marker set", ->
-        @locations.fitMapToMarkers.callCount.should.equal 1
+      context "when fitMapToSearchResults is false (default)", ->
+        it "should not fit the map to the new marker set", ->
+          @locations.fitMapToMarkers.callCount.should.equal 0
+      context "when fitMapToSearchResults is true", ->
+        beforeEach ->
+          @locations.fitMapToSearchResults = true
+          @locations.fillNearbyLocationsSuccess(@loc_array)
+        it "should fit the map to the new marker set", ->
+          @locations.fitMapToMarkers.callCount.should.equal 1
       it "should disable the map_reload button", ->
         $('#map_reload').is('.disabled').should.be.true
     context "when there are more than 20 locations", ->
@@ -216,6 +224,17 @@ describe "window.Yumster.Locations.Near", ->
 
   describe "searchHere()", ->
     beforeEach ->
+      sinon.stub(@locations, "searchMap")
+      @locations.searchHere()
+    afterEach ->
+      @locations.searchMap.restore()
+    it "sets fitMapToSearchResults to false", ->
+      @locations.searchMap.callCount.should.equal 1
+    it "searches the current map", ->
+      @locations.fitMapToSearchResults.should.equal false
+
+  describe "searchMap()", ->
+    beforeEach ->
       @map =
         getCenter: () ->
       @locations.setMap @map
@@ -227,7 +246,7 @@ describe "window.Yumster.Locations.Near", ->
       }
       $('#map_reload').removeClass('disabled')
       $('<li>whatever</li>').appendTo('#nearby_results')
-      @locations.searchHere()
+      @locations.searchMap()
     afterEach ->
       @locations.fillNearbyLocations.restore()
       @locations.updateURLLatLong.restore()
@@ -272,10 +291,13 @@ describe "window.Yumster.Locations.Near", ->
       @map =
         setCenter: sinon.spy()
       @locations.setMap @map
-      @locations.searchHere = sinon.spy()
+      @locations.searchMap = sinon.spy()
+      @locations.fitMapToSearchResults = false
       @locations.mapCallback(result)
     it "should move the map to the location", ->
       @map.setCenter.callCount.should.equal 1
       @map.setCenter.firstCall.args[0].should.equal @location
     it "should reload the map in this new location", ->
-      @locations.searchHere.callCount.should.equal 1
+      @locations.searchMap.callCount.should.equal 1
+    it "should set fitMapToSearchResults true", ->
+      @locations.fitMapToSearchResults.should.equal true

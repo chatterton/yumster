@@ -29,10 +29,7 @@ var map
 var geolocationSuccess = function(latitude, longitude, coordinatesOnURL) {
   var loc = new google.maps.LatLng(latitude, longitude)
   map.setCenter(loc)
-  window.Yumster.Locations.Near.fillNearbyLocations(latitude, longitude)
-  if(!coordinatesOnURL) {
-    window.Yumster.Locations.Near.updateURLLatLong(latitude, longitude)
-  }
+  window.Yumster.Locations.Near.searchHere()
 }
 
 // Add user's location dot to map
