@@ -17,11 +17,15 @@ class LocationsNear
   createLocationHTML: (location) ->
     $(@templates['templates/nearby_location_item'](location))
 
+  makeLatLng: (latitude, longitude) ->
+    new google.maps.LatLng latitude, longitude
+  makeMarker: (config) ->
+    new google.maps.Marker config
   # Markers generated with e.g.
   # http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=E|96c941|000000
   addMarkerToMap: (location) ->
-    latlng = new google.maps.LatLng location.latitude, location.longitude
-    marker = new google.maps.Marker {
+    latlng = @makeLatLng( location.latitude, location.longitude )
+    marker = @makeMarker {
       position: latlng
       map: window.Yumster.Locations.Near.map
       icon: location.icon
@@ -42,6 +46,8 @@ class LocationsNear
       @fitMapToMarkers(window.Yumster.Locations.Near.map, @markers)
 
   fillNearbyLocationsFailure: (status, error) ->
+    console.log status
+    console.log error
 
   fillNearbyLocations: (lat, long) ->
     path = $('#nearby_ajax_address').attr("href")
