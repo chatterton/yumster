@@ -79,7 +79,7 @@ describe "window.Yumster.Locations.Near", ->
       it "creates markers A and B", ->
         @locations.addMarkerToMap.firstCall.args[0].icon.should.include 'A.png'
         @locations.addMarkerToMap.secondCall.args[0].icon.should.include 'B.png'
-      context "when fitMapToSearchResults is false (default)", ->
+      context "when fitMapToSearchResults is false", ->
         it "should not fit the map to the new marker set", ->
           @locations.fitMapToMarkers.callCount.should.equal 0
       context "when fitMapToSearchResults is true", ->
@@ -233,6 +233,18 @@ describe "window.Yumster.Locations.Near", ->
     it "searches the current map", ->
       @locations.fitMapToSearchResults.should.equal false
 
+  describe "emptyCurrentResults()", ->
+    beforeEach ->
+      $('<li>whatever</li>').appendTo('#nearby_results')
+      @locations.markers.push {
+        setMap: () ->
+      }
+      @locations.emptyCurrentResults()
+    it "should clear the current results list", ->
+      $('#nearby_results').children().length.should.equal 0
+    it "should empty the markers array", ->
+      @locations.markers.should.be.empty
+
   describe "searchMap()", ->
     beforeEach ->
       @map =
@@ -240,19 +252,20 @@ describe "window.Yumster.Locations.Near", ->
       @locations.setMap @map
       sinon.stub(@locations, "fillNearbyLocations")
       sinon.stub(@locations, "updateURLLatLong")
+      sinon.stub(@locations, "emptyCurrentResults")
       sinon.stub(@map, "getCenter").returns {
         lat: () -> 666
         lng: () -> 667
       }
       $('#map_reload').removeClass('disabled')
-      $('<li>whatever</li>').appendTo('#nearby_results')
       @locations.searchMap()
     afterEach ->
       @locations.fillNearbyLocations.restore()
       @locations.updateURLLatLong.restore()
+      @locations.emptyCurrentResults.restore()
       @map.getCenter.restore()
-    it "should clear the current results list", ->
-      $('#nearby_results').children().length.should.equal 0
+    it "should clear any current results", ->
+      @locations.emptyCurrentResults.callCount.should.equal 1
     it "should search for nearby locations", ->
       @locations.fillNearbyLocations.callCount.should.equal 1
       @locations.fillNearbyLocations.firstCall.args[0].should.equal 666

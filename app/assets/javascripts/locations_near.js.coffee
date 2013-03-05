@@ -93,11 +93,14 @@ class LocationsNear
     @fitMapToSearchResults = false
     @searchMap()
 
-  searchMap: ->
-    center = window.Yumster.Locations.Near.map.getCenter()
+  emptyCurrentResults: () ->
     $('#nearby_results').empty()
     while marker = @markers.pop() ## clear all markers
       marker.setMap(null)
+
+  searchMap: ->
+    @emptyCurrentResults()
+    center = window.Yumster.Locations.Near.map.getCenter()
     @fillNearbyLocations(center.lat(), center.lng())
     @updateURLLatLong(center.lat(), center.lng())
 
