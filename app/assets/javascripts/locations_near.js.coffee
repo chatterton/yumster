@@ -10,6 +10,7 @@ class LocationsNear
     @alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     @markers = []
     @fitMapToSearchResults = true
+    @defaultSpan = .025
 
   setMap: (map) ->
     window.Yumster.Locations.Near.map = map
@@ -50,9 +51,9 @@ class LocationsNear
     if status is 500 and error is "Too many locations returned"
       $(@templates['templates/too_many_locations'](null)).appendTo($('#nearby_results'))
 
-  fillNearbyLocations: (lat, long) ->
+  fillNearbyLocations: (lat, long, span) ->
     path = $('#nearby_ajax_address').attr("href")
-    path = "#{path}?latitude=#{lat}&longitude=#{long}"
+    path += @createURLParams(lat, long, span)
     $.ajax {
       type: "GET"
       url: path
@@ -63,8 +64,16 @@ class LocationsNear
         window.Yumster.Locations.Near.fillNearbyLocationsFailure(jqXHR.status, jqXHR.responseText)
     }
 
-  updateURLLatLong: (lat, long) ->
-    window.History.replaceState {}, null, "?latitude=#{lat.toFixed(6)}&longitude=#{long.toFixed(6)}"
+  createURLParams: (lat, long, span) ->
+    url = ""
+    url += "?latitude=#{lat.toFixed(6)}"
+    url += "&longitude=#{long.toFixed(6)}"
+    url += "&span=#{span.toFixed(6)}"
+    url
+
+  updateURLLatLong: (lat, long, span) ->
+    state = @createURLParams(lat, long, span)
+    window.History.replaceState {}, null, state
 
   getMapCenter: (success, failure) ->
     latitude = if @urlParam("latitude") then parseFloat(@urlParam("latitude")) else null
@@ -100,9 +109,12 @@ class LocationsNear
 
   searchMap: ->
     @emptyCurrentResults()
+    span = @defaultSpan
+    if window.Yumster.Locations.Near.map.getBounds()
+      span = window.Yumster.Locations.Near.map.getBounds().toSpan().lat()
     center = window.Yumster.Locations.Near.map.getCenter()
-    @fillNearbyLocations(center.lat(), center.lng())
-    @updateURLLatLong(center.lat(), center.lng())
+    @fillNearbyLocations(center.lat(), center.lng(), span)
+    @updateURLLatLong(center.lat(), center.lng(), span)
 
   makeLatLngBounds: () ->
     new google.maps.LatLngBounds
