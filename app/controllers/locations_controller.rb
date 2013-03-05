@@ -29,7 +29,7 @@ class LocationsController < ApplicationController
         return
       end
       begin
-        @locations = Location.find_near(params[:latitude], params[:longitude], Location::NEARBY_DISTANCE_MI * 2)
+        @locations = Location.find_near(params[:latitude], params[:longitude], params[:span])
       rescue Exception => e
         render :text => e.message, :status => 500
         return

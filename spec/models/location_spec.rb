@@ -186,4 +186,11 @@ describe Location do
       end
     end
   end
+
+  describe "Location.deg_to_mi" do
+    it "converts degrees to miles" do
+      miles = Location.deg_to_mi(1)
+      miles.should == Location::MILES_IN_A_DEGREE
+    end
+  end
 end
