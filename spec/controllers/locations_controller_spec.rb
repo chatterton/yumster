@@ -79,17 +79,23 @@ describe LocationsController do
         response.should be_success
         response.content_type.should == "application/json"
       end
-      describe "the response" do
-        it "contains nearby locations but not far away ones" do
-          response.body.should =~ /Le Bus Stop/
-          response.body.should =~ /el portal/
-          response.body.should_not =~ /Mac counter at macy's/
-        end
-      end
       context "without lat / long on query string" do
         it "returns an error" do
           get :near
           response.should_not be_success
+        end
+      end
+      context "when an error is raised due to too many results" do
+        before do
+          locations = []
+          locations.stub(:count).and_return 1001
+          Location.stub(:within_bounding_box).and_return locations
+          get :near, :latitude => "47.6187812537455", :longitude => "-122.302367052115"
+        end
+        it "returns a 500 error" do
+          response.should_not be_success
+          response.response_code.should == 500
+          response.body.should =~ /Too many/
         end
       end
     end

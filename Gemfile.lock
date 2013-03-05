@@ -221,6 +221,7 @@ DEPENDENCIES
   guard-konacha
   guard-rspec
   jquery-rails
+  json
   konacha
   newrelic_rpm
   pg (= 0.12.2)

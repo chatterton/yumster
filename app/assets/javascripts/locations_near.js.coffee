@@ -7,9 +7,10 @@ window.Yumster.Locations.Near or= {}
 class LocationsNear
 
   constructor: (@templates = window.JST) ->
-    @initial_center_found = false
     @alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     @markers = []
+    @fitMapToSearchResults = true
+    @defaultSpan = .025
 
   setMap: (map) ->
     window.Yumster.Locations.Near.map = map
@@ -17,11 +18,15 @@ class LocationsNear
   createLocationHTML: (location) ->
     $(@templates['templates/nearby_location_item'](location))
 
+  makeLatLng: (latitude, longitude) ->
+    new google.maps.LatLng latitude, longitude
+  makeMarker: (config) ->
+    new google.maps.Marker config
   # Markers generated with e.g.
   # http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=E|96c941|000000
   addMarkerToMap: (location) ->
-    latlng = new google.maps.LatLng location.latitude, location.longitude
-    marker = new google.maps.Marker {
+    latlng = @makeLatLng( location.latitude, location.longitude )
+    marker = @makeMarker {
       position: latlng
       map: window.Yumster.Locations.Near.map
       icon: location.icon
@@ -39,23 +44,36 @@ class LocationsNear
     if data.length == 0
       $(@templates['templates/no_locations_found'](null)).appendTo(container)
     else
-      @fitMapToMarkers(window.Yumster.Locations.Near.map, @markers)
+      if @fitMapToSearchResults
+        @fitMapToMarkers(window.Yumster.Locations.Near.map, @markers)
 
-  fillNearbyLocations: (lat, long) ->
+  fillNearbyLocationsFailure: (status, error) ->
+    if status is 500 and error is "Too many locations returned"
+      $(@templates['templates/too_many_locations'](null)).appendTo($('#nearby_results'))
+
+  fillNearbyLocations: (lat, long, span) ->
     path = $('#nearby_ajax_address').attr("href")
-    path = "#{path}?latitude=#{lat}&longitude=#{long}"
+    path += @createURLParams(lat, long, span)
     $.ajax {
       type: "GET"
       url: path
       dataType: "json"
       success: (data, status, jqxhr) ->
         window.Yumster.Locations.Near.fillNearbyLocationsSuccess(data)
-      error: (data) ->
-        console.log(data)
+      error: (jqXHR, status, errorThrown) ->
+        window.Yumster.Locations.Near.fillNearbyLocationsFailure(jqXHR.status, jqXHR.responseText)
     }
 
-  updateURLLatLong: (lat, long) ->
-    window.History.replaceState {}, null, "?latitude=#{lat.toFixed(6)}&longitude=#{long.toFixed(6)}"
+  createURLParams: (lat, long, span) ->
+    url = ""
+    url += "?latitude=#{lat.toFixed(6)}"
+    url += "&longitude=#{long.toFixed(6)}"
+    url += "&span=#{span.toFixed(6)}"
+    url
+
+  updateURLLatLong: (lat, long, span) ->
+    state = @createURLParams(lat, long, span)
+    window.History.replaceState {}, null, state
 
   getMapCenter: (success, failure) ->
     latitude = if @urlParam("latitude") then parseFloat(@urlParam("latitude")) else null
@@ -77,16 +95,26 @@ class LocationsNear
     results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(address)
     if results then results[1] else null
 
-  centerChanged: ->
+  enableSearchHere: ->
     $('#map_reload').removeClass('disabled')
 
   searchHere: ->
-    center = window.Yumster.Locations.Near.map.getCenter()
+    @fitMapToSearchResults = false
+    @searchMap()
+
+  emptyCurrentResults: () ->
     $('#nearby_results').empty()
     while marker = @markers.pop() ## clear all markers
       marker.setMap(null)
-    @fillNearbyLocations(center.lat(), center.lng())
-    @updateURLLatLong(center.lat(), center.lng())
+
+  searchMap: ->
+    @emptyCurrentResults()
+    span = @defaultSpan
+    if window.Yumster.Locations.Near.map.getBounds()
+      span = window.Yumster.Locations.Near.map.getBounds().toSpan().lat()
+    center = window.Yumster.Locations.Near.map.getCenter()
+    @fillNearbyLocations(center.lat(), center.lng(), span)
+    @updateURLLatLong(center.lat(), center.lng(), span)
 
   makeLatLngBounds: () ->
     new google.maps.LatLngBounds
@@ -97,9 +125,10 @@ class LocationsNear
     map.fitBounds(bounds)
 
   mapCallback: (result) ->
+    @fitMapToSearchResults = true
     loc = result.geometry.location
     window.Yumster.Locations.Near.map.setCenter(loc)
-    window.Yumster.Locations.Near.searchHere()
+    window.Yumster.Locations.Near.searchMap()
 
 $ ->
   window.Yumster.Locations.Near = new LocationsNear

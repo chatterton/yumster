@@ -5,7 +5,10 @@
 describe "window.Yumster.Locations.Near", ->
 
   beforeEach ->
-    @templates = {}
+    @templates =
+      'templates/nearby_location_item': () ->
+      'templates/no_locations_found': () ->
+      'templates/too_many_locations': () ->
     @locations = new window.Yumster.Locations._Near(@templates)
     window.Yumster.Locations.Near = @locations
     $('body').append('''
@@ -15,45 +18,62 @@ describe "window.Yumster.Locations.Near", ->
       </ul>
     ''')
 
-  describe "fillNearbyLocations(lat, long)", ->
+  describe "fillNearbyLocations(lat, long, span)", ->
     beforeEach ->
       @server = sinon.fakeServer.create()
-      @server.respondWith "GET", null, [200, { "Content-Type": "application/json" }, '["whatevah"]']
-      sinon.spy(@locations, "fillNearbyLocationsSuccess")
+      sinon.stub(@locations, "fillNearbyLocationsSuccess")
+      sinon.stub(@locations, "fillNearbyLocationsFailure")
+      sinon.stub(@locations, "createURLParams").returns("?yolo")
     afterEach ->
       @server.restore()
       @locations.fillNearbyLocationsSuccess.restore()
+      @locations.fillNearbyLocationsFailure.restore()
+      @locations.createURLParams.restore()
     context "get locations from server", ->
       beforeEach ->
-        @locations.fillNearbyLocations(50, 51)
+        @server.respondWith "GET", null, [200, { "Content-Type": "application/json" }, '["whatevah"]']
+        @locations.fillNearbyLocations(50, 51, 3)
         @server.respond()
       it "fires an xhr to the server", ->
         @server.requests.length.should.equal 1
       it "builds the address correctly", ->
-        @server.requests[0].url.should.equal "/whatever?latitude=50&longitude=51"
+        @server.requests[0].url.should.equal "/whatever?yolo"
       it "calls into the success method with data", ->
         sinon.assert.calledOnce(@locations.fillNearbyLocationsSuccess)
         @locations.fillNearbyLocationsSuccess.calledWith(["whatevah"]).should.be.ok
+    context "on server error", ->
+      beforeEach ->
+        @server.respondWith "GET", null, [500, {}, 'BAM']
+        @locations.fillNearbyLocations(50, 51)
+        @server.respond()
+      it "calls into the failure method", ->
+        @locations.fillNearbyLocationsFailure.callCount.should.equal 1
+        @locations.fillNearbyLocationsFailure.calledWith(500, "BAM").should.be.ok
 
   describe "fillNearbyLocationsSuccess(data)", ->
     beforeEach ->
       sinon.stub(@locations, "createLocationHTML")
       sinon.stub(@locations, "addMarkerToMap")
       sinon.stub(@locations, "fitMapToMarkers")
+      sinon.stub(@locations, "makeLatLng")
+      sinon.stub(@locations, "makeMarker")
     afterEach ->
       @locations.createLocationHTML.restore()
       @locations.addMarkerToMap.restore()
       @locations.fitMapToMarkers.restore()
+      @locations.makeLatLng.restore()
+      @locations.makeMarker.restore()
     context "when there are several locations", ->
       beforeEach ->
         loc1 =
           check: 1
         loc2 =
           check: 2
-        locations = [ loc1, loc2 ]
+        @loc_array = [ loc1, loc2 ]
         @locations.createLocationHTML.withArgs(loc1).returns($("<li>OK1</li>"))
         @locations.createLocationHTML.withArgs(loc2).returns($("<li>OK2</li>"))
-        @locations.fillNearbyLocationsSuccess(locations)
+        @locations.fitMapToSearchResults = false
+        @locations.fillNearbyLocationsSuccess(@loc_array)
       it "populates #nearby_results with locations", ->
         container = $('#nearby_results').html()
         container.should.have.string("OK1")
@@ -61,8 +81,15 @@ describe "window.Yumster.Locations.Near", ->
       it "creates markers A and B", ->
         @locations.addMarkerToMap.firstCall.args[0].icon.should.include 'A.png'
         @locations.addMarkerToMap.secondCall.args[0].icon.should.include 'B.png'
-      it "should fit the map to the new marker set", ->
-        @locations.fitMapToMarkers.callCount.should.equal 1
+      context "when fitMapToSearchResults is false", ->
+        it "should not fit the map to the new marker set", ->
+          @locations.fitMapToMarkers.callCount.should.equal 0
+      context "when fitMapToSearchResults is true", ->
+        beforeEach ->
+          @locations.fitMapToSearchResults = true
+          @locations.fillNearbyLocationsSuccess(@loc_array)
+        it "should fit the map to the new marker set", ->
+          @locations.fitMapToMarkers.callCount.should.equal 1
       it "should disable the map_reload button", ->
         $('#map_reload').is('.disabled').should.be.true
     context "when there are more than 20 locations", ->
@@ -86,6 +113,25 @@ describe "window.Yumster.Locations.Near", ->
       it "does not try to fit map to marker set", ->
         @locations.fitMapToMarkers.callCount.should.equal 0
 
+  describe "fillNearbyLocationsFailure(status, error)", ->
+    beforeEach ->
+      @container = $('#nearby_results')
+      @container.empty()
+    context "on some random error", ->
+      beforeEach ->
+        @locations.fillNearbyLocationsFailure(501, "yogurt")
+      it "does nothing", ->
+        container = @container.html()
+        container.should.equal ""
+    context "on too many locations error", ->
+      beforeEach ->
+        @templates['templates/too_many_locations'] = ->
+          '<li>toomany</li>'
+        @locations.fillNearbyLocationsFailure(500, "Too many locations returned")
+      it "shows the too many results template", ->
+        container = @container.html()
+        container.should.have.string "toomany"
+
   describe "createLocationHTML(location)", ->
     beforeEach ->
       @templates['templates/nearby_location_item'] = sinon.stub().returns("<div></div>")
@@ -93,18 +139,19 @@ describe "window.Yumster.Locations.Near", ->
     it "returns a jquery html object", ->
       @html.should.be.an.instanceof jQuery
 
-  describe "updateURLLatLong(lat, long)", ->
+  describe "updateURLLatLong(lat, long, span)", ->
     beforeEach ->
       sinon.stub window.History, "replaceState"
     afterEach ->
       window.History.replaceState.restore()
-    it "updates the address bar with latitude and longitude", ->
-      @locations.updateURLLatLong(41.001, 42.002)
+    it "updates the address bar with latitude, longitude, and span", ->
+      @locations.updateURLLatLong(41.001, 42.002, 33)
       new_address = window.History.replaceState.getCall(0).args[2]
       new_address.should.have.string("41.001")
       new_address.should.have.string("42.002")
+      new_address.should.have.string("span=33")
     it "shortens long floats to six decimal places", ->
-      @locations.updateURLLatLong(41.111111111111, 42.002)
+      @locations.updateURLLatLong(41.111111111111, 42.002, 1)
       new_address = window.History.replaceState.getCall(0).args[2]
       new_address.should.have.string("41.111111")
       new_address.should.not.have.string("41.1111111")
@@ -172,40 +219,76 @@ describe "window.Yumster.Locations.Near", ->
       two = @locations.urlParam("bar", address)
       two.should.equal("TWO")
 
-  describe "centerChanged()", ->
+  describe "enableSearchHere()", ->
     it "enables the Search Here button", ->
       $('#map_reload').is('.disabled').should.be.true
-      @locations.centerChanged()
+      @locations.enableSearchHere()
       $('#map_reload').is('.disabled').should.not.be.true
 
   describe "searchHere()", ->
     beforeEach ->
+      sinon.stub(@locations, "searchMap")
+      @locations.searchHere()
+    afterEach ->
+      @locations.searchMap.restore()
+    it "sets fitMapToSearchResults to false", ->
+      @locations.searchMap.callCount.should.equal 1
+    it "searches the current map", ->
+      @locations.fitMapToSearchResults.should.equal false
+
+  describe "emptyCurrentResults()", ->
+    beforeEach ->
+      $('<li>whatever</li>').appendTo('#nearby_results')
+      @locations.markers.push {
+        setMap: () ->
+      }
+      @locations.emptyCurrentResults()
+    it "should clear the current results list", ->
+      $('#nearby_results').children().length.should.equal 0
+    it "should empty the markers array", ->
+      @locations.markers.should.be.empty
+
+  describe "searchMap()", ->
+    beforeEach ->
+      @map = {}
       @map =
         getCenter: () ->
+          lat: () -> 666
+          lng: () -> 667
+        getBounds: () ->
+          toSpan: () ->
+            lat: () -> 2
+            lng: () -> 3
       @locations.setMap @map
-      sinon.spy(@locations, "fillNearbyLocations")
-      sinon.spy(@locations, "updateURLLatLong")
-      sinon.stub(@map, "getCenter").returns {
-        lat: () -> 666
-        lng: () -> 667
-      }
       $('#map_reload').removeClass('disabled')
-      $('<li>whatever</li>').appendTo('#nearby_results')
-      @locations.searchHere()
+      sinon.stub(@locations, "fillNearbyLocations")
+      sinon.stub(@locations, "updateURLLatLong")
+      sinon.stub(@locations, "emptyCurrentResults")
+      @locations.searchMap()
     afterEach ->
       @locations.fillNearbyLocations.restore()
       @locations.updateURLLatLong.restore()
-      @map.getCenter.restore()
-    it "should clear the current results list", ->
-      $('#nearby_results').children().length.should.equal 0
+      @locations.emptyCurrentResults.restore()
+    it "should clear any current results", ->
+      @locations.emptyCurrentResults.callCount.should.equal 1
     it "should search for nearby locations", ->
       @locations.fillNearbyLocations.callCount.should.equal 1
       @locations.fillNearbyLocations.firstCall.args[0].should.equal 666
       @locations.fillNearbyLocations.firstCall.args[1].should.equal 667
-    it "should update the URL with the current center", ->
+      @locations.fillNearbyLocations.firstCall.args[2].should.equal 2
+    it "should update the URL", ->
       @locations.updateURLLatLong.callCount.should.equal 1
       @locations.updateURLLatLong.firstCall.args[0].should.equal 666
       @locations.updateURLLatLong.firstCall.args[1].should.equal 667
+      @locations.updateURLLatLong.firstCall.args[2].should.equal 2
+    context "when getBounds returns undefined", ->
+      beforeEach ->
+        @map.getBounds = () ->
+          undefined
+        @locations.searchMap()
+      it "fills in span with a reasonable default", ->
+        @locations.updateURLLatLong.secondCall.args[2].should.equal window.Yumster.Locations.Near.defaultSpan
+
 
   describe "fitMapToMarkers(map, markers)", ->
     beforeEach ->
@@ -236,10 +319,13 @@ describe "window.Yumster.Locations.Near", ->
       @map =
         setCenter: sinon.spy()
       @locations.setMap @map
-      @locations.searchHere = sinon.spy()
+      @locations.searchMap = sinon.spy()
+      @locations.fitMapToSearchResults = false
       @locations.mapCallback(result)
     it "should move the map to the location", ->
       @map.setCenter.callCount.should.equal 1
       @map.setCenter.firstCall.args[0].should.equal @location
     it "should reload the map in this new location", ->
-      @locations.searchHere.callCount.should.equal 1
+      @locations.searchMap.callCount.should.equal 1
+    it "should set fitMapToSearchResults true", ->
+      @locations.fitMapToSearchResults.should.equal true

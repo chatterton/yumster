@@ -29,10 +29,7 @@ var map
 var geolocationSuccess = function(latitude, longitude, coordinatesOnURL) {
   var loc = new google.maps.LatLng(latitude, longitude)
   map.setCenter(loc)
-  window.Yumster.Locations.Near.fillNearbyLocations(latitude, longitude)
-  if(!coordinatesOnURL) {
-    window.Yumster.Locations.Near.updateURLLatLong(latitude, longitude)
-  }
+  window.Yumster.Locations.Near.searchHere()
 }
 
 // Add user's location dot to map
@@ -62,9 +59,8 @@ var init = function() {
 
   // On map idle, begin listening for map movement
   google.maps.event.addListenerOnce(map, 'idle', function() {
-    google.maps.event.addListener(map, 'center_changed', function() {
-      var center = map.getCenter()
-      window.Yumster.Locations.Near.centerChanged(center.lat(), center.lng())
+    google.maps.event.addListener(map, 'bounds_changed', function() {
+      window.Yumster.Locations.Near.enableSearchHere()
     })
   })
 }
