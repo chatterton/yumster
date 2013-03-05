@@ -36,6 +36,7 @@
 }
 
 .map_container {
+  border: 1px solid $COLOR_WELL_WHITE;
   @media screen and (max-width: $BREAKPOINT) {
     margin-bottom: 8px;
   }

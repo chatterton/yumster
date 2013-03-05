@@ -1,6 +1,5 @@
 class LocationsController < ApplicationController
   before_filter :authenticate_user!, :only => [:new, :create]
-  NEARBY_DISTANCE_MI = 0.75
 
   def new
     @location = current_user.locations.build
@@ -24,18 +23,18 @@ class LocationsController < ApplicationController
 
   respond_to :json, :html
   def near
-    center_point = false
-    if params[:latitude] and params[:longitude]
-      center_point = [params[:latitude], params[:longitude]]
-    end
     if request.format.json?
-      unless center_point
+      unless params[:latitude] and params[:longitude]
         render :text => "No location given", :status => 500
         return
       end
-      box = Geocoder::Calculations.bounding_box(center_point, NEARBY_DISTANCE_MI)
-      @locations = Location.within_bounding_box(box)
-      respond_with(@locations)
+      begin
+        @locations = Location.find_near(params[:latitude], params[:longitude], params[:span])
+      rescue Exception => e
+        render :text => e.message, :status => 500
+        return
+      end
+      render :json => @locations.to_json(:only => [:id, :description, :latitude, :longitude, :category, :tips_count])
     else
       render 'near'
     end

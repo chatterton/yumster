@@ -45,4 +45,23 @@ class Location < ActiveRecord::Base
 
   validates :user_id, presence: true
 
+  NEARBY_DISTANCE_MI = 0.75
+  MAX_LOCATIONS = 1000
+  MILES_IN_A_DEGREE = 69.1
+
+  def self.deg_to_mi(degrees)
+    MILES_IN_A_DEGREE * degrees
+  end
+
+  def self.find_near(latitude, longitude, box_width)
+    radius_miles = self.deg_to_mi(box_width.to_f / 2)
+    box = Geocoder::Calculations.bounding_box([latitude, longitude], radius_miles)
+    location_size = Location.within_bounding_box(box).count
+    if (location_size > Location::MAX_LOCATIONS)
+      raise "Too many locations returned"
+    end
+    locations = Location.within_bounding_box(box)
+    return locations
+  end
+
 end
