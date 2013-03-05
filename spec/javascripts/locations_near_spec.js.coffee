@@ -55,14 +55,10 @@ describe "window.Yumster.Locations.Near", ->
       sinon.stub(@locations, "createLocationHTML")
       sinon.stub(@locations, "addMarkerToMap")
       sinon.stub(@locations, "fitMapToMarkers")
-      sinon.stub(@locations, "makeLatLng")
-      sinon.stub(@locations, "makeMarker")
     afterEach ->
       @locations.createLocationHTML.restore()
       @locations.addMarkerToMap.restore()
       @locations.fitMapToMarkers.restore()
-      @locations.makeLatLng.restore()
-      @locations.makeMarker.restore()
     context "when there are several locations", ->
       beforeEach ->
         loc1 =
