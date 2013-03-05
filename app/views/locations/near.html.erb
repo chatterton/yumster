@@ -59,9 +59,8 @@ var init = function() {
 
   // On map idle, begin listening for map movement
   google.maps.event.addListenerOnce(map, 'idle', function() {
-    google.maps.event.addListener(map, 'center_changed', function() {
-      var center = map.getCenter()
-      window.Yumster.Locations.Near.centerChanged(center.lat(), center.lng())
+    google.maps.event.addListener(map, 'bounds_changed', function() {
+      window.Yumster.Locations.Near.enableSearchHere()
     })
   })
 }

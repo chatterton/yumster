@@ -95,7 +95,7 @@ class LocationsNear
     results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(address)
     if results then results[1] else null
 
-  centerChanged: ->
+  enableSearchHere: ->
     $('#map_reload').removeClass('disabled')
 
   searchHere: ->

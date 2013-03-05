@@ -219,10 +219,10 @@ describe "window.Yumster.Locations.Near", ->
       two = @locations.urlParam("bar", address)
       two.should.equal("TWO")
 
-  describe "centerChanged()", ->
+  describe "enableSearchHere()", ->
     it "enables the Search Here button", ->
       $('#map_reload').is('.disabled').should.be.true
-      @locations.centerChanged()
+      @locations.enableSearchHere()
       $('#map_reload').is('.disabled').should.not.be.true
 
   describe "searchHere()", ->
