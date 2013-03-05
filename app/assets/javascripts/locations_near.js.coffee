@@ -31,10 +31,10 @@ class LocationsNear
   fillNearbyLocationsSuccess: (data) ->
     container = $('#nearby_results')
     for location, i in data when i < 20
-      location.icon = "/assets/markers/#{@alphabet[i]}.png"
+      location.letter = @alphabet[i]
       loc = @createLocationHTML(location)
       loc.appendTo(container)
-      @addMarkerToMap(location)
+      @addMarkerToMap(location, i)
     $('#map_reload').addClass('disabled')
     if data.length == 0
       $(@templates['templates/no_locations_found'](null)).appendTo(container)

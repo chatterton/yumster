@@ -10,7 +10,8 @@ describe "window.Yumster.MapMarkers", ->
     beforeEach ->
       sinon.stub(@mapmarkers, "makeLatLng")
       @marker = {}
-      sinon.stub(@mapmarkers, "makeMarker").returns(@marker)
+      sinon.stub(@mapmarkers, "makeMarker").returns @marker
+      sinon.stub(@mapmarkers, "makeMarkerImage").returns "image"
       @map = sinon.spy()
       @checkmarker = @mapmarkers.createMarker(0, @map, 14, 15)
     afterEach ->
@@ -20,5 +21,6 @@ describe "window.Yumster.MapMarkers", ->
       @mapmarkers.makeMarker.callCount.should.equal 1
       config = @mapmarkers.makeMarker.firstCall.args[0]
       config["map"].should.equal @map
+      config["icon"].should.equal "image"
     it "returns the marker", ->
       @checkmarker.should.equal @marker
