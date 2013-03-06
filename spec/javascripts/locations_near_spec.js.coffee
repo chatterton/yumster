@@ -75,8 +75,8 @@ describe "window.Yumster.Locations.Near", ->
         container.should.have.string("OK1")
         container.should.have.string("OK2")
       it "creates markers A and B", ->
-        @locations.addMarkerToMap.firstCall.args[0].icon.should.include 'A.png'
-        @locations.addMarkerToMap.secondCall.args[0].icon.should.include 'B.png'
+        @locations.addMarkerToMap.firstCall.args[0].letter.should.equal 'A'
+        @locations.addMarkerToMap.secondCall.args[0].letter.should.equal 'B'
       context "when fitMapToSearchResults is false", ->
         it "should not fit the map to the new marker set", ->
           @locations.fitMapToMarkers.callCount.should.equal 0

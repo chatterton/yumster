@@ -3,7 +3,8 @@
 
 describe "window.Yumster.MapMarkers", ->
   beforeEach ->
-    @mapmarkers = new window.Yumster._MapMarkers
+    @MapMarkers = window.Yumster._MapMarkers
+    @mapmarkers = new @MapMarkers
     window.Yumster.MapMarkers = @mapmarkers
 
   describe "createMarker(ordinal, map, lat, lng)", ->
@@ -24,3 +25,13 @@ describe "window.Yumster.MapMarkers", ->
       config["icon"].should.equal "image"
     it "returns the marker", ->
       @checkmarker.should.equal @marker
+
+  describe "spriteOffsetsForOrdinal(ordinal)", ->
+    it "returns 0, 0 for 0", ->
+      [xoffset, yoffset] = @mapmarkers.spriteOffsetsForOrdinal(0)
+      xoffset.should.equal 0
+      yoffset.should.equal 0
+    it "correctly wraps around to the next column", ->
+      [xoffset, yoffset] = @mapmarkers.spriteOffsetsForOrdinal(@MapMarkers.SPRITE_XCOUNT)
+      xoffset.should.equal @MapMarkers.SPRITE_XSIZE
+      yoffset.should.equal 0

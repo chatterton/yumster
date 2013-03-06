@@ -3,6 +3,10 @@ window.Yumster.MapMarkers or= {}
 
 class MapMarkers
 
+  @SPRITE_XCOUNT: 24
+  @SPRITE_XSIZE: 72
+  @SPRITE_YSIZE: 84
+
   makeLatLng: (latitude, longitude) ->
     new google.maps.LatLng latitude, longitude
   makeMarker: (config) ->
@@ -14,10 +18,18 @@ class MapMarkers
   makeMarkerImage: (ordinal) ->
     path = "/assets/marker-sprite.png"
     size = @makeSize(21, 34)
-    offset = 84 * ordinal
-    spritelocation = @makePoint(0, offset)
+    [xoffset, yoffset] = @spriteOffsetsForOrdinal(ordinal)
+    spritelocation = @makePoint(xoffset, yoffset)
     anchor = @makePoint(11, 34)
     new google.maps.MarkerImage(path, size, spritelocation, anchor)
+
+  spriteOffsetsForOrdinal: (ordinal) ->
+    xoffset = MapMarkers.SPRITE_XSIZE * Math.floor(ordinal / MapMarkers.SPRITE_XCOUNT)
+    console.log xoffset
+    yoffset = MapMarkers.SPRITE_YSIZE * (ordinal % MapMarkers.SPRITE_XCOUNT)
+    console.log yoffset
+    [xoffset, yoffset]
+
   createMarker: (ordinal, map, lat, lng) ->
     latlng = @makeLatLng(lat, lng)
     marker = @makeMarker {
