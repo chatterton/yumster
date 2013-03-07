@@ -55,14 +55,10 @@ describe "window.Yumster.Locations.Near", ->
       sinon.stub(@locations, "createLocationHTML")
       sinon.stub(@locations, "addMarkerToMap")
       sinon.stub(@locations, "fitMapToMarkers")
-      sinon.stub(@locations, "makeLatLng")
-      sinon.stub(@locations, "makeMarker")
     afterEach ->
       @locations.createLocationHTML.restore()
       @locations.addMarkerToMap.restore()
       @locations.fitMapToMarkers.restore()
-      @locations.makeLatLng.restore()
-      @locations.makeMarker.restore()
     context "when there are several locations", ->
       beforeEach ->
         loc1 =
@@ -79,8 +75,8 @@ describe "window.Yumster.Locations.Near", ->
         container.should.have.string("OK1")
         container.should.have.string("OK2")
       it "creates markers A and B", ->
-        @locations.addMarkerToMap.firstCall.args[0].icon.should.include 'A.png'
-        @locations.addMarkerToMap.secondCall.args[0].icon.should.include 'B.png'
+        @locations.addMarkerToMap.firstCall.args[0].letter.should.equal 'A'
+        @locations.addMarkerToMap.secondCall.args[0].letter.should.equal 'B'
       context "when fitMapToSearchResults is false", ->
         it "should not fit the map to the new marker set", ->
           @locations.fitMapToMarkers.callCount.should.equal 0
