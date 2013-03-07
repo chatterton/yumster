@@ -62,41 +62,11 @@
     margin-top: .5em;
   }
 }
-
-li.location_item {
-  @extend .hover_container;
-  &:hover {
-    background-color: $COLOR_BACKGROUND_WHITE;
-  }
-  border-bottom: 2px solid $COLOR_WELL_WHITE;
-}
-
-li.location_item_nohover {
-  border-bottom: 2px solid $COLOR_WELL_WHITE;
-}
-
-img.location_marker {
-  float: left;
-  padding: 8px;
-}
-
 #nearby_results {
   list-style: none;
   margin-left: 0px;
   border-top: 2px solid $COLOR_WELL_WHITE;
   clear: both; // makes the <ul> stop eating the map
-}
-
-p.location_content {
-  padding-top: 6px;
-}
-
-p.location_content .location_tips {
-  font-size: $FONT_SIZE_SMALL;
-  color: $COLOR_CYAN;
-  float: right;
-  padding-right: 5px;
-  padding-top: 4px;
 }
 
 #map_reload {
@@ -133,6 +103,9 @@ p.location_content .location_tips {
   color: $COLOR_PRIMARY_GREEN;
 }
 
+/////////////////////
+//// TIPS
+
 textarea#tip_text {
   width: 100%;
   height: 45px;
@@ -166,4 +139,40 @@ textarea#tip_text {
   &:hover {
     opacity: 1;
   }
+}
+
+/////////////////////
+//// LOCATION_ITEM
+
+li.location_item {
+  @extend .hover_container;
+  &:hover {
+    background-color: $COLOR_BACKGROUND_WHITE;
+  }
+  border-bottom: 2px solid $COLOR_WELL_WHITE;
+}
+
+li.location_item_nohover {
+  border-bottom: 2px solid $COLOR_WELL_WHITE;
+}
+
+.location_letter {
+  font-size: 3em;
+  padding-top: .4em;
+  padding-right: .3em;
+  padding-left: .2em;
+  float: left;
+  color: $COLOR_PRIMARY_GREEN;
+}
+
+p.location_content {
+  padding-top: 6px;
+}
+
+p.location_content .location_tips {
+  font-size: $FONT_SIZE_SMALL;
+  color: $COLOR_CYAN;
+  float: right;
+  padding-right: 5px;
+  padding-top: 3px;
 }
