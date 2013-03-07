@@ -21,7 +21,7 @@ class LocationsNear
   # Markers generated with e.g.
   # http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=E|96c941|000000
   addMarkerToMap: (location, ordinal) ->
-    marker = window.Yumster.MapMarkers.createMarker(
+    marker = window.Yumster.MapMarkers.placeMarkerOnMap(
       ordinal,
       window.Yumster.Locations.Near.map,
       location.latitude,

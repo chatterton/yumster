@@ -7,6 +7,18 @@ class MapMarkers
   @SPRITE_XSIZE: 72
   @SPRITE_YSIZE: 84
 
+  @MARKER_CLUSTER: 26
+
+  constructor: (@clusterpercent = .10) ->
+    @markers = []
+
+  spriteOffsetsForOrdinal: (ordinal) ->
+    xoffset = MapMarkers.SPRITE_XSIZE * Math.floor(ordinal / MapMarkers.SPRITE_XCOUNT)
+    console.log xoffset
+    yoffset = MapMarkers.SPRITE_YSIZE * (ordinal % MapMarkers.SPRITE_XCOUNT)
+    console.log yoffset
+    [xoffset, yoffset]
+
   makeLatLng: (latitude, longitude) ->
     new google.maps.LatLng latitude, longitude
   makeMarker: (config) ->
@@ -23,14 +35,7 @@ class MapMarkers
     anchor = @makePoint(11, 34)
     new google.maps.MarkerImage(path, size, spritelocation, anchor)
 
-  spriteOffsetsForOrdinal: (ordinal) ->
-    xoffset = MapMarkers.SPRITE_XSIZE * Math.floor(ordinal / MapMarkers.SPRITE_XCOUNT)
-    console.log xoffset
-    yoffset = MapMarkers.SPRITE_YSIZE * (ordinal % MapMarkers.SPRITE_XCOUNT)
-    console.log yoffset
-    [xoffset, yoffset]
-
-  createMarker: (ordinal, map, lat, lng) ->
+  placeMarkerOnMap: (ordinal, map, lat, lng) ->
     latlng = @makeLatLng(lat, lng)
     marker = @makeMarker {
       position: latlng
@@ -38,6 +43,19 @@ class MapMarkers
       icon: @makeMarkerImage(ordinal)
     }
     marker
+
+  clear: () ->
+    @markers = []
+
+  addMarker: (marker) ->
+    @markers.push marker
+
+  renderMarkersAndClusters: (map) ->
+    bounds = map.getBounds()
+    markers =[]
+    clusters = []
+    markers.push marker for marker in @markers when bounds.contains(marker.getPosition())
+    return [markers, clusters]
 
 $ ->
   window.Yumster.MapMarkers = new MapMarkers

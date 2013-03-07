@@ -6,15 +6,15 @@ describe "window.Yumster.MapMarkers", ->
     @MapMarkers = window.Yumster._MapMarkers
     @mapmarkers = new @MapMarkers
     window.Yumster.MapMarkers = @mapmarkers
+    @map = sinon.spy()
 
-  describe "createMarker(ordinal, map, lat, lng)", ->
+  describe "placeMarkerOnMap(ordinal, map, lat, lng)", ->
     beforeEach ->
       sinon.stub(@mapmarkers, "makeLatLng")
       @marker = {}
       sinon.stub(@mapmarkers, "makeMarker").returns @marker
       sinon.stub(@mapmarkers, "makeMarkerImage").returns "image"
-      @map = sinon.spy()
-      @checkmarker = @mapmarkers.createMarker(0, @map, 14, 15)
+      @checkmarker = @mapmarkers.placeMarkerOnMap(0, @map, 14, 15)
     afterEach ->
       @mapmarkers.makeLatLng.restore()
       @mapmarkers.makeMarker.restore()
@@ -35,3 +35,26 @@ describe "window.Yumster.MapMarkers", ->
       [xoffset, yoffset] = @mapmarkers.spriteOffsetsForOrdinal(@MapMarkers.SPRITE_XCOUNT)
       xoffset.should.equal @MapMarkers.SPRITE_XSIZE
       yoffset.should.equal 0
+
+  describe "addMarker(marker)", ->
+    it "push the marker onto the array", ->
+      @mapmarkers.markers = []
+      @mapmarkers.addMarker("fuh")
+      @mapmarkers.markers[0].should.equal "fuh"
+
+  describe "clear()", ->
+    it "empties marker array", ->
+      @mapmarkers.markers = ["thing"]
+      @mapmarkers.clear()
+      @mapmarkers.markers.should.be.empty
+
+  describe "renderMarkersAndClusters(map)", ->
+    beforeEach ->
+      bounds =
+        contains: (marker) -> true
+      @map.getBounds = () -> bounds
+      [@mk, @cl] = @mapmarkers.renderMarkersAndClusters(@map)
+    it "returns a marker and cluster array", ->
+      @mk.should.be.an('array')
+      @cl.should.be.an('array')
+
