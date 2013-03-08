@@ -19,11 +19,6 @@ describe "window.Yumster.MapMarkers", ->
     afterEach ->
       @mapmarkers.makeLatLng.restore()
       @mapmarkers.makeMarker.restore()
-    xit "adds a marker to the map", ->
-      @mapmarkers.makeMarker.callCount.should.equal 1
-      config = @mapmarkers.makeMarker.firstCall.args[0]
-      config["map"].should.equal @map
-      config["icon"].should.equal "image"
     it "returns the marker", ->
       @checkmarker.should.equal @marker
     it "pushes the marker onto the array", ->

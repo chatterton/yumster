@@ -9,7 +9,8 @@ class LocationsNear
 
   constructor: (@templates = window.JST) ->
     @alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    @markers = []
+    @markersOnMap = []
+    @allMarkers = []
     @fitMapToSearchResults = true
     @defaultSpan = .025
 
@@ -19,20 +20,30 @@ class LocationsNear
   createLocationHTML: (location) ->
     $(@templates['templates/nearby_location_item'](location))
 
-  fillNearbyLocationsSuccess: (data) ->
+  showMarkersAndClusters: (markers, clusters) ->
     container = $('#nearby_results')
-    for location, i in data when i < 20
+    for marker, i in markers when i < 20
+      location = marker.location
       location.letter = @alphabet[i]
       loc = @createLocationHTML(location)
       loc.appendTo(container)
+      marker.setIcon(window.Yumster.MapMarkers.makeMarkerImage(i))
+      marker.setMap(window.Yumster.Locations.Near.map)
+
+  fillNearbyLocationsSuccess: (data) ->
+    container = $('#nearby_results')
+    for location, i in data
       marker = window.Yumster.MapMarkers.addMarker(location.latitude, location.longitude)
-      @markers.push marker
+      marker.location = location
+      @allMarkers.push marker
     $('#map_reload').addClass('disabled')
     if data.length == 0
       $(@templates['templates/no_locations_found'](null)).appendTo(container)
     else
+      [markers, clusters] = window.Yumster.MapMarkers.renderMarkersAndClusters(window.Yumster.Locations.Near.map.getBounds())
+      @showMarkersAndClusters(markers, clusters)
       if @fitMapToSearchResults
-        @fitMapToMarkers(window.Yumster.Locations.Near.map, @markers)
+        @fitMapToMarkers(window.Yumster.Locations.Near.map, @markersOnMap)
 
   fillNearbyLocationsFailure: (status, error) ->
     if status is 500 and error is "Too many locations returned"
@@ -91,7 +102,7 @@ class LocationsNear
 
   emptyCurrentResults: () ->
     $('#nearby_results').empty()
-    while marker = @markers.pop() ## clear all markers
+    while marker = @markersOnMap.pop() ## clear all markers
       marker.setMap(null)
 
   searchMap: ->

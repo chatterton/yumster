@@ -50,15 +50,46 @@ describe "window.Yumster.Locations.Near", ->
         @locations.fillNearbyLocationsFailure.callCount.should.equal 1
         @locations.fillNearbyLocationsFailure.calledWith(500, "BAM").should.be.ok
 
-  describe "fillNearbyLocationsSuccess(data)", ->
+  describe "showMarkersAndClusters(markers, clusters)", ->
     beforeEach ->
-      sinon.stub(@locations, "createLocationHTML")
-      sinon.stub(@locations, "fitMapToMarkers")
-      @marker = {}
-      window.Yumster.MapMarkers.addMarker = sinon.stub().returns(@marker)
+      sinon.stub(@locations, "createLocationHTML").returns($("<i>OK!</i>"))
+      @marker =
+        location: {}
+        setIcon: sinon.spy()
+        setMap: sinon.spy()
+      window.Yumster.MapMarkers.makeMarkerImage = sinon.stub().returns {}
+      @locations.showMarkersAndClusters([@marker], [])
     afterEach ->
       @locations.createLocationHTML.restore()
+    it "populates #nearby_results with locations", ->
+      container = $('#nearby_results').html()
+      container.should.have.string("OK!")
+    it "sets icon on marker", ->
+      @marker.setIcon.callCount.should.equal 1
+    it "sets map on marker", ->
+      @marker.setMap.callCount.should.equal 1
+    context "when there are more than 20 markers", ->
+      beforeEach ->
+        markers = []
+        for i in [1..25]
+          markers.push @marker
+        @locations.createLocationHTML.reset()
+        @locations.showMarkersAndClusters(markers, [])
+      it "only shows the first 20", ->
+        @locations.createLocationHTML.callCount.should.equal 20
+
+  describe "fillNearbyLocationsSuccess(data)", ->
+    beforeEach ->
+      sinon.stub(@locations, "fitMapToMarkers")
+      sinon.stub(@locations, "showMarkersAndClusters")
+      @marker = {}
+      window.Yumster.MapMarkers.addMarker = sinon.stub().returns(@marker)
+      window.Yumster.Locations.Near.map =
+        getBounds: () -> "bounds"
+      window.Yumster.MapMarkers.renderMarkersAndClusters = sinon.stub().returns(["a","b"])
+    afterEach ->
       @locations.fitMapToMarkers.restore()
+      @locations.showMarkersAndClusters.restore()
     context "when there are several locations", ->
       beforeEach ->
         loc1 =
@@ -66,14 +97,10 @@ describe "window.Yumster.Locations.Near", ->
         loc2 =
           check: 2
         @loc_array = [ loc1, loc2 ]
-        @locations.createLocationHTML.withArgs(loc1).returns($("<li>OK1</li>"))
-        @locations.createLocationHTML.withArgs(loc2).returns($("<li>OK2</li>"))
         @locations.fitMapToSearchResults = false
         @locations.fillNearbyLocationsSuccess(@loc_array)
-      it "populates #nearby_results with locations", ->
-        container = $('#nearby_results').html()
-        container.should.have.string("OK1")
-        container.should.have.string("OK2")
+      it "renders markers", ->
+        @locations.showMarkersAndClusters.callCount.should.equal 1
       context "when fitMapToSearchResults is false", ->
         it "should not fit the map to the new marker set", ->
           @locations.fitMapToMarkers.callCount.should.equal 0
@@ -85,14 +112,9 @@ describe "window.Yumster.Locations.Near", ->
           @locations.fitMapToMarkers.callCount.should.equal 1
       it "should disable the map_reload button", ->
         $('#map_reload').is('.disabled').should.be.true
-    context "when there are more than 20 locations", ->
-      beforeEach ->
-        locations = ("location #{i}" for i in [1..25])
-        @locations.createLocationHTML.reset()
-        @locations.createLocationHTML.returns($("<div />"))
-        @locations.fillNearbyLocationsSuccess(locations)
-      it "only shows the first 20", ->
-        @locations.createLocationHTML.callCount.should.equal 20
+      it "saves location on marker", ->
+        @locations.allMarkers.length.should.equal 2
+        @locations.allMarkers[0].location.should.be
     context "when there are zero locations", ->
       beforeEach ->
         $('#nearby_results').empty()
@@ -232,14 +254,14 @@ describe "window.Yumster.Locations.Near", ->
   describe "emptyCurrentResults()", ->
     beforeEach ->
       $('<li>whatever</li>').appendTo('#nearby_results')
-      @locations.markers.push {
+      @locations.markersOnMap.push {
         setMap: () ->
       }
       @locations.emptyCurrentResults()
     it "should clear the current results list", ->
       $('#nearby_results').children().length.should.equal 0
     it "should empty the markers array", ->
-      @locations.markers.should.be.empty
+      @locations.markersOnMap.should.be.empty
 
   describe "searchMap()", ->
     beforeEach ->
