@@ -2,6 +2,7 @@
 
 window.Yumster or= {}
 window.Yumster.Locations or= {}
+window.Yumster.MapMarkers or= {}
 window.Yumster.Locations.Near or= {}
 
 class LocationsNear
@@ -18,23 +19,14 @@ class LocationsNear
   createLocationHTML: (location) ->
     $(@templates['templates/nearby_location_item'](location))
 
-  # Markers generated with e.g.
-  # http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=E|96c941|000000
-  addMarkerToMap: (location, ordinal) ->
-    marker = window.Yumster.MapMarkers.placeMarkerOnMap(
-      ordinal,
-      window.Yumster.Locations.Near.map,
-      location.latitude,
-      location.longitude)
-    @markers.push marker
-
   fillNearbyLocationsSuccess: (data) ->
     container = $('#nearby_results')
     for location, i in data when i < 20
       location.letter = @alphabet[i]
       loc = @createLocationHTML(location)
       loc.appendTo(container)
-      @addMarkerToMap(location, i)
+      marker = window.Yumster.MapMarkers.addMarker(location.latitude, location.longitude)
+      @markers.push marker
     $('#map_reload').addClass('disabled')
     if data.length == 0
       $(@templates['templates/no_locations_found'](null)).appendTo(container)
@@ -90,7 +82,7 @@ class LocationsNear
     results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(address)
     if results then results[1] else null
 
-  enableSearchHere: ->
+  boundsChanged: ->
     $('#map_reload').removeClass('disabled')
 
   searchHere: ->

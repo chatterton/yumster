@@ -8,23 +8,26 @@ describe "window.Yumster.MapMarkers", ->
     window.Yumster.MapMarkers = @mapmarkers
     @map = sinon.spy()
 
-  describe "placeMarkerOnMap(ordinal, map, lat, lng)", ->
+  describe "addMarker(lat, lng)", ->
     beforeEach ->
       sinon.stub(@mapmarkers, "makeLatLng")
       @marker = {}
       sinon.stub(@mapmarkers, "makeMarker").returns @marker
       sinon.stub(@mapmarkers, "makeMarkerImage").returns "image"
-      @checkmarker = @mapmarkers.placeMarkerOnMap(0, @map, 14, 15)
+      @mapmarkers.markers = []
+      @checkmarker = @mapmarkers.addMarker(14, 15)
     afterEach ->
       @mapmarkers.makeLatLng.restore()
       @mapmarkers.makeMarker.restore()
-    it "adds a marker to the map", ->
+    xit "adds a marker to the map", ->
       @mapmarkers.makeMarker.callCount.should.equal 1
       config = @mapmarkers.makeMarker.firstCall.args[0]
       config["map"].should.equal @map
       config["icon"].should.equal "image"
     it "returns the marker", ->
       @checkmarker.should.equal @marker
+    it "pushes the marker onto the array", ->
+      @mapmarkers.markers[0].should.equal @marker
 
   describe "spriteOffsetsForOrdinal(ordinal)", ->
     it "returns 0, 0 for 0", ->
@@ -36,12 +39,6 @@ describe "window.Yumster.MapMarkers", ->
       xoffset.should.equal @MapMarkers.SPRITE_XSIZE
       yoffset.should.equal 0
 
-  describe "addMarker(marker)", ->
-    it "pushes the marker onto the array", ->
-      @mapmarkers.markers = []
-      @mapmarkers.addMarker("fuh")
-      @mapmarkers.markers[0].should.equal "fuh"
-
   describe "clear()", ->
     it "empties marker array", ->
       @mapmarkers.markers = ["thing"]
@@ -50,7 +47,7 @@ describe "window.Yumster.MapMarkers", ->
 
   describe "renderMarkersAndClusters(map)", ->
     beforeEach ->
-      @map.getBounds = () ->
+      bounds =
         toSpan: () ->
           lat: () -> .25
         contains: (marker) -> true
@@ -73,7 +70,7 @@ describe "window.Yumster.MapMarkers", ->
       @mapmarkers.markers = [@m1, @m2, @m3, @m4]
       sinon.stub(@mapmarkers, "makeMarker").returns "clusteredmarker"
       sinon.stub(@mapmarkers, "makeMarkerImage")
-      [@mk, @cl] = @mapmarkers.renderMarkersAndClusters(@map)
+      [@mk, @cl] = @mapmarkers.renderMarkersAndClusters(bounds)
     afterEach ->
       @mapmarkers.makeMarker.restore()
       @mapmarkers.makeMarkerImage.restore()

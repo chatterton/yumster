@@ -35,20 +35,16 @@ class MapMarkers
     anchor = @makePoint(11, 34)
     new google.maps.MarkerImage(path, size, spritelocation, anchor)
 
-  placeMarkerOnMap: (ordinal, map, lat, lng) ->
-    latlng = @makeLatLng(lat, lng)
-    marker = @makeMarker {
-      position: latlng
-      map: map
-      icon: @makeMarkerImage(ordinal)
-    }
-    marker
-
   clear: () ->
     @markers = []
 
-  addMarker: (marker) ->
+  addMarker: (lat, lng) ->
+    latlng = @makeLatLng(lat, lng)
+    marker = @makeMarker {
+      position: latlng
+    }
     @markers.push marker
+    marker
 
   nearby: (marker, othermarker, distance) ->
     return (marker.getPosition().lat() > othermarker.getPosition().lat() - distance / 2) and
@@ -56,8 +52,7 @@ class MapMarkers
       (marker.getPosition().lng() > othermarker.getPosition().lng() - distance / 2) and
       (marker.getPosition().lng() < othermarker.getPosition().lng() + distance / 2)
 
-  renderMarkersAndClusters: (map) ->
-    mapboundary = map.getBounds()
+  renderMarkersAndClusters: (mapboundary) ->
     cluster_size = mapboundary.toSpan().lat() * MapMarkers.CLUSTER_PERCENT
     clustermarkers = []
     markers = (marker for marker in @markers when mapboundary.contains(marker.getPosition()))

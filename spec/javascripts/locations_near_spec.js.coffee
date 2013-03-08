@@ -53,11 +53,11 @@ describe "window.Yumster.Locations.Near", ->
   describe "fillNearbyLocationsSuccess(data)", ->
     beforeEach ->
       sinon.stub(@locations, "createLocationHTML")
-      sinon.stub(@locations, "addMarkerToMap")
       sinon.stub(@locations, "fitMapToMarkers")
+      @marker = {}
+      window.Yumster.MapMarkers.addMarker = sinon.stub().returns(@marker)
     afterEach ->
       @locations.createLocationHTML.restore()
-      @locations.addMarkerToMap.restore()
       @locations.fitMapToMarkers.restore()
     context "when there are several locations", ->
       beforeEach ->
@@ -74,9 +74,6 @@ describe "window.Yumster.Locations.Near", ->
         container = $('#nearby_results').html()
         container.should.have.string("OK1")
         container.should.have.string("OK2")
-      it "creates markers A and B", ->
-        @locations.addMarkerToMap.firstCall.args[0].letter.should.equal 'A'
-        @locations.addMarkerToMap.secondCall.args[0].letter.should.equal 'B'
       context "when fitMapToSearchResults is false", ->
         it "should not fit the map to the new marker set", ->
           @locations.fitMapToMarkers.callCount.should.equal 0
@@ -215,10 +212,10 @@ describe "window.Yumster.Locations.Near", ->
       two = @locations.urlParam("bar", address)
       two.should.equal("TWO")
 
-  describe "enableSearchHere()", ->
+  describe "boundsChanged()", ->
     it "enables the Search Here button", ->
       $('#map_reload').is('.disabled').should.be.true
-      @locations.enableSearchHere()
+      @locations.boundsChanged()
       $('#map_reload').is('.disabled').should.not.be.true
 
   describe "searchHere()", ->
