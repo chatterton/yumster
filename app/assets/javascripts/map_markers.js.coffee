@@ -7,16 +7,16 @@ class MapMarkers
   @SPRITE_XSIZE: 72
   @SPRITE_YSIZE: 84
 
-  @MARKER_CLUSTER: 26
+  @MARKER_CLUSTER_ORDINAL: 26
 
-  constructor: (@clusterpercent = .10) ->
+  @CLUSTER_PERCENT = .1
+
+  constructor: () ->
     @markers = []
 
   spriteOffsetsForOrdinal: (ordinal) ->
     xoffset = MapMarkers.SPRITE_XSIZE * Math.floor(ordinal / MapMarkers.SPRITE_XCOUNT)
-    console.log xoffset
     yoffset = MapMarkers.SPRITE_YSIZE * (ordinal % MapMarkers.SPRITE_XCOUNT)
-    console.log yoffset
     [xoffset, yoffset]
 
   makeLatLng: (latitude, longitude) ->
@@ -50,12 +50,35 @@ class MapMarkers
   addMarker: (marker) ->
     @markers.push marker
 
+  nearby: (marker, othermarker, distance) ->
+    return (marker.getPosition().lat() > othermarker.getPosition().lat() - distance / 2) and
+      (marker.getPosition().lat() < othermarker.getPosition().lat() + distance / 2) and
+      (marker.getPosition().lng() > othermarker.getPosition().lng() - distance / 2) and
+      (marker.getPosition().lng() < othermarker.getPosition().lng() + distance / 2)
+
   renderMarkersAndClusters: (map) ->
-    bounds = map.getBounds()
-    markers =[]
-    clusters = []
-    markers.push marker for marker in @markers when bounds.contains(marker.getPosition())
-    return [markers, clusters]
+    mapboundary = map.getBounds()
+    cluster_size = mapboundary.toSpan().lat() * MapMarkers.CLUSTER_PERCENT
+    clustermarkers = []
+    markers = (marker for marker in @markers when mapboundary.contains(marker.getPosition()))
+    clustered = []
+    for marker, i in markers
+      if clustered.indexOf(marker) >= 0
+        continue
+      cluster = [marker]
+      for check, j in markers when j > i
+        if @nearby(marker, check, cluster_size)
+          cluster.push check
+      if cluster.length > 1
+        clustermarker = @makeMarker {
+          position: cluster[0].getPosition()
+          icon: @makeMarkerImage(MapMarkers.MARKER_CLUSTER_ORDINAL)
+        }
+        clustermarkers.push clustermarker
+        for mk in cluster
+          clustered.push mk
+    unclusteredmarkers = (marker for marker in markers when clustered.indexOf(marker) == -1)
+    return [unclusteredmarkers, clustermarkers]
 
 $ ->
   window.Yumster.MapMarkers = new MapMarkers
