@@ -29,8 +29,13 @@ class LocationsNear
       loc.appendTo(container)
       marker.setIcon(window.Yumster.MapMarkers.makeMarkerImage(i))
       marker.setMap(window.Yumster.Locations.Near.map)
+      @markersOnMap.push marker
+    for cluster in clusters
+      cluster.setMap(window.Yumster.Locations.Near.map)
+      @markersOnMap.push cluster
 
   fillNearbyLocationsSuccess: (data) ->
+    @emptyCurrentResults()
     container = $('#nearby_results')
     for location, i in data
       marker = window.Yumster.MapMarkers.addMarker(location.latitude, location.longitude)
@@ -104,6 +109,7 @@ class LocationsNear
     $('#nearby_results').empty()
     while marker = @markersOnMap.pop() ## clear all markers
       marker.setMap(null)
+    window.Yumster.MapMarkers.clear()
 
   searchMap: ->
     @emptyCurrentResults()

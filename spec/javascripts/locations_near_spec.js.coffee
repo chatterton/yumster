@@ -57,8 +57,10 @@ describe "window.Yumster.Locations.Near", ->
         location: {}
         setIcon: sinon.spy()
         setMap: sinon.spy()
+      @cluster =
+        setMap: sinon.spy()
       window.Yumster.MapMarkers.makeMarkerImage = sinon.stub().returns {}
-      @locations.showMarkersAndClusters([@marker], [])
+      @locations.showMarkersAndClusters([@marker], [@cluster])
     afterEach ->
       @locations.createLocationHTML.restore()
     it "populates #nearby_results with locations", ->
@@ -68,6 +70,8 @@ describe "window.Yumster.Locations.Near", ->
       @marker.setIcon.callCount.should.equal 1
     it "sets map on marker", ->
       @marker.setMap.callCount.should.equal 1
+    it "sets map on cluster", ->
+      @cluster.setMap.callCount.should.equal 1
     context "when there are more than 20 markers", ->
       beforeEach ->
         markers = []
@@ -82,6 +86,7 @@ describe "window.Yumster.Locations.Near", ->
     beforeEach ->
       sinon.stub(@locations, "fitMapToMarkers")
       sinon.stub(@locations, "showMarkersAndClusters")
+      sinon.stub(@locations, "emptyCurrentResults")
       @marker = {}
       window.Yumster.MapMarkers.addMarker = sinon.stub().returns(@marker)
       window.Yumster.Locations.Near.map =
@@ -90,6 +95,10 @@ describe "window.Yumster.Locations.Near", ->
     afterEach ->
       @locations.fitMapToMarkers.restore()
       @locations.showMarkersAndClusters.restore()
+      @locations.emptyCurrentResults.restore()
+    it "clears any current markers", ->
+      @locations.fillNearbyLocationsSuccess([])
+      @locations.emptyCurrentResults.callCount.should.equal 1
     context "when there are several locations", ->
       beforeEach ->
         loc1 =
@@ -112,8 +121,9 @@ describe "window.Yumster.Locations.Near", ->
           @locations.fitMapToMarkers.callCount.should.equal 1
       it "should disable the map_reload button", ->
         $('#map_reload').is('.disabled').should.be.true
-      it "saves location on marker", ->
+      it "keeps track of both results", ->
         @locations.allMarkers.length.should.equal 2
+      it "saves location on marker", ->
         @locations.allMarkers[0].location.should.be
     context "when there are zero locations", ->
       beforeEach ->
@@ -257,11 +267,14 @@ describe "window.Yumster.Locations.Near", ->
       @locations.markersOnMap.push {
         setMap: () ->
       }
+      window.Yumster.MapMarkers.clear = sinon.spy()
       @locations.emptyCurrentResults()
     it "should clear the current results list", ->
       $('#nearby_results').children().length.should.equal 0
     it "should empty the markers array", ->
       @locations.markersOnMap.should.be.empty
+    it "clears mapmarkers", ->
+      window.Yumster.MapMarkers.clear.callCount.should.equal 1
 
   describe "searchMap()", ->
     beforeEach ->
