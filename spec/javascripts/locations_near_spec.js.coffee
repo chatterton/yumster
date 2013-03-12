@@ -1,6 +1,5 @@
 #= require spec_helper
 #= require locations_near
-#= require jquery.history.js
 
 describe "window.Yumster.Locations.Near", ->
 
@@ -88,10 +87,11 @@ describe "window.Yumster.Locations.Near", ->
       sinon.stub(@locations, "showMarkersAndClusters")
       sinon.stub(@locations, "emptyCurrentResults")
       @marker = {}
-      window.Yumster.MapMarkers.addMarker = sinon.stub().returns(@marker)
       window.Yumster.Locations.Near.map =
         getBounds: () -> "bounds"
-      window.Yumster.MapMarkers.renderMarkersAndClusters = sinon.stub().returns(["a","b"])
+      window.Yumster.LocationManager.addLocations = sinon.stub()
+      window.Yumster.LocationManager.getClusterLocations = sinon.stub().returns ["clusters"]
+      window.Yumster.LocationManager.getMarkerLocations = sinon.stub().returns ["markers"]
     afterEach ->
       @locations.fitMapToMarkers.restore()
       @locations.showMarkersAndClusters.restore()
@@ -99,6 +99,15 @@ describe "window.Yumster.Locations.Near", ->
     it "clears any current markers", ->
       @locations.fillNearbyLocationsSuccess([])
       @locations.emptyCurrentResults.callCount.should.equal 1
+    it "loads the location manager with the results", ->
+      data = ["foo"]
+      @locations.fillNearbyLocationsSuccess data, 1, 2, 3
+      window.Yumster.LocationManager.addLocations.callCount.should.equal 1
+      args = window.Yumster.LocationManager.addLocations.firstCall.args
+      args[0].should.equal data
+      args[1].should.equal 1
+      args[2].should.equal 2
+      args[3].should.equal 3
     context "when there are several locations", ->
       beforeEach ->
         loc1 =
@@ -110,6 +119,9 @@ describe "window.Yumster.Locations.Near", ->
         @locations.fillNearbyLocationsSuccess(@loc_array)
       it "renders markers", ->
         @locations.showMarkersAndClusters.callCount.should.equal 1
+      it "gets markers and clusters from the location manager", ->
+        @locations.showMarkersAndClusters.firstCall.args[0].should.deep.equal ["markers"]
+        @locations.showMarkersAndClusters.firstCall.args[1].should.deep.equal ["clusters"]
       context "when fitMapToSearchResults is false", ->
         it "should not fit the map to the new marker set", ->
           @locations.fitMapToMarkers.callCount.should.equal 0
@@ -121,10 +133,6 @@ describe "window.Yumster.Locations.Near", ->
           @locations.fitMapToMarkers.callCount.should.equal 1
       it "should disable the map_reload button", ->
         $('#map_reload').is('.disabled').should.be.true
-      it "keeps track of both results", ->
-        @locations.allMarkers.length.should.equal 2
-      it "saves location on marker", ->
-        @locations.allMarkers[0].location.should.be
     context "when there are zero locations", ->
       beforeEach ->
         $('#nearby_results').empty()
@@ -267,14 +275,14 @@ describe "window.Yumster.Locations.Near", ->
       @locations.markersOnMap.push {
         setMap: () ->
       }
-      window.Yumster.MapMarkers.clear = sinon.spy()
+      window.Yumster.LocationManager.clear = sinon.spy()
       @locations.emptyCurrentResults()
     it "should clear the current results list", ->
       $('#nearby_results').children().length.should.equal 0
     it "should empty the markers array", ->
       @locations.markersOnMap.should.be.empty
-    it "clears mapmarkers", ->
-      window.Yumster.MapMarkers.clear.callCount.should.equal 1
+    it "clears the location manager", ->
+      window.Yumster.LocationManager.clear.callCount.should.equal 1
 
   describe "searchMap()", ->
     beforeEach ->

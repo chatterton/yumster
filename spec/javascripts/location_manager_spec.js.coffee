@@ -1,10 +1,10 @@
 #= require spec_helper
 #= require location_manager
 
-describe "window.Yumster.Locations.LocationManager", ->
+describe "window.Yumster.LocationManager", ->
   beforeEach ->
-    @manager = new window.Yumster.Locations._LocationManager
-    window.Yumster.Locations.LocationManager = @manager
+    @manager = new window.Yumster._LocationManager
+    window.Yumster.LocationManager = @manager
     l1 =
       latitude: 42.001
       longitude: 42.002
