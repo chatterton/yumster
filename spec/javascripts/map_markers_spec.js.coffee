@@ -13,7 +13,7 @@ describe "window.Yumster.MapMarkers", ->
       sinon.stub(@mapmarkers, "makeLatLng")
       @marker = {}
       sinon.stub(@mapmarkers, "makeMarker").returns @marker
-      sinon.stub(@mapmarkers, "makeMarkerImage").returns "image"
+      window.Yumster.MarkerSprite.makeMarkerImage = sinon.stub().returns "image"
       @mapmarkers.markers = []
       @checkmarker = @mapmarkers.addMarker(14, 15)
     afterEach ->
@@ -23,16 +23,6 @@ describe "window.Yumster.MapMarkers", ->
       @checkmarker.should.equal @marker
     it "pushes the marker onto the array", ->
       @mapmarkers.markers[0].should.equal @marker
-
-  describe "spriteOffsetsForOrdinal(ordinal)", ->
-    it "returns 0, 0 for 0", ->
-      [xoffset, yoffset] = @mapmarkers.spriteOffsetsForOrdinal(0)
-      xoffset.should.equal 0
-      yoffset.should.equal 0
-    it "correctly wraps around to the next column", ->
-      [xoffset, yoffset] = @mapmarkers.spriteOffsetsForOrdinal(@MapMarkers.SPRITE_XCOUNT)
-      xoffset.should.equal @MapMarkers.SPRITE_XSIZE
-      yoffset.should.equal 0
 
   describe "clear()", ->
     it "empties marker array", ->
@@ -64,11 +54,9 @@ describe "window.Yumster.MapMarkers", ->
           lng: () -> 50.0002
       @mapmarkers.markers = [@m1, @m2, @m3, @m4]
       sinon.stub(@mapmarkers, "makeMarker").returns "clusteredmarker"
-      sinon.stub(@mapmarkers, "makeMarkerImage")
       [@mk, @cl] = @mapmarkers.renderMarkersAndClusters(bounds)
     afterEach ->
       @mapmarkers.makeMarker.restore()
-      @mapmarkers.makeMarkerImage.restore()
     it "returns a marker and cluster array", ->
       @mk.should.be.an('array')
       @cl.should.be.an('array')

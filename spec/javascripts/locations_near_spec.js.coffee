@@ -59,7 +59,7 @@ describe "window.Yumster.Locations.Near", ->
         setMap: sinon.spy()
       @cluster =
         setMap: sinon.spy()
-      window.Yumster.MapMarkers.makeMarkerImage = sinon.stub().returns {}
+      window.Yumster.MarkerSprite.makeMarkerImage = sinon.stub().returns {}
       @locations.showMarkersAndClusters([@marker], [@cluster])
     afterEach ->
       @locations.createLocationHTML.restore()

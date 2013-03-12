@@ -1,39 +1,18 @@
 window.Yumster or= {}
 window.Yumster.MapMarkers or= {}
+window.Yumster.MarkerSprite or= {}
 
 class MapMarkers
-
-  @SPRITE_XCOUNT: 24
-  @SPRITE_XSIZE: 72
-  @SPRITE_YSIZE: 84
-
-  @MARKER_CLUSTER_ORDINAL: 26
 
   @CLUSTER_PERCENT = .1
 
   constructor: () ->
     @markers = []
 
-  spriteOffsetsForOrdinal: (ordinal) ->
-    xoffset = MapMarkers.SPRITE_XSIZE * Math.floor(ordinal / MapMarkers.SPRITE_XCOUNT)
-    yoffset = MapMarkers.SPRITE_YSIZE * (ordinal % MapMarkers.SPRITE_XCOUNT)
-    [xoffset, yoffset]
-
   makeLatLng: (latitude, longitude) ->
     new google.maps.LatLng latitude, longitude
   makeMarker: (config) ->
     new google.maps.Marker config
-  makePoint: (x, y) ->
-    new google.maps.Point(x, y)
-  makeSize: (width, height) ->
-    new google.maps.Size(width, height)
-  makeMarkerImage: (ordinal) ->
-    path = "/assets/marker-sprite.png"
-    size = @makeSize(21, 34)
-    [xoffset, yoffset] = @spriteOffsetsForOrdinal(ordinal)
-    spritelocation = @makePoint(xoffset, yoffset)
-    anchor = @makePoint(11, 34)
-    new google.maps.MarkerImage(path, size, spritelocation, anchor)
 
   clear: () ->
     @markers = []
@@ -67,7 +46,7 @@ class MapMarkers
       if cluster.length > 1
         clustermarker = @makeMarker {
           position: cluster[0].getPosition()
-          icon: @makeMarkerImage(MapMarkers.MARKER_CLUSTER_ORDINAL)
+          icon: window.Yumster.MarkerSprite.makeMarkerImage(window.Yumster.MarkerSprite.MARKER_CLUSTER_ORDINAL)
         }
         clustermarkers.push clustermarker
         for mk in cluster

@@ -3,6 +3,7 @@
 window.Yumster or= {}
 window.Yumster.Locations or= {}
 window.Yumster.MapMarkers or= {}
+window.Yumster.MarkerSprite or= {}
 window.Yumster.Locations.Near or= {}
 
 class LocationsNear
@@ -27,7 +28,7 @@ class LocationsNear
       location.letter = @alphabet[i]
       loc = @createLocationHTML(location)
       loc.appendTo(container)
-      marker.setIcon(window.Yumster.MapMarkers.makeMarkerImage(i))
+      marker.setIcon(window.Yumster.MarkerSprite.makeMarkerImage(i))
       marker.setMap(window.Yumster.Locations.Near.map)
       @markersOnMap.push marker
     for cluster in clusters
