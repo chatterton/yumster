@@ -20,19 +20,30 @@ class LocationsNear
   createLocationHTML: (location) ->
     $(@templates['templates/nearby_location_item'](location))
 
-  showMarkersAndClusters: (markers, clusters) ->
+  makeLatLng: (latitude, longitude) ->
+    new google.maps.LatLng latitude, longitude
+  makeMarker: (config) ->
+    new google.maps.Marker config
+  putMarkerOnMap: (lat, lng, ord) ->
+    marker = @makeMarker {
+      position: @makeLatLng(lat, lng)
+      map: window.Yumster.Locations.Near.map
+      icon: window.Yumster.MarkerSprite.makeMarkerImage(ord)
+    }
+    @markersOnMap.push marker
+    marker
+
+  showMarkers: (markerLocations) ->
     container = $('#nearby_results')
-    for marker, i in markers when i < 20
-      location = marker.location
+    for location, i in markerLocations when i < @alphabet.length
+      @putMarkerOnMap(location.latitude, location.longitude, i)
       location.letter = @alphabet[i]
       loc = @createLocationHTML(location)
       loc.appendTo(container)
-      marker.setIcon(window.Yumster.MarkerSprite.makeMarkerImage(i))
-      marker.setMap(window.Yumster.Locations.Near.map)
-      @markersOnMap.push marker
-    for cluster in clusters
-      cluster.setMap(window.Yumster.Locations.Near.map)
-      @markersOnMap.push cluster
+
+  showClusters: (clusterLocations) ->
+    for cluster in clusterLocations
+      @putMarkerOnMap(cluster.latitude, cluster.longitude, window.Yumster._MarkerSprite.MARKER_CLUSTER_ORDINAL)
 
   fillNearbyLocationsSuccess: (data, lat, long, span) ->
     @emptyCurrentResults()
@@ -43,8 +54,9 @@ class LocationsNear
       $(@templates['templates/no_locations_found'](null)).appendTo(container)
     else
       markers = window.Yumster.LocationManager.getMarkerLocations(lat, long, span)
+      @showMarkers(markers)
       clusters = window.Yumster.LocationManager.getClusterLocations(lat, long, span)
-      @showMarkersAndClusters(markers, clusters)
+      @showClusters(clusters)
       if @fitMapToSearchResults
         @fitMapToMarkers(window.Yumster.Locations.Near.map, @markersOnMap)
 

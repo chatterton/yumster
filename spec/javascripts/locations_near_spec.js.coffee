@@ -49,42 +49,33 @@ describe "window.Yumster.Locations.Near", ->
         @locations.fillNearbyLocationsFailure.callCount.should.equal 1
         @locations.fillNearbyLocationsFailure.calledWith(500, "BAM").should.be.ok
 
-  describe "showMarkersAndClusters(markers, clusters)", ->
+  describe "showMarkers(markerLocations)", ->
     beforeEach ->
       sinon.stub(@locations, "createLocationHTML").returns($("<i>OK!</i>"))
-      @marker =
-        location: {}
-        setIcon: sinon.spy()
-        setMap: sinon.spy()
-      @cluster =
-        setMap: sinon.spy()
+      sinon.stub(@locations, "putMarkerOnMap")
       window.Yumster.MarkerSprite.makeMarkerImage = sinon.stub().returns {}
-      @locations.showMarkersAndClusters([@marker], [@cluster])
+      @locations.showMarkers ["location1", "location2"]
     afterEach ->
       @locations.createLocationHTML.restore()
+      @locations.putMarkerOnMap.restore()
+    it "creates a marker for each location", ->
+      @locations.putMarkerOnMap.callCount.should.equal 2
     it "populates #nearby_results with locations", ->
       container = $('#nearby_results').html()
       container.should.have.string("OK!")
-    it "sets icon on marker", ->
-      @marker.setIcon.callCount.should.equal 1
-    it "sets map on marker", ->
-      @marker.setMap.callCount.should.equal 1
-    it "sets map on cluster", ->
-      @cluster.setMap.callCount.should.equal 1
-    context "when there are more than 20 markers", ->
-      beforeEach ->
-        markers = []
-        for i in [1..25]
-          markers.push @marker
-        @locations.createLocationHTML.reset()
-        @locations.showMarkersAndClusters(markers, [])
-      it "only shows the first 20", ->
-        @locations.createLocationHTML.callCount.should.equal 20
+
+  describe "showClusters(clusterLocations)", ->
+    beforeEach ->
+      sinon.stub(@locations, "putMarkerOnMap")
+      @locations.showClusters ["cluster1", "cluster2"]
+    it "creates a marker for each location", ->
+      @locations.putMarkerOnMap.callCount.should.equal 2
 
   describe "fillNearbyLocationsSuccess(data)", ->
     beforeEach ->
       sinon.stub(@locations, "fitMapToMarkers")
-      sinon.stub(@locations, "showMarkersAndClusters")
+      sinon.stub(@locations, "showMarkers")
+      sinon.stub(@locations, "showClusters")
       sinon.stub(@locations, "emptyCurrentResults")
       @marker = {}
       window.Yumster.Locations.Near.map =
@@ -94,7 +85,8 @@ describe "window.Yumster.Locations.Near", ->
       window.Yumster.LocationManager.getMarkerLocations = sinon.stub().returns ["markers"]
     afterEach ->
       @locations.fitMapToMarkers.restore()
-      @locations.showMarkersAndClusters.restore()
+      @locations.showMarkers.restore()
+      @locations.showClusters.restore()
       @locations.emptyCurrentResults.restore()
     it "clears any current markers", ->
       @locations.fillNearbyLocationsSuccess([])
@@ -117,11 +109,12 @@ describe "window.Yumster.Locations.Near", ->
         @loc_array = [ loc1, loc2 ]
         @locations.fitMapToSearchResults = false
         @locations.fillNearbyLocationsSuccess(@loc_array)
-      it "renders markers", ->
-        @locations.showMarkersAndClusters.callCount.should.equal 1
-      it "gets markers and clusters from the location manager", ->
-        @locations.showMarkersAndClusters.firstCall.args[0].should.deep.equal ["markers"]
-        @locations.showMarkersAndClusters.firstCall.args[1].should.deep.equal ["clusters"]
+      it "renders markers from manager", ->
+        @locations.showMarkers.callCount.should.equal 1
+        @locations.showMarkers.firstCall.args[0].should.deep.equal ["markers"]
+      it "renders clusters from manager", ->
+        @locations.showClusters.callCount.should.equal 1
+        @locations.showClusters.firstCall.args[0].should.deep.equal ["clusters"]
       context "when fitMapToSearchResults is false", ->
         it "should not fit the map to the new marker set", ->
           @locations.fitMapToMarkers.callCount.should.equal 0
