@@ -14,9 +14,6 @@ class LocationsNear
     @fitMapToSearchResults = true
     @defaultSpan = .025
 
-  setMap: (map) ->
-    window.Yumster.Locations.Near.map = map
-
   createLocationHTML: (location) ->
     $(@templates['templates/nearby_location_item'](location))
 
@@ -153,6 +150,8 @@ class LocationsNear
     loc = result.geometry.location
     window.Yumster.Locations.Near.map.setCenter(loc)
     window.Yumster.Locations.Near.searchMap()
+
+  pageLoad: () ->
 
 $ ->
   window.Yumster.Locations.Near = new LocationsNear

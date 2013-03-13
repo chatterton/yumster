@@ -23,15 +23,6 @@
   <script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
   <%= javascript_include_tag 'geolocationmarker.js' %>
   <script type="text/javascript" charset="utf-8">
-
-// Load nearby locations
-var map
-var geolocationSuccess = function(latitude, longitude, coordinatesOnURL) {
-  var loc = new google.maps.LatLng(latitude, longitude)
-  map.setCenter(loc)
-  window.Yumster.Locations.Near.searchHere()
-}
-
 // Add user's location dot to map
 var GeoMarker
 var addPositionIndicator = function(map) {
@@ -45,22 +36,23 @@ var addPositionIndicator = function(map) {
 // Initialize Google Maps v3 API
 var init = function() {
   // Set up map
-  map = new google.maps.Map(document.getElementById('map_canvas'), {
+  var map = new google.maps.Map(document.getElementById('map_canvas'), {
     zoom: 15,
     mapTypeId: google.maps.MapTypeId.ROADMAP
   })
   addPositionIndicator(map)
-  window.Yumster.Locations.Near.setMap(map)
 
-  var failure = function(error) {
-    console.log("Error placing map: ", error)
-  }
-  window.Yumster.Locations.Near.getMapCenter(geolocationSuccess, failure)
+  // Set map window global
+  window.Yumster.Locations.Map.setMap(map)
 
-  // On map idle, begin listening for map movement
+  // Get coordinates from URL, etc
+  window.Yumster.Locations.Near.pageLoad()
+
+  // Wait for map idle
   google.maps.event.addListenerOnce(map, 'idle', function() {
+    // Add bounds changed listener
     google.maps.event.addListener(map, 'bounds_changed', function() {
-      window.Yumster.Locations.Near.boundsChanged()
+      window.Yumster.Locations.Map.boundsChanged()
     })
   })
 }
@@ -71,7 +63,7 @@ $(function() {
   window.Yumster.Locations.initializeAddressSearch(
     '#map_address_input',
     '#map_address_button',
-    window.Yumster.Locations.Near.mapCallback)
+    window.Yumster.Locations.Map.addressSearch)
 })
 
   </script>

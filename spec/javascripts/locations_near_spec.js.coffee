@@ -300,7 +300,7 @@ describe "window.Yumster.Locations.Near", ->
           toSpan: () ->
             lat: () -> 2
             lng: () -> 3
-      @locations.setMap @map
+      window.Yumster.Locations.Near.map = @map
       $('#map_reload').removeClass('disabled')
       sinon.stub(@locations, "fillNearbyLocations")
       sinon.stub(@locations, "updateURLLatLong")
@@ -359,7 +359,7 @@ describe "window.Yumster.Locations.Near", ->
           location: @location
       @map =
         setCenter: sinon.spy()
-      @locations.setMap @map
+      window.Yumster.Locations.Near.map = @map
       @locations.searchMap = sinon.spy()
       @locations.fitMapToSearchResults = false
       @locations.mapCallback(result)
@@ -370,3 +370,7 @@ describe "window.Yumster.Locations.Near", ->
       @locations.searchMap.callCount.should.equal 1
     it "should set fitMapToSearchResults true", ->
       @locations.fitMapToSearchResults.should.equal true
+
+  describe "upon page load", ->
+    context "with complete map parameters on URL", ->
+      it "shows the map using the URL parameters", ->
