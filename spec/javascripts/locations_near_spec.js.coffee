@@ -53,25 +53,35 @@ describe "window.Yumster.Locations.Near", ->
     beforeEach ->
       sinon.stub(@locations, "createLocationHTML").returns($("<i>OK!</i>"))
       sinon.stub(@locations, "putMarkerOnMap")
+      sinon.stub(@locations, "makeClickLinkListener")
       window.Yumster.MarkerSprite.makeMarkerImage = sinon.stub().returns {}
       @locations.showMarkers ["location1", "location2"]
     afterEach ->
       @locations.createLocationHTML.restore()
       @locations.putMarkerOnMap.restore()
+      @locations.makeClickLinkListener.restore()
     it "creates a marker for each location", ->
       @locations.putMarkerOnMap.callCount.should.equal 2
     it "populates #nearby_results with locations", ->
       container = $('#nearby_results').html()
       container.should.have.string("OK!")
+    it "puts a link listener on each marker", ->
+      @locations.makeClickLinkListener.callCount.should.equal 2
 
   describe "showClusters(clusterLocations)", ->
     beforeEach ->
       sinon.stub(@locations, "putMarkerOnMap")
+      sinon.stub(@locations, "makeClickZoomListener")
       window.Yumster._MarkerSprite or= {}
       window.Yumster._MarkerSprite.MARKER_CLUSTER_ORDINAL or= 999
       @locations.showClusters ["cluster1", "cluster2"]
+    afterEach ->
+      @locations.putMarkerOnMap.restore()
+      @locations.makeClickZoomListener.restore()
     it "creates a marker for each location", ->
       @locations.putMarkerOnMap.callCount.should.equal 2
+    it "puts a zoom listener on each marker", ->
+      @locations.makeClickZoomListener.callCount.should.equal 2
 
   describe "fillNearbyLocationsSuccess(data)", ->
     beforeEach ->
