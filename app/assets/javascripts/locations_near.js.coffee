@@ -28,7 +28,7 @@ class LocationsNear
     marker = @makeMarker {
       position: @makeLatLng(lat, lng)
       map: window.Yumster.Locations.Near.map
-      icon: window.Yumster.MarkerSprite.makeMarkerImage(ord)
+      icon: window.Yumster.MarkerSprite.makeMarkerIcon(ord)
     }
     @markersOnMap.push marker
     marker

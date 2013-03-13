@@ -13,17 +13,29 @@ class MarkerSprite
     yoffset = MarkerSprite.SPRITE_YSIZE * (ordinal % MarkerSprite.SPRITE_XCOUNT)
     [xoffset, yoffset]
 
-  makePoint: (x, y) ->
+  makePoint: ([x, y]) ->
     new google.maps.Point(x, y)
   makeSize: (width, height) ->
     new google.maps.Size(width, height)
-  makeMarkerImage: (ordinal) ->
-    path = "/assets/marker-sprite.png"
-    size = @makeSize(21, 34)
-    [xoffset, yoffset] = @spriteOffsetsForOrdinal(ordinal)
-    spritelocation = @makePoint(xoffset, yoffset)
-    anchor = @makePoint(11, 34)
-    new google.maps.MarkerImage(path, size, spritelocation, anchor)
+
+  makeMarkerIcon: (ordinal) ->
+    if ordinal == MarkerSprite.MARKER_CLUSTER_ORDINAL
+      return @clusterIcon()
+    return @markerIcon(ordinal)
+
+  markerIcon: (ord) -> {
+    url: "/assets/marker-sprite.png"
+    size: @makeSize(21, 34)
+    origin: @makePoint(@spriteOffsetsForOrdinal(ord))
+    anchor: @makePoint([11, 34])
+  }
+
+  clusterIcon: () -> {
+    url: "/assets/marker-sprite.png"
+    size: @makeSize(35, 26)
+    origin: @makePoint(@spriteOffsetsForOrdinal(MarkerSprite.MARKER_CLUSTER_ORDINAL))
+    anchor: @makePoint([17, 13])
+  }
 
 $ ->
   window.Yumster.MarkerSprite = new MarkerSprite

@@ -67,6 +67,8 @@ describe "window.Yumster.Locations.Near", ->
   describe "showClusters(clusterLocations)", ->
     beforeEach ->
       sinon.stub(@locations, "putMarkerOnMap")
+      window.Yumster._MarkerSprite or= {}
+      window.Yumster._MarkerSprite.MARKER_CLUSTER_ORDINAL or= 999
       @locations.showClusters ["cluster1", "cluster2"]
     it "creates a marker for each location", ->
       @locations.putMarkerOnMap.callCount.should.equal 2
