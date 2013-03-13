@@ -1,6 +1,5 @@
 #= require spec_helper
 #= require locations_near
-#= require jquery.history.js
 
 describe "window.Yumster.Locations.Near", ->
 
@@ -50,15 +49,69 @@ describe "window.Yumster.Locations.Near", ->
         @locations.fillNearbyLocationsFailure.callCount.should.equal 1
         @locations.fillNearbyLocationsFailure.calledWith(500, "BAM").should.be.ok
 
-  describe "fillNearbyLocationsSuccess(data)", ->
+  describe "showMarkers(markerLocations)", ->
     beforeEach ->
-      sinon.stub(@locations, "createLocationHTML")
-      sinon.stub(@locations, "addMarkerToMap")
-      sinon.stub(@locations, "fitMapToMarkers")
+      sinon.stub(@locations, "createLocationHTML").returns($("<i>OK!</i>"))
+      sinon.stub(@locations, "putMarkerOnMap")
+      sinon.stub(@locations, "makeClickLinkListener")
+      window.Yumster.MarkerSprite.makeMarkerImage = sinon.stub().returns {}
+      @locations.showMarkers ["location1", "location2"]
     afterEach ->
       @locations.createLocationHTML.restore()
-      @locations.addMarkerToMap.restore()
+      @locations.putMarkerOnMap.restore()
+      @locations.makeClickLinkListener.restore()
+    it "creates a marker for each location", ->
+      @locations.putMarkerOnMap.callCount.should.equal 2
+    it "populates #nearby_results with locations", ->
+      container = $('#nearby_results').html()
+      container.should.have.string("OK!")
+    it "puts a link listener on each marker", ->
+      @locations.makeClickLinkListener.callCount.should.equal 2
+
+  describe "showClusters(clusterLocations)", ->
+    beforeEach ->
+      sinon.stub(@locations, "putMarkerOnMap")
+      sinon.stub(@locations, "makeClickZoomListener")
+      window.Yumster._MarkerSprite or= {}
+      window.Yumster._MarkerSprite.MARKER_CLUSTER_ORDINAL or= 999
+      @locations.showClusters ["cluster1", "cluster2"]
+    afterEach ->
+      @locations.putMarkerOnMap.restore()
+      @locations.makeClickZoomListener.restore()
+    it "creates a marker for each location", ->
+      @locations.putMarkerOnMap.callCount.should.equal 2
+    it "puts a zoom listener on each marker", ->
+      @locations.makeClickZoomListener.callCount.should.equal 2
+
+  describe "fillNearbyLocationsSuccess(data)", ->
+    beforeEach ->
+      sinon.stub(@locations, "fitMapToMarkers")
+      sinon.stub(@locations, "showMarkers")
+      sinon.stub(@locations, "showClusters")
+      sinon.stub(@locations, "emptyCurrentResults")
+      @marker = {}
+      window.Yumster.Locations.Near.map =
+        getBounds: () -> "bounds"
+      window.Yumster.LocationManager.addLocations = sinon.stub()
+      window.Yumster.LocationManager.getClusterLocations = sinon.stub().returns ["clusters"]
+      window.Yumster.LocationManager.getMarkerLocations = sinon.stub().returns ["markers"]
+    afterEach ->
       @locations.fitMapToMarkers.restore()
+      @locations.showMarkers.restore()
+      @locations.showClusters.restore()
+      @locations.emptyCurrentResults.restore()
+    it "clears any current markers", ->
+      @locations.fillNearbyLocationsSuccess([])
+      @locations.emptyCurrentResults.callCount.should.equal 1
+    it "loads the location manager with the results", ->
+      data = ["foo"]
+      @locations.fillNearbyLocationsSuccess data, 1, 2, 3
+      window.Yumster.LocationManager.addLocations.callCount.should.equal 1
+      args = window.Yumster.LocationManager.addLocations.firstCall.args
+      args[0].should.equal data
+      args[1].should.equal 1
+      args[2].should.equal 2
+      args[3].should.equal 3
     context "when there are several locations", ->
       beforeEach ->
         loc1 =
@@ -66,17 +119,14 @@ describe "window.Yumster.Locations.Near", ->
         loc2 =
           check: 2
         @loc_array = [ loc1, loc2 ]
-        @locations.createLocationHTML.withArgs(loc1).returns($("<li>OK1</li>"))
-        @locations.createLocationHTML.withArgs(loc2).returns($("<li>OK2</li>"))
         @locations.fitMapToSearchResults = false
         @locations.fillNearbyLocationsSuccess(@loc_array)
-      it "populates #nearby_results with locations", ->
-        container = $('#nearby_results').html()
-        container.should.have.string("OK1")
-        container.should.have.string("OK2")
-      it "creates markers A and B", ->
-        @locations.addMarkerToMap.firstCall.args[0].letter.should.equal 'A'
-        @locations.addMarkerToMap.secondCall.args[0].letter.should.equal 'B'
+      it "renders markers from manager", ->
+        @locations.showMarkers.callCount.should.equal 1
+        @locations.showMarkers.firstCall.args[0].should.deep.equal ["markers"]
+      it "renders clusters from manager", ->
+        @locations.showClusters.callCount.should.equal 1
+        @locations.showClusters.firstCall.args[0].should.deep.equal ["clusters"]
       context "when fitMapToSearchResults is false", ->
         it "should not fit the map to the new marker set", ->
           @locations.fitMapToMarkers.callCount.should.equal 0
@@ -88,14 +138,6 @@ describe "window.Yumster.Locations.Near", ->
           @locations.fitMapToMarkers.callCount.should.equal 1
       it "should disable the map_reload button", ->
         $('#map_reload').is('.disabled').should.be.true
-    context "when there are more than 20 locations", ->
-      beforeEach ->
-        locations = ("location #{i}" for i in [1..25])
-        @locations.createLocationHTML.reset()
-        @locations.createLocationHTML.returns($("<div />"))
-        @locations.fillNearbyLocationsSuccess(locations)
-      it "only shows the first 20", ->
-        @locations.createLocationHTML.callCount.should.equal 20
     context "when there are zero locations", ->
       beforeEach ->
         $('#nearby_results').empty()
@@ -215,10 +257,10 @@ describe "window.Yumster.Locations.Near", ->
       two = @locations.urlParam("bar", address)
       two.should.equal("TWO")
 
-  describe "enableSearchHere()", ->
+  describe "boundsChanged()", ->
     it "enables the Search Here button", ->
       $('#map_reload').is('.disabled').should.be.true
-      @locations.enableSearchHere()
+      @locations.boundsChanged()
       $('#map_reload').is('.disabled').should.not.be.true
 
   describe "searchHere()", ->
@@ -235,14 +277,17 @@ describe "window.Yumster.Locations.Near", ->
   describe "emptyCurrentResults()", ->
     beforeEach ->
       $('<li>whatever</li>').appendTo('#nearby_results')
-      @locations.markers.push {
+      @locations.markersOnMap.push {
         setMap: () ->
       }
+      window.Yumster.LocationManager.clear = sinon.spy()
       @locations.emptyCurrentResults()
     it "should clear the current results list", ->
       $('#nearby_results').children().length.should.equal 0
     it "should empty the markers array", ->
-      @locations.markers.should.be.empty
+      @locations.markersOnMap.should.be.empty
+    it "clears the location manager", ->
+      window.Yumster.LocationManager.clear.callCount.should.equal 1
 
   describe "searchMap()", ->
     beforeEach ->
