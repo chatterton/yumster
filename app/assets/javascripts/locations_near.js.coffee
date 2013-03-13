@@ -1,14 +1,16 @@
 #= require jquery.history.js
 
 window.Yumster or= {}
+window.Yumster.MarkerSprite or= {}
 window.Yumster.Locations or= {}
+window.Yumster.LocationManager or= {}
 window.Yumster.Locations.Near or= {}
 
 class LocationsNear
 
   constructor: (@templates = window.JST) ->
     @alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    @markers = []
+    @markersOnMap = []
     @fitMapToSearchResults = true
     @defaultSpan = .025
 
@@ -18,29 +20,55 @@ class LocationsNear
   createLocationHTML: (location) ->
     $(@templates['templates/nearby_location_item'](location))
 
-  # Markers generated with e.g.
-  # http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=E|96c941|000000
-  addMarkerToMap: (location, ordinal) ->
-    marker = window.Yumster.MapMarkers.createMarker(
-      ordinal,
-      window.Yumster.Locations.Near.map,
-      location.latitude,
-      location.longitude)
-    @markers.push marker
+  makeLatLng: (latitude, longitude) ->
+    new google.maps.LatLng latitude, longitude
+  makeMarker: (config) ->
+    new google.maps.Marker config
+  makeClickLinkListener: (marker, link) ->
+    google.maps.event.addListener marker, 'click', ->
+      window.location.href = link
+  makeClickZoomListener: (marker) ->
+    google.maps.event.addListener marker, 'click', ->
+      window.Yumster.Locations.Near.map.setZoom(window.Yumster.Locations.Near.map.getZoom() + 1)
+      window.Yumster.Locations.Near.map.setCenter marker.getPosition()
+      window.Yumster.Locations.Near.searchHere()
+  putMarkerOnMap: (lat, lng, ord) ->
+    marker = @makeMarker {
+      position: @makeLatLng(lat, lng)
+      map: window.Yumster.Locations.Near.map
+      icon: window.Yumster.MarkerSprite.makeMarkerIcon(ord)
+    }
+    @markersOnMap.push marker
+    marker
 
-  fillNearbyLocationsSuccess: (data) ->
+  showMarkers: (markerLocations) ->
     container = $('#nearby_results')
-    for location, i in data when i < 20
+    for location, i in markerLocations when i < @alphabet.length
+      marker = @putMarkerOnMap(location.latitude, location.longitude, i)
+      @makeClickLinkListener(marker, '/locations/'+location.id)
       location.letter = @alphabet[i]
       loc = @createLocationHTML(location)
       loc.appendTo(container)
-      @addMarkerToMap(location, i)
+
+  showClusters: (clusterLocations) ->
+    for cluster in clusterLocations
+      marker = @putMarkerOnMap(cluster.latitude, cluster.longitude, window.Yumster._MarkerSprite.MARKER_CLUSTER_ORDINAL)
+      @makeClickZoomListener(marker)
+
+  fillNearbyLocationsSuccess: (data, lat, long, span) ->
+    @emptyCurrentResults()
+    window.Yumster.LocationManager.addLocations(data, lat, long, span)
+    container = $('#nearby_results')
     $('#map_reload').addClass('disabled')
     if data.length == 0
       $(@templates['templates/no_locations_found'](null)).appendTo(container)
     else
+      markers = window.Yumster.LocationManager.getMarkerLocations(lat, long, span)
+      @showMarkers(markers)
+      clusters = window.Yumster.LocationManager.getClusterLocations(lat, long, span)
+      @showClusters(clusters)
       if @fitMapToSearchResults
-        @fitMapToMarkers(window.Yumster.Locations.Near.map, @markers)
+        @fitMapToMarkers(window.Yumster.Locations.Near.map, @markersOnMap)
 
   fillNearbyLocationsFailure: (status, error) ->
     if status is 500 and error is "Too many locations returned"
@@ -54,7 +82,7 @@ class LocationsNear
       url: path
       dataType: "json"
       success: (data, status, jqxhr) ->
-        window.Yumster.Locations.Near.fillNearbyLocationsSuccess(data)
+        window.Yumster.Locations.Near.fillNearbyLocationsSuccess(data, lat, long, span)
       error: (jqXHR, status, errorThrown) ->
         window.Yumster.Locations.Near.fillNearbyLocationsFailure(jqXHR.status, jqXHR.responseText)
     }
@@ -90,7 +118,7 @@ class LocationsNear
     results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(address)
     if results then results[1] else null
 
-  enableSearchHere: ->
+  boundsChanged: ->
     $('#map_reload').removeClass('disabled')
 
   searchHere: ->
@@ -99,8 +127,9 @@ class LocationsNear
 
   emptyCurrentResults: () ->
     $('#nearby_results').empty()
-    while marker = @markers.pop() ## clear all markers
+    while marker = @markersOnMap.pop() ## clear all markers
       marker.setMap(null)
+    window.Yumster.LocationManager.clear()
 
   searchMap: ->
     @emptyCurrentResults()
@@ -127,5 +156,4 @@ class LocationsNear
 
 $ ->
   window.Yumster.Locations.Near = new LocationsNear
-  # make prototype available for testing
   window.Yumster.Locations._Near = LocationsNear
