@@ -51,11 +51,15 @@ class LocationManager
         if @contains(location.latitude, location.longitude, cluster_size, check.latitude, check.longitude, 0)
           cluster.locations.push check
       if cluster.locations.length > 1
-        cluster.latitude = location.latitude
-        cluster.longitude = location.longitude
-        clusters.push cluster
+        longitudeSum = 0
+        latitudeSum = 0
         for lc in cluster.locations
           clusteredlocations.push lc
+          longitudeSum += lc.longitude
+          latitudeSum += lc.latitude
+        cluster.latitude = latitudeSum / cluster.locations.length
+        cluster.longitude = longitudeSum / cluster.locations.length
+        clusters.push cluster
     return clusters
 
   getMarkerLocations: (lat, lng, span) ->

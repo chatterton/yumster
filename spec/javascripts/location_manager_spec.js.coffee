@@ -9,8 +9,8 @@ describe "window.Yumster.LocationManager", ->
       latitude: 42.001
       longitude: 42.002
     l2 =
-      latitude: 42.003
-      longitude: 42.004
+      latitude: 42.009
+      longitude: 42.008
     l3 =
       latitude: 41
       longitude: 41
@@ -62,9 +62,9 @@ describe "window.Yumster.LocationManager", ->
     describe "the cluster", ->
       beforeEach ->
         @cluster = @clusters[0]
-      it "should be in the right place", ->
-        @cluster.latitude.should.be.within(41.9, 42.1)
-        @cluster.longitude.should.be.within(41.9, 42.1)
+      it "should average together the markers for its location", ->
+        @cluster.latitude.should.be.within(42.004, 42.006)
+        @cluster.longitude.should.be.within(42.004, 42.006)
       it "should contain the clustered locations", ->
         @cluster.should.have.property('locations').with.length 2
         @cluster.locations.should.contain @locations[0]
