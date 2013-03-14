@@ -42,7 +42,7 @@
   }
 }
 
-.form-section-description:first-child:first-letter {
+.form-section-index {
   font-size: 4em;
   padding-top: .20em;
   padding-right: .13em;
@@ -59,7 +59,7 @@
 
 #location_submit {
   @media screen and (max-width: $BREAKPOINT) {
-    margin-top: .5em;
+    margin-left: 3em;
   }
 }
 #nearby_results {
