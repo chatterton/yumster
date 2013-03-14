@@ -24,13 +24,18 @@
   <%= javascript_include_tag 'geolocationmarker.js' %>
   <script type="text/javascript" charset="utf-8">
 // Add user's location dot to map
-var GeoMarker
+var geoMarker
 var addPositionIndicator = function(map) {
-  if(!GeoMarker) {
-    GeoMarker = new GeolocationMarker()
-    GeoMarker.setCircleOptions({fillColor: '#808080'})
-    GeoMarker.setMap(map)
+  if(!geoMarker) {
+    geoMarker = new GeolocationMarker()
+    geoMarker.setCircleOptions({fillColor: '#808080'})
+    geoMarker.setMap(map)
   }
+  google.maps.event.addListenerOnce(geoMarker, 'position_changed', function() {
+    console.log('position changed: ', geoMarker.getPosition())
+    pos = geoMarker.getPosition()
+    window.Yumster.Locations.Near.geolocationCallback(pos.lat(), pos.lng())
+  })
 }
 
 // Initialize Google Maps v3 API
@@ -38,9 +43,9 @@ var init = function() {
   // Set up map
   var map = new google.maps.Map(document.getElementById('map_canvas'), {
     zoom: 15,
+    center: new google.maps.LatLng(0, 0),
     mapTypeId: google.maps.MapTypeId.ROADMAP
   })
-  addPositionIndicator(map)
 
   // Set map window global
   window.Yumster.Locations.Map.setMap(map)
@@ -48,12 +53,8 @@ var init = function() {
   // Get coordinates from URL, etc
   window.Yumster.Locations.Near.pageLoad()
 
-  // Geolocate if necessary
-  var failure = function() {}
-  window.Yumster.Locations.geolocate(
-    window.Yumster.Locations.Near.geolocationCallback,
-    failure
-  )
+  // add position indicator
+  addPositionIndicator(map)
 
   // Wait for map idle
   google.maps.event.addListenerOnce(map, 'idle', function() {
@@ -61,6 +62,7 @@ var init = function() {
     google.maps.event.addListener(map, 'bounds_changed', function() {
       window.Yumster.Locations.Near.boundsChanged()
     })
+    // TODO: start timer to display location not found error
   })
 }
 google.maps.event.addDomListener(window, 'load', init)

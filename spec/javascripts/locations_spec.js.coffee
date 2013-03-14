@@ -47,31 +47,3 @@ describe "window.Yumster.Locations", ->
         @callback.callCount.should.equal 1
         @callback.firstCall.args[0].should.equal "first"
 
-  describe "geolocate(success, failure)", ->
-    beforeEach ->
-      @keepFunction = navigator.geolocation.getCurrentPosition
-      @success = sinon.spy()
-      @failure = sinon.spy()
-    afterEach ->
-      navigator.geolocation.getCurrentPosition = @keepFunction
-    context "when the user allows geolocation", ->
-      beforeEach ->
-        navigator.geolocation.getCurrentPosition = (f1, f2) ->
-          f1({
-            coords:
-              latitude: 5
-              longitude: 6
-          })
-      it "calls success on coordinates", ->
-        @locations.geolocate(@success, @failure)
-        @success.callCount.should.equal 1
-        @failure.callCount.should.equal 0
-    context "when the user does not allow geolocation", ->
-      beforeEach ->
-        navigator.geolocation.getCurrentPosition = (f1, f2) ->
-          f2({})
-      it "calls failure callback", ->
-        @locations.geolocate(@success, @failure)
-        @success.callCount.should.equal 0
-        @failure.callCount.should.equal 1
-

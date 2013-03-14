@@ -33,15 +33,6 @@ class Locations
         event.preventDefault()
         addressSearchClick()
 
-  geolocate: (success, failure) ->
-    if navigator.geolocation
-      navigator.geolocation.getCurrentPosition (position) ->
-        success(position.coords.latitude, position.coords.longitude, false)
-      , ->
-        return failure("User did not allow geolocation")
-    else
-      return failure("Browser does not support geolocation")
-
 $ ->
   unless typeof google is "undefined"
     window.Yumster.Locations = new Locations
