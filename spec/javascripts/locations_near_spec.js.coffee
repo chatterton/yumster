@@ -20,6 +20,8 @@ describe "window.Yumster.Locations.Near", ->
     window.Yumster.Locations.Map or= {}
     @gm = new window.Yumster._GoogleMaker
     @locations.gm = @gm
+    window.Yumster.Locations.Map.putMarkerOnMap = sinon.stub()
+    window.Yumster.MarkerSprite.makeMarkerIcon = sinon.stub().returns {}
 
   describe "fillNearbyLocations(lat, long, span)", ->
     beforeEach ->
@@ -56,16 +58,13 @@ describe "window.Yumster.Locations.Near", ->
   describe "showMarkers(markerLocations)", ->
     beforeEach ->
       sinon.stub(@locations, "createLocationHTML").returns($("<i>OK!</i>"))
-      sinon.stub(@locations, "putMarkerOnMap")
       sinon.stub(@locations, "setClickLinkListener")
-      window.Yumster.MarkerSprite.makeMarkerImage = sinon.stub().returns {}
       @locations.showMarkers ["location1", "location2"]
     afterEach ->
       @locations.createLocationHTML.restore()
-      @locations.putMarkerOnMap.restore()
       @locations.setClickLinkListener.restore()
     it "creates a marker for each location", ->
-      @locations.putMarkerOnMap.callCount.should.equal 2
+      window.Yumster.Locations.Map.putMarkerOnMap.callCount.should.equal 2
     it "populates #nearby_results with locations", ->
       container = $('#nearby_results').html()
       container.should.have.string("OK!")
@@ -74,18 +73,16 @@ describe "window.Yumster.Locations.Near", ->
 
   describe "showClusters(clusterLocations)", ->
     beforeEach ->
-      sinon.stub(@locations, "putMarkerOnMap")
       sinon.stub(@locations, "setClickZoomListener")
       window.Yumster._MarkerSprite or= {}
       window.Yumster._MarkerSprite.MARKER_CLUSTER_ORDINAL or= 999
-      @locations.showClusters ["cluster1", "cluster2"]
+      @locations.showClusters ["cluster1", "cluster2", "cluster3"]
     afterEach ->
-      @locations.putMarkerOnMap.restore()
       @locations.setClickZoomListener.restore()
     it "creates a marker for each location", ->
-      @locations.putMarkerOnMap.callCount.should.equal 2
+      window.Yumster.Locations.Map.putMarkerOnMap.callCount.should.equal 3
     it "puts a zoom listener on each marker", ->
-      @locations.setClickZoomListener.callCount.should.equal 2
+      @locations.setClickZoomListener.callCount.should.equal 3
 
   describe "fillNearbyLocationsSuccess(data)", ->
     beforeEach ->
@@ -390,21 +387,21 @@ describe "window.Yumster.Locations.Near", ->
     beforeEach ->
       sinon.stub(@locations, "getMapParamsFromURL").returns [10, 11, 12]
       window.Yumster.Locations.Map.fitMapToBounds = sinon.stub()
-      sinon.stub(@locations, "searchHere")
+      sinon.stub(@locations, "fillNearbyLocations")
     afterEach ->
       @locations.getMapParamsFromURL.restore()
-      @locations.searchHere.restore()
+      @locations.fillNearbyLocations.restore()
     context "with complete map parameters on URL", ->
       beforeEach ->
         @locations.pageLoad()
       it "shows the map using the URL parameters", ->
         window.Yumster.Locations.Map.fitMapToBounds.callCount.should.equal 1
       it "loads and displays locations", ->
-        @locations.searchHere.callCount.should.equal 1
+        @locations.fillNearbyLocations.callCount.should.equal 1
     context "without complete map parameters", ->
       beforeEach ->
         @locations.getMapParamsFromURL.returns [null, 11, 12]
         @locations.pageLoad()
       it "does nothing", ->
         window.Yumster.Locations.Map.fitMapToBounds.callCount.should.equal 0
-        @locations.searchHere.callCount.should.equal 0
+        @locations.fillNearbyLocations.callCount.should.equal 0

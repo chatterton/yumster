@@ -10,14 +10,13 @@ class LocationsNear
 
   constructor: (@templates = window.JST) ->
     @alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    @markersOnMap = []
     @fitMapToSearchResults = true
     @defaultSpan = .025
     @gm = window.Yumster.GoogleMaker
+    @markersOnMap = []
 
   createLocationHTML: (location) ->
     $(@templates['templates/nearby_location_item'](location))
-
 
   setClickLinkListener: (marker, link) ->
     @gm.addMarkerListener marker, 'click', ->
@@ -29,19 +28,11 @@ class LocationsNear
       window.Yumster.Locations.Near.map.setCenter marker.getPosition()
       window.Yumster.Locations.Near.searchHere()
 
-  putMarkerOnMap: (lat, lng, ord) ->
-    marker = @gm.makeMarker {
-      position: @gm.makeLatLng(lat, lng)
-      map: window.Yumster.Locations.Near.map
-      icon: window.Yumster.MarkerSprite.makeMarkerIcon(ord)
-    }
-    @markersOnMap.push marker
-    marker
-
   showMarkers: (markerLocations) ->
     container = $('#nearby_results')
     for location, i in markerLocations when i < @alphabet.length
-      marker = @putMarkerOnMap(location.latitude, location.longitude, i)
+      icon = window.Yumster.MarkerSprite.makeMarkerIcon(i)
+      marker = window.Yumster.Locations.Map.putMarkerOnMap(location.latitude, location.longitude, icon)
       @setClickLinkListener(marker, '/locations/'+location.id)
       location.letter = @alphabet[i]
       loc = @createLocationHTML(location)
@@ -49,7 +40,8 @@ class LocationsNear
 
   showClusters: (clusterLocations) ->
     for cluster in clusterLocations
-      marker = @putMarkerOnMap(cluster.latitude, cluster.longitude, window.Yumster._MarkerSprite.MARKER_CLUSTER_ORDINAL)
+      icon = window.Yumster.MarkerSprite.makeMarkerIcon(window.Yumster._MarkerSprite.MARKER_CLUSTER_ORDINAL)
+      marker = window.Yumster.Locations.Map.putMarkerOnMap(cluster.latitude, cluster.longitude, icon)
       @setClickZoomListener(marker)
 
   fillNearbyLocationsSuccess: (data, lat, long, span) ->
@@ -160,7 +152,7 @@ class LocationsNear
     [lat, lng, span] = @getMapParamsFromURL()
     if lat and lng and span
       window.Yumster.Locations.Map.fitMapToBounds lat, lng, span
-      @searchHere()
+      @fillNearbyLocations lat, lng, span
 
   searchHere: ->
 
