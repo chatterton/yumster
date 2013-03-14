@@ -32,6 +32,13 @@ var addPositionIndicator = function(map) {
     geoMarker.setMap(map)
   }
   google.maps.event.addListenerOnce(geoMarker, 'position_changed', function() {
+    // Return if map has been explicitly loaded at a location
+    var urlparams = window.Yumster.Locations.Near.getMapParamsFromURL()
+    if(urlparams[0] && urlparams[1] && urlparams[2]) {
+      return
+    }
+    // No URL location found. Get current position off geomarker
+    // and move map to there.
     pos = geoMarker.getPosition()
     window.Yumster.Locations.Near.geolocationCallback(pos.lat(), pos.lng())
   })
