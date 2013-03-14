@@ -7,53 +7,39 @@ window.Yumster.LocationManager or= {}
 window.Yumster.Locations.Near or= {}
 
 class LocationsNear
+  @DEFAULT_SPAN: .018
 
   constructor: (@templates = window.JST) ->
     @alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    @markersOnMap = []
-    @fitMapToSearchResults = true
-    @defaultSpan = .025
-
-  setMap: (map) ->
-    window.Yumster.Locations.Near.map = map
+    @gm = window.Yumster.GoogleMaker
 
   createLocationHTML: (location) ->
     $(@templates['templates/nearby_location_item'](location))
 
-  makeLatLng: (latitude, longitude) ->
-    new google.maps.LatLng latitude, longitude
-  makeMarker: (config) ->
-    new google.maps.Marker config
-  makeClickLinkListener: (marker, link) ->
-    google.maps.event.addListener marker, 'click', ->
+  setClickLinkListener: (marker, link) ->
+    @gm.addMarkerListener marker, 'click', ->
       window.location.href = link
-  makeClickZoomListener: (marker) ->
-    google.maps.event.addListener marker, 'click', ->
-      window.Yumster.Locations.Near.map.setZoom(window.Yumster.Locations.Near.map.getZoom() + 1)
-      window.Yumster.Locations.Near.map.setCenter marker.getPosition()
+
+  setClickZoomListener: (marker, lat, lng) ->
+    @gm.addMarkerListener marker, 'click', ->
+      window.Yumster.Locations.Map.zoomInAndRecenter lat, lng
       window.Yumster.Locations.Near.searchHere()
-  putMarkerOnMap: (lat, lng, ord) ->
-    marker = @makeMarker {
-      position: @makeLatLng(lat, lng)
-      map: window.Yumster.Locations.Near.map
-      icon: window.Yumster.MarkerSprite.makeMarkerIcon(ord)
-    }
-    @markersOnMap.push marker
-    marker
 
   showMarkers: (markerLocations) ->
     container = $('#nearby_results')
     for location, i in markerLocations when i < @alphabet.length
-      marker = @putMarkerOnMap(location.latitude, location.longitude, i)
-      @makeClickLinkListener(marker, '/locations/'+location.id)
+      icon = window.Yumster.MarkerSprite.makeMarkerIcon(i)
+      marker = window.Yumster.Locations.Map.putMarkerOnMap(location.latitude, location.longitude, icon)
+      @setClickLinkListener(marker, '/locations/'+location.id)
       location.letter = @alphabet[i]
       loc = @createLocationHTML(location)
       loc.appendTo(container)
 
   showClusters: (clusterLocations) ->
     for cluster in clusterLocations
-      marker = @putMarkerOnMap(cluster.latitude, cluster.longitude, window.Yumster._MarkerSprite.MARKER_CLUSTER_ORDINAL)
-      @makeClickZoomListener(marker)
+      icon = window.Yumster.MarkerSprite.makeMarkerIcon(window.Yumster._MarkerSprite.MARKER_CLUSTER_ORDINAL)
+      marker = window.Yumster.Locations.Map.putMarkerOnMap(cluster.latitude, cluster.longitude, icon)
+      @setClickZoomListener(marker, cluster.latitude, cluster.longitude)
 
   fillNearbyLocationsSuccess: (data, lat, long, span) ->
     @emptyCurrentResults()
@@ -67,8 +53,6 @@ class LocationsNear
       @showMarkers(markers)
       clusters = window.Yumster.LocationManager.getClusterLocations(lat, long, span)
       @showClusters(clusters)
-      if @fitMapToSearchResults
-        @fitMapToMarkers(window.Yumster.Locations.Near.map, @markersOnMap)
 
   fillNearbyLocationsFailure: (status, error) ->
     if status is 500 and error is "Too many locations returned"
@@ -87,72 +71,59 @@ class LocationsNear
         window.Yumster.Locations.Near.fillNearbyLocationsFailure(jqXHR.status, jqXHR.responseText)
     }
 
-  createURLParams: (lat, long, span) ->
+  createURLParams: (lat, lng, span) ->
     url = ""
-    url += "?latitude=#{lat.toFixed(6)}"
-    url += "&longitude=#{long.toFixed(6)}"
+    url += "?lat=#{lat.toFixed(6)}"
+    url += "&lng=#{lng.toFixed(6)}"
     url += "&span=#{span.toFixed(6)}"
     url
 
-  updateURLLatLong: (lat, long, span) ->
-    state = @createURLParams(lat, long, span)
+  updateURL: (lat, lng, span) ->
+    state = @createURLParams(lat, lng, span)
     window.History.replaceState {}, null, state
-
-  getMapCenter: (success, failure) ->
-    latitude = if @urlParam("latitude") then parseFloat(@urlParam("latitude")) else null
-    longitude = if @urlParam("longitude") then parseFloat(@urlParam("longitude")) else null
-    if latitude and longitude
-      return success(latitude, longitude, true)
-    @geolocate(success, failure)
-
-  geolocate: (success, failure) ->
-    if navigator.geolocation
-      navigator.geolocation.getCurrentPosition (position) ->
-        success(position.coords.latitude, position.coords.longitude, false)
-      , ->
-        return failure("User did not allow geolocation")
-    else
-      return failure("Browser does not support geolocation")
 
   urlParam: (name, address = window.location.href) ->
     results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(address)
     if results then results[1] else null
 
+  urlParamToFloat: (name) ->
+    val = @urlParam(name)
+    if val
+      if parseFloat(val)
+        return parseFloat(val)
+    return null
+
   boundsChanged: ->
     $('#map_reload').removeClass('disabled')
 
-  searchHere: ->
-    @fitMapToSearchResults = false
-    @searchMap()
-
   emptyCurrentResults: () ->
     $('#nearby_results').empty()
-    while marker = @markersOnMap.pop() ## clear all markers
-      marker.setMap(null)
+    window.Yumster.Locations.Map.clear()
     window.Yumster.LocationManager.clear()
 
-  searchMap: ->
-    @emptyCurrentResults()
-    span = @defaultSpan
-    if window.Yumster.Locations.Near.map.getBounds()
-      span = window.Yumster.Locations.Near.map.getBounds().toSpan().lat()
-    center = window.Yumster.Locations.Near.map.getCenter()
-    @fillNearbyLocations(center.lat(), center.lng(), span)
-    @updateURLLatLong(center.lat(), center.lng(), span)
+  geolocationCallback: (lat, lng) ->
+    window.Yumster.Locations.Map.fitMapToBounds lat, lng, LocationsNear.DEFAULT_SPAN
+    window.Yumster.Locations.Near.searchHere()
 
-  makeLatLngBounds: () ->
-    new google.maps.LatLngBounds
+  getMapParamsFromURL: () ->
+    lat = @urlParamToFloat('lat')
+    lng = @urlParamToFloat('lng')
+    span = @urlParamToFloat('span')
+    return [lat, lng, span]
 
-  fitMapToMarkers: (map, markers) ->
-    bounds = @makeLatLngBounds()
-    bounds.extend(marker.getPosition()) for marker in markers
-    map.fitBounds(bounds)
+  pageLoad: () ->
+    [lat, lng, span] = @getMapParamsFromURL()
+    if lat and lng and span
+      window.Yumster.Locations.Map.fitMapToBounds lat, lng, span
+      @fillNearbyLocations lat, lng, span
 
-  mapCallback: (result) ->
-    @fitMapToSearchResults = true
-    loc = result.geometry.location
-    window.Yumster.Locations.Near.map.setCenter(loc)
-    window.Yumster.Locations.Near.searchMap()
+  searchHere: ->
+    [lat, lng, span] = window.Yumster.Locations.Map.getBoundsFromMap()
+    unless lat and lng and span
+      return
+    @updateURL lat, lng, span
+    @fillNearbyLocations lat, lng, span
+
 
 $ ->
   window.Yumster.Locations.Near = new LocationsNear

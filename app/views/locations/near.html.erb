@@ -23,45 +23,52 @@
   <script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
   <%= javascript_include_tag 'geolocationmarker.js' %>
   <script type="text/javascript" charset="utf-8">
-
-// Load nearby locations
-var map
-var geolocationSuccess = function(latitude, longitude, coordinatesOnURL) {
-  var loc = new google.maps.LatLng(latitude, longitude)
-  map.setCenter(loc)
-  window.Yumster.Locations.Near.searchHere()
-}
-
 // Add user's location dot to map
-var GeoMarker
+var geoMarker
 var addPositionIndicator = function(map) {
-  if(!GeoMarker) {
-    GeoMarker = new GeolocationMarker()
-    GeoMarker.setCircleOptions({fillColor: '#808080'})
-    GeoMarker.setMap(map)
+  if(!geoMarker) {
+    geoMarker = new GeolocationMarker()
+    geoMarker.setCircleOptions({fillColor: '#808080'})
+    geoMarker.setMap(map)
   }
+  google.maps.event.addListenerOnce(geoMarker, 'position_changed', function() {
+    // Return if map has been explicitly loaded at a location
+    var urlparams = window.Yumster.Locations.Near.getMapParamsFromURL()
+    if(urlparams[0] && urlparams[1] && urlparams[2]) {
+      return
+    }
+    // No URL location found. Get current position off geomarker
+    // and move map to there.
+    pos = geoMarker.getPosition()
+    window.Yumster.Locations.Near.geolocationCallback(pos.lat(), pos.lng())
+  })
 }
 
 // Initialize Google Maps v3 API
 var init = function() {
   // Set up map
-  map = new google.maps.Map(document.getElementById('map_canvas'), {
+  var map = new google.maps.Map(document.getElementById('map_canvas'), {
     zoom: 15,
+    center: new google.maps.LatLng(0, 0),
     mapTypeId: google.maps.MapTypeId.ROADMAP
   })
+
+  // Set map window global
+  window.Yumster.Locations.Map.setMap(map)
+
+  // Get coordinates from URL, etc
+  window.Yumster.Locations.Near.pageLoad()
+
+  // add position indicator
   addPositionIndicator(map)
-  window.Yumster.Locations.Near.setMap(map)
 
-  var failure = function(error) {
-    console.log("Error placing map: ", error)
-  }
-  window.Yumster.Locations.Near.getMapCenter(geolocationSuccess, failure)
-
-  // On map idle, begin listening for map movement
+  // Wait for map idle
   google.maps.event.addListenerOnce(map, 'idle', function() {
+    // Add bounds changed listener
     google.maps.event.addListener(map, 'bounds_changed', function() {
       window.Yumster.Locations.Near.boundsChanged()
     })
+    // TODO: start timer to display location not found error
   })
 }
 google.maps.event.addDomListener(window, 'load', init)
@@ -71,7 +78,7 @@ $(function() {
   window.Yumster.Locations.initializeAddressSearch(
     '#map_address_input',
     '#map_address_button',
-    window.Yumster.Locations.Near.mapCallback)
+    window.Yumster.Locations.Near.geolocationCallback)
 })
 
   </script>

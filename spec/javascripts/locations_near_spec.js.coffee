@@ -1,5 +1,6 @@
 #= require spec_helper
 #= require locations_near
+#= require google_maker
 
 describe "window.Yumster.Locations.Near", ->
 
@@ -16,6 +17,11 @@ describe "window.Yumster.Locations.Near", ->
       <ul id="nearby_results">
       </ul>
     ''')
+    window.Yumster.Locations.Map or= {}
+    @gm = new window.Yumster._GoogleMaker
+    @locations.gm = @gm
+    window.Yumster.Locations.Map.putMarkerOnMap = sinon.stub()
+    window.Yumster.MarkerSprite.makeMarkerIcon = sinon.stub().returns {}
 
   describe "fillNearbyLocations(lat, long, span)", ->
     beforeEach ->
@@ -52,51 +58,42 @@ describe "window.Yumster.Locations.Near", ->
   describe "showMarkers(markerLocations)", ->
     beforeEach ->
       sinon.stub(@locations, "createLocationHTML").returns($("<i>OK!</i>"))
-      sinon.stub(@locations, "putMarkerOnMap")
-      sinon.stub(@locations, "makeClickLinkListener")
-      window.Yumster.MarkerSprite.makeMarkerImage = sinon.stub().returns {}
+      sinon.stub(@locations, "setClickLinkListener")
       @locations.showMarkers ["location1", "location2"]
     afterEach ->
       @locations.createLocationHTML.restore()
-      @locations.putMarkerOnMap.restore()
-      @locations.makeClickLinkListener.restore()
+      @locations.setClickLinkListener.restore()
     it "creates a marker for each location", ->
-      @locations.putMarkerOnMap.callCount.should.equal 2
+      window.Yumster.Locations.Map.putMarkerOnMap.callCount.should.equal 2
     it "populates #nearby_results with locations", ->
       container = $('#nearby_results').html()
       container.should.have.string("OK!")
     it "puts a link listener on each marker", ->
-      @locations.makeClickLinkListener.callCount.should.equal 2
+      @locations.setClickLinkListener.callCount.should.equal 2
 
   describe "showClusters(clusterLocations)", ->
     beforeEach ->
-      sinon.stub(@locations, "putMarkerOnMap")
-      sinon.stub(@locations, "makeClickZoomListener")
+      sinon.stub(@locations, "setClickZoomListener")
       window.Yumster._MarkerSprite or= {}
       window.Yumster._MarkerSprite.MARKER_CLUSTER_ORDINAL or= 999
-      @locations.showClusters ["cluster1", "cluster2"]
+      @locations.showClusters ["cluster1", "cluster2", "cluster3"]
     afterEach ->
-      @locations.putMarkerOnMap.restore()
-      @locations.makeClickZoomListener.restore()
+      @locations.setClickZoomListener.restore()
     it "creates a marker for each location", ->
-      @locations.putMarkerOnMap.callCount.should.equal 2
+      window.Yumster.Locations.Map.putMarkerOnMap.callCount.should.equal 3
     it "puts a zoom listener on each marker", ->
-      @locations.makeClickZoomListener.callCount.should.equal 2
+      @locations.setClickZoomListener.callCount.should.equal 3
 
   describe "fillNearbyLocationsSuccess(data)", ->
     beforeEach ->
-      sinon.stub(@locations, "fitMapToMarkers")
       sinon.stub(@locations, "showMarkers")
       sinon.stub(@locations, "showClusters")
       sinon.stub(@locations, "emptyCurrentResults")
       @marker = {}
-      window.Yumster.Locations.Near.map =
-        getBounds: () -> "bounds"
       window.Yumster.LocationManager.addLocations = sinon.stub()
       window.Yumster.LocationManager.getClusterLocations = sinon.stub().returns ["clusters"]
       window.Yumster.LocationManager.getMarkerLocations = sinon.stub().returns ["markers"]
     afterEach ->
-      @locations.fitMapToMarkers.restore()
       @locations.showMarkers.restore()
       @locations.showClusters.restore()
       @locations.emptyCurrentResults.restore()
@@ -119,7 +116,6 @@ describe "window.Yumster.Locations.Near", ->
         loc2 =
           check: 2
         @loc_array = [ loc1, loc2 ]
-        @locations.fitMapToSearchResults = false
         @locations.fillNearbyLocationsSuccess(@loc_array)
       it "renders markers from manager", ->
         @locations.showMarkers.callCount.should.equal 1
@@ -127,15 +123,6 @@ describe "window.Yumster.Locations.Near", ->
       it "renders clusters from manager", ->
         @locations.showClusters.callCount.should.equal 1
         @locations.showClusters.firstCall.args[0].should.deep.equal ["clusters"]
-      context "when fitMapToSearchResults is false", ->
-        it "should not fit the map to the new marker set", ->
-          @locations.fitMapToMarkers.callCount.should.equal 0
-      context "when fitMapToSearchResults is true", ->
-        beforeEach ->
-          @locations.fitMapToSearchResults = true
-          @locations.fillNearbyLocationsSuccess(@loc_array)
-        it "should fit the map to the new marker set", ->
-          @locations.fitMapToMarkers.callCount.should.equal 1
       it "should disable the map_reload button", ->
         $('#map_reload').is('.disabled').should.be.true
     context "when there are zero locations", ->
@@ -148,8 +135,6 @@ describe "window.Yumster.Locations.Near", ->
       it "shows a friendly error message", ->
         container = $('#nearby_results').html()
         container.should.have.string("no loc found template")
-      it "does not try to fit map to marker set", ->
-        @locations.fitMapToMarkers.callCount.should.equal 0
 
   describe "fillNearbyLocationsFailure(status, error)", ->
     beforeEach ->
@@ -177,77 +162,22 @@ describe "window.Yumster.Locations.Near", ->
     it "returns a jquery html object", ->
       @html.should.be.an.instanceof jQuery
 
-  describe "updateURLLatLong(lat, long, span)", ->
+  describe "updateURL(lat, long, span)", ->
     beforeEach ->
       sinon.stub window.History, "replaceState"
     afterEach ->
       window.History.replaceState.restore()
     it "updates the address bar with latitude, longitude, and span", ->
-      @locations.updateURLLatLong(41.001, 42.002, 33)
+      @locations.updateURL(41.001, 42.002, 33)
       new_address = window.History.replaceState.getCall(0).args[2]
       new_address.should.have.string("41.001")
       new_address.should.have.string("42.002")
       new_address.should.have.string("span=33")
     it "shortens long floats to six decimal places", ->
-      @locations.updateURLLatLong(41.111111111111, 42.002, 1)
+      @locations.updateURL(41.111111111111, 42.002, 1)
       new_address = window.History.replaceState.getCall(0).args[2]
       new_address.should.have.string("41.111111")
       new_address.should.not.have.string("41.1111111")
-
-  describe "getMapCenter(success, failure)", ->
-    beforeEach ->
-      sinon.stub(@locations, "urlParam")
-      sinon.stub(@locations, "geolocate")
-      @success = sinon.spy()
-      @failure = sinon.spy()
-    afterEach ->
-      @locations.urlParam.restore()
-      @locations.geolocate.restore()
-    context "when coordinates are provided on the query string", ->
-      beforeEach ->
-        @locations.urlParam.withArgs("latitude").returns("15")
-        @locations.urlParam.withArgs("longitude").returns("16")
-      it "calls the success callback on them", ->
-        @locations.getMapCenter(@success, @failure)
-        @success.firstCall.args[0].should.equal 15
-        @success.firstCall.args[1].should.equal 16
-    context "when there are no coordinates", ->
-      beforeEach ->
-        @locations.urlParam.withArgs("latitude").returns(null)
-        @locations.urlParam.withArgs("longitude").returns(null)
-      it "calls geolocate with the callbacks", ->
-        @locations.getMapCenter(@success, @failure)
-        @locations.geolocate.callCount.should.equal 1
-        @locations.geolocate.firstCall.args[0].should.equal @success
-        @locations.geolocate.firstCall.args[1].should.equal @failure
-
-  describe "geolocate(success, failure)", ->
-    beforeEach ->
-      @keepFunction = navigator.geolocation.getCurrentPosition
-      @success = sinon.spy()
-      @failure = sinon.spy()
-    afterEach ->
-      navigator.geolocation.getCurrentPosition = @keepFunction
-    context "when the user allows geolocation", ->
-      beforeEach ->
-        navigator.geolocation.getCurrentPosition = (f1, f2) ->
-          f1({
-            coords:
-              latitude: 5
-              longitude: 6
-          })
-      it "calls success on coordinates", ->
-        @locations.geolocate(@success, @failure)
-        @success.callCount.should.equal 1
-        @failure.callCount.should.equal 0
-    context "when the user does not allow geolocation", ->
-      beforeEach ->
-        navigator.geolocation.getCurrentPosition = (f1, f2) ->
-          f2({})
-      it "calls failure callback", ->
-        @locations.geolocate(@success, @failure)
-        @success.callCount.should.equal 0
-        @failure.callCount.should.equal 1
 
   describe "urlParam(name)", ->
     it "returns parameters from query string", ->
@@ -257,116 +187,125 @@ describe "window.Yumster.Locations.Near", ->
       two = @locations.urlParam("bar", address)
       two.should.equal("TWO")
 
+  describe "urlParamToFloat(name)", ->
+    beforeEach ->
+      sinon.stub(@locations, "urlParam")
+    afterEach ->
+      @locations.urlParam.restore()
+    context "when a parameter is a number", ->
+      it "returns a number", ->
+        @locations.urlParam.returns('1024')
+        check = @locations.urlParamToFloat('whatever')
+        check.should.be.a 'number'
+        check.should.equal 1024
+    context "when a parameter is NaN", ->
+      it "returns null", ->
+        @locations.urlParam.returns('biscuits')
+        check = @locations.urlParamToFloat('whatever')
+        assert.isNull(check)
+
   describe "boundsChanged()", ->
     it "enables the Search Here button", ->
       $('#map_reload').is('.disabled').should.be.true
       @locations.boundsChanged()
       $('#map_reload').is('.disabled').should.not.be.true
 
-  describe "searchHere()", ->
-    beforeEach ->
-      sinon.stub(@locations, "searchMap")
-      @locations.searchHere()
-    afterEach ->
-      @locations.searchMap.restore()
-    it "sets fitMapToSearchResults to false", ->
-      @locations.searchMap.callCount.should.equal 1
-    it "searches the current map", ->
-      @locations.fitMapToSearchResults.should.equal false
-
   describe "emptyCurrentResults()", ->
     beforeEach ->
       $('<li>whatever</li>').appendTo('#nearby_results')
-      @locations.markersOnMap.push {
-        setMap: () ->
-      }
       window.Yumster.LocationManager.clear = sinon.spy()
+      window.Yumster.Locations.Map.clear = sinon.spy()
       @locations.emptyCurrentResults()
     it "should clear the current results list", ->
       $('#nearby_results').children().length.should.equal 0
-    it "should empty the markers array", ->
-      @locations.markersOnMap.should.be.empty
+    it "should clear the map", ->
+      window.Yumster.Locations.Map.clear.callCount.should.equal 1
     it "clears the location manager", ->
       window.Yumster.LocationManager.clear.callCount.should.equal 1
 
-  describe "searchMap()", ->
+  describe "geolocationCallback(lat, lng)", ->
+      sinon.stub @locations, "searchHere"
+      window.Yumster.Locations.Map.fitMapToBounds = sinon.spy()
+      @locations.geolocationCallback 90210, 92102
+      @args = window.Yumster.Locations.Map.fitMapToBounds.firstCall.args
+    afterEach ->
+      @locations.searchHere.restore()
+    it "should move the map to the location", ->
+      window.Yumster.Locations.Map.fitMapToBounds.callCount.should.equal 1
+      @args[0].should.equal 90210
+      @args[1].should.equal 92102
+    it "fills in a default span", ->
+      @args[2].should.be.at.least .001
+    it "should reload the map in this new location", ->
+      @locations.searchHere.callCount.should.equal 1
+
+  describe "retrieving map parameters from the URL", ->
     beforeEach ->
-      @map = {}
-      @map =
-        getCenter: () ->
-          lat: () -> 666
-          lng: () -> 667
-        getBounds: () ->
-          toSpan: () ->
-            lat: () -> 2
-            lng: () -> 3
-      @locations.setMap @map
-      $('#map_reload').removeClass('disabled')
+      sinon.stub(@locations, "urlParam")
+      @locations.urlParam.withArgs('lat').returns '10'
+      @locations.urlParam.withArgs('lng').returns '11'
+      @locations.urlParam.withArgs('span').returns '12'
+    afterEach ->
+      @locations.urlParam.restore()
+    context "when the parameters are valid", ->
+      it "returns an array containing them as floats", ->
+        [lat, lng, span] = @locations.getMapParamsFromURL()
+        lat.should.equal 10
+        lng.should.equal 11
+        span.should.equal 12
+    context "when one of the parameters is bogus", ->
+      it "returns null for that parameter", ->
+        @locations.urlParam.withArgs('span').returns 'hamburgers'
+        [lat, lng, span] = @locations.getMapParamsFromURL()
+        lat.should.equal 10
+        lng.should.equal 11
+        assert.isNull(span)
+
+  describe "upon page load", ->
+    beforeEach ->
+      sinon.stub(@locations, "getMapParamsFromURL").returns [10, 11, 12]
+      window.Yumster.Locations.Map.fitMapToBounds = sinon.stub()
       sinon.stub(@locations, "fillNearbyLocations")
-      sinon.stub(@locations, "updateURLLatLong")
-      sinon.stub(@locations, "emptyCurrentResults")
-      @locations.searchMap()
+    afterEach ->
+      @locations.getMapParamsFromURL.restore()
+      @locations.fillNearbyLocations.restore()
+    context "with complete map parameters on URL", ->
+      beforeEach ->
+        @locations.pageLoad()
+      it "shows the map using the URL parameters", ->
+        window.Yumster.Locations.Map.fitMapToBounds.callCount.should.equal 1
+      it "loads and displays locations", ->
+        @locations.fillNearbyLocations.callCount.should.equal 1
+    context "without complete map parameters", ->
+      beforeEach ->
+        @locations.getMapParamsFromURL.returns [null, 11, 12]
+        @locations.pageLoad()
+      it "does nothing", ->
+        window.Yumster.Locations.Map.fitMapToBounds.callCount.should.equal 0
+        @locations.fillNearbyLocations.callCount.should.equal 0
+
+  describe "user hits the 'search here' button", ->
+    beforeEach ->
+      sinon.stub(@locations, "fillNearbyLocations")
+      window.Yumster.Locations.Map.getBoundsFromMap = sinon.stub().returns [31, 32, 33]
+      sinon.stub(@locations, "updateURL")
+      @locations.searchHere()
     afterEach ->
       @locations.fillNearbyLocations.restore()
-      @locations.updateURLLatLong.restore()
-      @locations.emptyCurrentResults.restore()
-    it "should clear any current results", ->
-      @locations.emptyCurrentResults.callCount.should.equal 1
-    it "should search for nearby locations", ->
+      @locations.updateURL.restore()
+    it "updates the URL from the map", ->
+      @locations.updateURL.callCount.should.equal 1
+      @locations.updateURL.firstCall.args[0].should.equal 31
+      @locations.updateURL.firstCall.args[1].should.equal 32
+      @locations.updateURL.firstCall.args[2].should.equal 33
+    it "loads and displays locations", ->
       @locations.fillNearbyLocations.callCount.should.equal 1
-      @locations.fillNearbyLocations.firstCall.args[0].should.equal 666
-      @locations.fillNearbyLocations.firstCall.args[1].should.equal 667
-      @locations.fillNearbyLocations.firstCall.args[2].should.equal 2
-    it "should update the URL", ->
-      @locations.updateURLLatLong.callCount.should.equal 1
-      @locations.updateURLLatLong.firstCall.args[0].should.equal 666
-      @locations.updateURLLatLong.firstCall.args[1].should.equal 667
-      @locations.updateURLLatLong.firstCall.args[2].should.equal 2
-    context "when getBounds returns undefined", ->
+    context "when the bounds are no good", ->
       beforeEach ->
-        @map.getBounds = () ->
-          undefined
-        @locations.searchMap()
-      it "fills in span with a reasonable default", ->
-        @locations.updateURLLatLong.secondCall.args[2].should.equal window.Yumster.Locations.Near.defaultSpan
-
-
-  describe "fitMapToMarkers(map, markers)", ->
-    beforeEach ->
-      @map =
-        fitBounds: sinon.spy()
-      @bounds =
-        extend: sinon.spy()
-      m1 =
-        getPosition: () -> "marker1"
-      m2 =
-        getPosition: () -> "marker2"
-      sinon.stub(@locations, 'makeLatLngBounds').returns(@bounds)
-      @locations.fitMapToMarkers(@map, [m1, m2])
-    afterEach ->
-      @locations.makeLatLngBounds.restore()
-    it 'fits map bounds to collection of marker positions', ->
-      @bounds.extend.callCount.should.equal 2
-      @bounds.extend.firstCall.args[0].should.equal "marker1"
-      @bounds.extend.secondCall.args[0].should.equal "marker2"
-      @map.fitBounds.callCount.should.equal 1
-
-  describe "mapCallback(result)", ->
-    beforeEach ->
-      @location = {}
-      result =
-        geometry:
-          location: @location
-      @map =
-        setCenter: sinon.spy()
-      @locations.setMap @map
-      @locations.searchMap = sinon.spy()
-      @locations.fitMapToSearchResults = false
-      @locations.mapCallback(result)
-    it "should move the map to the location", ->
-      @map.setCenter.callCount.should.equal 1
-      @map.setCenter.firstCall.args[0].should.equal @location
-    it "should reload the map in this new location", ->
-      @locations.searchMap.callCount.should.equal 1
-    it "should set fitMapToSearchResults true", ->
-      @locations.fitMapToSearchResults.should.equal true
+        @locations.fillNearbyLocations.reset()
+        @locations.updateURL.reset()
+        window.Yumster.Locations.Map.getBoundsFromMap = sinon.stub().returns [31, 32, null]
+        @locations.searchHere()
+      it "does nothing", ->
+        @locations.updateURL.callCount.should.equal 0
+        @locations.fillNearbyLocations.callCount.should.equal 0

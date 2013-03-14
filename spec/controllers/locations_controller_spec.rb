@@ -73,7 +73,7 @@ describe LocationsController do
     context "when requesting json" do
       before do
         @request.env["HTTP_ACCEPT"] = "application/json"
-        get :near, :latitude => "47.6187812537455", :longitude => "-122.302367052115"
+        get :near, :lat => "47.6187812537455", :lng => "-122.302367052115"
       end
       it 'returns json' do
         response.should be_success
@@ -90,7 +90,7 @@ describe LocationsController do
           locations = []
           locations.stub(:count).and_return 1001
           Location.stub(:within_bounding_box).and_return locations
-          get :near, :latitude => "47.6187812537455", :longitude => "-122.302367052115"
+          get :near, :lat => "47.6187812537455", :lng => "-122.302367052115"
         end
         it "returns a 500 error" do
           response.should_not be_success

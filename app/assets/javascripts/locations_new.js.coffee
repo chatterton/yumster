@@ -64,9 +64,9 @@ LocationsNew = class LocationsNew
       $('#character_count').toggleClass('character_count_red', true)
       $('#character_count').toggleClass('character_count_green', false)
 
-  mapCallback: (result) ->
-    loc = result.geometry.location
-    window.Yumster.Locations.New.map.setCenter(loc)
+  geolocationCallback: (lat, lng) ->
+    pos = window.Yumster.GoogleMaker.makeLatLng lat, lng
+    window.Yumster.Locations.New.map.setCenter(pos)
 
 $ ->
   window.Yumster.Locations.New = new LocationsNew
