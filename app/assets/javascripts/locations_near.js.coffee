@@ -124,10 +124,6 @@ class LocationsNear
   boundsChanged: ->
     $('#map_reload').removeClass('disabled')
 
-  searchHere: ->
-    @fitMapToSearchResults = false
-    @searchMap()
-
   emptyCurrentResults: () ->
     $('#nearby_results').empty()
     while marker = @markersOnMap.pop() ## clear all markers
@@ -165,6 +161,8 @@ class LocationsNear
     if lat and lng and span
       window.Yumster.Locations.Map.fitMapToBounds lat, lng, span
       @searchHere()
+
+  searchHere: ->
 
 $ ->
   window.Yumster.Locations.Near = new LocationsNear

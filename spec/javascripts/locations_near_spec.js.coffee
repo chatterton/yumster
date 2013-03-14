@@ -267,17 +267,6 @@ describe "window.Yumster.Locations.Near", ->
       @locations.boundsChanged()
       $('#map_reload').is('.disabled').should.not.be.true
 
-  describe "searchHere()", ->
-    beforeEach ->
-      sinon.stub(@locations, "searchMap")
-      @locations.searchHere()
-    afterEach ->
-      @locations.searchMap.restore()
-    it "sets fitMapToSearchResults to false", ->
-      @locations.searchMap.callCount.should.equal 1
-    it "searches the current map", ->
-      @locations.fitMapToSearchResults.should.equal false
-
   describe "emptyCurrentResults()", ->
     beforeEach ->
       $('<li>whatever</li>').appendTo('#nearby_results')
