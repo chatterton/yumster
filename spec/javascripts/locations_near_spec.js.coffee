@@ -217,6 +217,23 @@ describe "window.Yumster.Locations.Near", ->
       two = @locations.urlParam("bar", address)
       two.should.equal("TWO")
 
+  describe "urlParamToFloat(name)", ->
+    beforeEach ->
+      sinon.stub(@locations, "urlParam")
+    afterEach ->
+      @locations.urlParam.restore()
+    context "when a parameter is a number", ->
+      it "returns a number", ->
+        @locations.urlParam.returns('1024')
+        check = @locations.urlParamToFloat('whatever')
+        check.should.be.a 'number'
+        check.should.equal 1024
+    context "when a parameter is NaN", ->
+      it "returns null", ->
+        @locations.urlParam.returns('biscuits')
+        check = @locations.urlParamToFloat('whatever')
+        assert.isNull(check)
+
   describe "boundsChanged()", ->
     it "enables the Search Here button", ->
       $('#map_reload').is('.disabled').should.be.true
