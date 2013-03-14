@@ -52,7 +52,7 @@ var init = function() {
   google.maps.event.addListenerOnce(map, 'idle', function() {
     // Add bounds changed listener
     google.maps.event.addListener(map, 'bounds_changed', function() {
-      window.Yumster.Locations.Map.boundsChanged()
+      window.Yumster.Locations.Near.boundsChanged()
     })
   })
 }

@@ -45,6 +45,10 @@ class LocationsMap
     window.Yumster.Locations.Map.map.setZoom(window.Yumster.Locations.Map.map.getZoom() + 1)
     window.Yumster.Locations.Map.map.setCenter @gm.makeLatLng(lat, lng)
 
+  clear: () ->
+    while marker = @markersOnMap.pop()
+      marker.setMap(null)
+
 $ ->
   window.Yumster.Locations.Map = new LocationsMap
   window.Yumster.Locations._Map = LocationsMap

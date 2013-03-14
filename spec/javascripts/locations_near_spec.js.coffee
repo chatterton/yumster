@@ -253,15 +253,13 @@ describe "window.Yumster.Locations.Near", ->
   describe "emptyCurrentResults()", ->
     beforeEach ->
       $('<li>whatever</li>').appendTo('#nearby_results')
-      @locations.markersOnMap.push {
-        setMap: () ->
-      }
       window.Yumster.LocationManager.clear = sinon.spy()
+      window.Yumster.Locations.Map.clear = sinon.spy()
       @locations.emptyCurrentResults()
     it "should clear the current results list", ->
       $('#nearby_results').children().length.should.equal 0
-    it "should empty the markers array", ->
-      @locations.markersOnMap.should.be.empty
+    it "should clear the map", ->
+      window.Yumster.Locations.Map.clear.callCount.should.equal 1
     it "clears the location manager", ->
       window.Yumster.LocationManager.clear.callCount.should.equal 1
 

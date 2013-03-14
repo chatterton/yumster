@@ -12,7 +12,6 @@ class LocationsNear
     @alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     @defaultSpan = .025
     @gm = window.Yumster.GoogleMaker
-    @markersOnMap = []
 
   createLocationHTML: (location) ->
     $(@templates['templates/nearby_location_item'](location))
@@ -114,8 +113,7 @@ class LocationsNear
 
   emptyCurrentResults: () ->
     $('#nearby_results').empty()
-    while marker = @markersOnMap.pop() ## clear all markers
-      marker.setMap(null)
+    window.Yumster.Locations.Map.clear()
     window.Yumster.LocationManager.clear()
 
   searchMap: ->

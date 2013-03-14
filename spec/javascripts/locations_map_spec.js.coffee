@@ -72,3 +72,15 @@ describe "window.Yumster.Locations.Map", ->
       window.Yumster.Locations.Map.map.setZoom.firstCall.args[0].should.equal 322
     it "recenters the map", ->
       window.Yumster.Locations.Map.map.setCenter.firstCall.args[0].should.equal "yep"
+
+  describe "clearing the map", ->
+    beforeEach ->
+      @m1 = { setMap: sinon.spy() }
+      @m2 = { setMap: sinon.spy() }
+      @lm.markersOnMap = [@m1, @m2]
+      @lm.clear()
+    it "detatches all markers from map", ->
+      assert.isNull(@m1.setMap.firstCall.args[0])
+      assert.isNull(@m2.setMap.firstCall.args[0])
+    it "empties the markers array", ->
+      @lm.markersOnMap.should.be.empty
