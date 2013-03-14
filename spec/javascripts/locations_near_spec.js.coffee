@@ -86,7 +86,6 @@ describe "window.Yumster.Locations.Near", ->
 
   describe "fillNearbyLocationsSuccess(data)", ->
     beforeEach ->
-      sinon.stub(@locations, "fitMapToMarkers")
       sinon.stub(@locations, "showMarkers")
       sinon.stub(@locations, "showClusters")
       sinon.stub(@locations, "emptyCurrentResults")
@@ -97,7 +96,6 @@ describe "window.Yumster.Locations.Near", ->
       window.Yumster.LocationManager.getClusterLocations = sinon.stub().returns ["clusters"]
       window.Yumster.LocationManager.getMarkerLocations = sinon.stub().returns ["markers"]
     afterEach ->
-      @locations.fitMapToMarkers.restore()
       @locations.showMarkers.restore()
       @locations.showClusters.restore()
       @locations.emptyCurrentResults.restore()
@@ -120,7 +118,6 @@ describe "window.Yumster.Locations.Near", ->
         loc2 =
           check: 2
         @loc_array = [ loc1, loc2 ]
-        @locations.fitMapToSearchResults = false
         @locations.fillNearbyLocationsSuccess(@loc_array)
       it "renders markers from manager", ->
         @locations.showMarkers.callCount.should.equal 1
@@ -128,15 +125,6 @@ describe "window.Yumster.Locations.Near", ->
       it "renders clusters from manager", ->
         @locations.showClusters.callCount.should.equal 1
         @locations.showClusters.firstCall.args[0].should.deep.equal ["clusters"]
-      context "when fitMapToSearchResults is false", ->
-        it "should not fit the map to the new marker set", ->
-          @locations.fitMapToMarkers.callCount.should.equal 0
-      context "when fitMapToSearchResults is true", ->
-        beforeEach ->
-          @locations.fitMapToSearchResults = true
-          @locations.fillNearbyLocationsSuccess(@loc_array)
-        it "should fit the map to the new marker set", ->
-          @locations.fitMapToMarkers.callCount.should.equal 1
       it "should disable the map_reload button", ->
         $('#map_reload').is('.disabled').should.be.true
     context "when there are zero locations", ->
@@ -149,8 +137,6 @@ describe "window.Yumster.Locations.Near", ->
       it "shows a friendly error message", ->
         container = $('#nearby_results').html()
         container.should.have.string("no loc found template")
-      it "does not try to fit map to marker set", ->
-        @locations.fitMapToMarkers.callCount.should.equal 0
 
   describe "fillNearbyLocationsFailure(status, error)", ->
     beforeEach ->
@@ -206,16 +192,16 @@ describe "window.Yumster.Locations.Near", ->
       @locations.geolocate.restore()
     context "when coordinates are provided on the query string", ->
       beforeEach ->
-        @locations.urlParam.withArgs("latitude").returns("15")
-        @locations.urlParam.withArgs("longitude").returns("16")
+        @locations.urlParam.withArgs("lat").returns("15")
+        @locations.urlParam.withArgs("lng").returns("16")
       it "calls the success callback on them", ->
         @locations.getMapCenter(@success, @failure)
         @success.firstCall.args[0].should.equal 15
         @success.firstCall.args[1].should.equal 16
     context "when there are no coordinates", ->
       beforeEach ->
-        @locations.urlParam.withArgs("latitude").returns(null)
-        @locations.urlParam.withArgs("longitude").returns(null)
+        @locations.urlParam.withArgs("lat").returns(null)
+        @locations.urlParam.withArgs("lng").returns(null)
       it "calls geolocate with the callbacks", ->
         @locations.getMapCenter(@success, @failure)
         @locations.geolocate.callCount.should.equal 1
@@ -321,26 +307,6 @@ describe "window.Yumster.Locations.Near", ->
         @locations.updateURL.secondCall.args[2].should.equal window.Yumster.Locations.Near.defaultSpan
 
 
-  describe "fitMapToMarkers(map, markers)", ->
-    beforeEach ->
-      @map =
-        fitBounds: sinon.spy()
-      @bounds =
-        extend: sinon.spy()
-      m1 =
-        getPosition: () -> "marker1"
-      m2 =
-        getPosition: () -> "marker2"
-      sinon.stub(@gm, 'makeLatLngBounds').returns(@bounds)
-      @locations.fitMapToMarkers(@map, [m1, m2])
-    afterEach ->
-      @gm.makeLatLngBounds.restore()
-    it 'fits map bounds to collection of marker positions', ->
-      @bounds.extend.callCount.should.equal 2
-      @bounds.extend.firstCall.args[0].should.equal "marker1"
-      @bounds.extend.secondCall.args[0].should.equal "marker2"
-      @map.fitBounds.callCount.should.equal 1
-
   describe "mapCallback(result)", ->
     beforeEach ->
       @location = {}
@@ -351,15 +317,12 @@ describe "window.Yumster.Locations.Near", ->
         setCenter: sinon.spy()
       window.Yumster.Locations.Near.map = @map
       @locations.searchMap = sinon.spy()
-      @locations.fitMapToSearchResults = false
       @locations.mapCallback(result)
     it "should move the map to the location", ->
       @map.setCenter.callCount.should.equal 1
       @map.setCenter.firstCall.args[0].should.equal @location
     it "should reload the map in this new location", ->
       @locations.searchMap.callCount.should.equal 1
-    it "should set fitMapToSearchResults true", ->
-      @locations.fitMapToSearchResults.should.equal true
 
   describe "retrieving map parameters from the URL", ->
     beforeEach ->

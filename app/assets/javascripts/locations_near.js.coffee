@@ -127,11 +127,6 @@ class LocationsNear
     @fillNearbyLocations(center.lat(), center.lng(), span)
     @updateURL(center.lat(), center.lng(), span)
 
-  fitMapToMarkers: (map, markers) ->
-    bounds = @gm.makeLatLngBounds()
-    bounds.extend(marker.getPosition()) for marker in markers
-    map.fitBounds(bounds)
-
   mapCallback: (result) ->
     loc = result.geometry.location
     window.Yumster.Locations.Near.map.setCenter(loc)
