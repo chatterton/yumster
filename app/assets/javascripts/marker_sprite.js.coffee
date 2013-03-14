@@ -3,10 +3,17 @@ window.Yumster.MarkerSprite or= {}
 
 class MarkerSprite
   @SPRITE_XCOUNT: 24
-  @SPRITE_XSIZE: 72
-  @SPRITE_YSIZE: 84
+  @SPRITE_XSIZE: 70
+  @SPRITE_YSIZE: 82
 
-  @MARKER_CLUSTER_ORDINAL: 26
+  @MARKER_XSIZE: 28
+  @MARKER_YSIZE: 35
+
+  @MARKER_CLUSTER: 26
+  @CLUSTER_XSIZE: 36
+  @CLUSTER_YSIZE: 31
+
+  @MARKER_PLAIN: 27
 
   spriteOffsetsForOrdinal: (ordinal) ->
     xoffset = MarkerSprite.SPRITE_XSIZE * Math.floor(ordinal / MarkerSprite.SPRITE_XCOUNT)
@@ -19,22 +26,21 @@ class MarkerSprite
     new google.maps.Size(width, height)
 
   makeMarkerIcon: (ordinal) ->
-    if ordinal == MarkerSprite.MARKER_CLUSTER_ORDINAL
+    if ordinal == MarkerSprite.MARKER_CLUSTER
       return @clusterIcon()
     return @markerIcon(ordinal)
 
   markerIcon: (ord) -> {
     url: "/assets/marker-sprite.png"
-    size: @makeSize(21, 34)
+    size: @makeSize(MarkerSprite.MARKER_XSIZE, MarkerSprite.MARKER_YSIZE)
     origin: @makePoint(@spriteOffsetsForOrdinal(ord))
-    anchor: @makePoint([11, 34])
   }
 
   clusterIcon: () -> {
     url: "/assets/marker-sprite.png"
-    size: @makeSize(35, 26)
-    origin: @makePoint(@spriteOffsetsForOrdinal(MarkerSprite.MARKER_CLUSTER_ORDINAL))
-    anchor: @makePoint([17, 13])
+    size: @makeSize(MarkerSprite.CLUSTER_XSIZE, MarkerSprite.CLUSTER_YSIZE)
+    origin: @makePoint(@spriteOffsetsForOrdinal(MarkerSprite.MARKER_CLUSTER))
+    anchor: @makePoint([18, 16])
   }
 
 $ ->

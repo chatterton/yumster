@@ -75,7 +75,7 @@ describe "window.Yumster.Locations.Near", ->
     beforeEach ->
       sinon.stub(@locations, "setClickZoomListener")
       window.Yumster._MarkerSprite or= {}
-      window.Yumster._MarkerSprite.MARKER_CLUSTER_ORDINAL or= 999
+      window.Yumster._MarkerSprite.MARKER_CLUSTER or= 999
       @locations.showClusters ["cluster1", "cluster2", "cluster3"]
     afterEach ->
       @locations.setClickZoomListener.restore()

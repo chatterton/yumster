@@ -37,7 +37,7 @@ class LocationsNear
 
   showClusters: (clusterLocations) ->
     for cluster in clusterLocations
-      icon = window.Yumster.MarkerSprite.makeMarkerIcon(window.Yumster._MarkerSprite.MARKER_CLUSTER_ORDINAL)
+      icon = window.Yumster.MarkerSprite.makeMarkerIcon(window.Yumster._MarkerSprite.MARKER_CLUSTER)
       marker = window.Yumster.Locations.Map.putMarkerOnMap(cluster.latitude, cluster.longitude, icon)
       @setClickZoomListener(marker, cluster.latitude, cluster.longitude)
 

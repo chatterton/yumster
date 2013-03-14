@@ -62,6 +62,7 @@ var init = function() {
   })
   marker = new google.maps.Marker({
     position: position,
+    icon: window.Yumster.MarkerSprite.makeMarkerIcon(window.Yumster._MarkerSprite.MARKER_PLAIN),
     map: map
   })
 }
