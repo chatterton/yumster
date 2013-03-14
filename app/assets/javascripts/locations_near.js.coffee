@@ -76,10 +76,10 @@ class LocationsNear
         window.Yumster.Locations.Near.fillNearbyLocationsFailure(jqXHR.status, jqXHR.responseText)
     }
 
-  createURLParams: (lat, long, span) ->
+  createURLParams: (lat, lng, span) ->
     url = ""
-    url += "?latitude=#{lat.toFixed(6)}"
-    url += "&longitude=#{long.toFixed(6)}"
+    url += "?lat=#{lat.toFixed(6)}"
+    url += "&lng=#{lng.toFixed(6)}"
     url += "&span=#{span.toFixed(6)}"
     url
 
@@ -88,10 +88,10 @@ class LocationsNear
     window.History.replaceState {}, null, state
 
   getMapCenter: (success, failure) ->
-    latitude = if @urlParam("latitude") then parseFloat(@urlParam("latitude")) else null
-    longitude = if @urlParam("longitude") then parseFloat(@urlParam("longitude")) else null
-    if latitude and longitude
-      return success(latitude, longitude, true)
+    lat = if @urlParam("lat") then parseFloat(@urlParam("lat")) else null
+    lng = if @urlParam("lng") then parseFloat(@urlParam("lng")) else null
+    if lat and lng
+      return success(lat, lng, true)
     @geolocate(success, failure)
 
   geolocate: (success, failure) ->

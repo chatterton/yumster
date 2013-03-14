@@ -53,7 +53,7 @@ describe "Locations pages" do
   describe "near page json" do
     before do
       FactoryGirl.create(:location)
-      get near_locations_path, { :latitude => 11.2, :longitude => 11.4, :format => :json }
+      get near_locations_path, { :lat => 11.2, :lng => 11.4, :format => :json }
     end
     it "gets json back" do
       response.should be_success

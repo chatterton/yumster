@@ -24,12 +24,12 @@ class LocationsController < ApplicationController
   respond_to :json, :html
   def near
     if request.format.json?
-      unless params[:latitude] and params[:longitude]
+      unless params[:lat] and params[:lng]
         render :text => "No location given", :status => 500
         return
       end
       begin
-        @locations = Location.find_near(params[:latitude], params[:longitude], params[:span])
+        @locations = Location.find_near(params[:lat], params[:lng], params[:span])
       rescue Exception => e
         render :text => e.message, :status => 500
         return
