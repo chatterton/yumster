@@ -16,6 +16,7 @@ describe "window.Yumster.Locations.Near", ->
       <ul id="nearby_results">
       </ul>
     ''')
+    window.Yumster.Locations.Map or= {}
 
   describe "fillNearbyLocations(lat, long, span)", ->
     beforeEach ->
@@ -371,6 +372,47 @@ describe "window.Yumster.Locations.Near", ->
     it "should set fitMapToSearchResults true", ->
       @locations.fitMapToSearchResults.should.equal true
 
+  describe "retrieving map parameters from the URL", ->
+    beforeEach ->
+      sinon.stub(@locations, "urlParam")
+      @locations.urlParam.withArgs('lat').returns '10'
+      @locations.urlParam.withArgs('lng').returns '11'
+      @locations.urlParam.withArgs('span').returns '12'
+    afterEach ->
+      @locations.urlParam.restore()
+    context "when the parameters are valid", ->
+      it "returns an array containing them as floats", ->
+        [lat, lng, span] = @locations.getMapParamsFromURL()
+        lat.should.equal 10
+        lng.should.equal 11
+        span.should.equal 12
+    context "when one of the parameters is bogus", ->
+      it "returns null for that parameter", ->
+        @locations.urlParam.withArgs('span').returns 'hamburgers'
+        [lat, lng, span] = @locations.getMapParamsFromURL()
+        lat.should.equal 10
+        lng.should.equal 11
+        assert.isNull(span)
+
   describe "upon page load", ->
+    beforeEach ->
+      sinon.stub(@locations, "getMapParamsFromURL").returns [10, 11, 12]
+      window.Yumster.Locations.Map.fitMapToBounds = sinon.stub()
+      sinon.stub(@locations, "searchHere")
+    afterEach ->
+      @locations.getMapParamsFromURL.restore()
+      @locations.searchHere.restore()
     context "with complete map parameters on URL", ->
+      beforeEach ->
+        @locations.pageLoad()
       it "shows the map using the URL parameters", ->
+        window.Yumster.Locations.Map.fitMapToBounds.callCount.should.equal 1
+      it "loads and displays locations", ->
+        @locations.searchHere.callCount.should.equal 1
+    context "without complete map parameters", ->
+      beforeEach ->
+        @locations.getMapParamsFromURL.returns [null, 11, 12]
+        @locations.pageLoad()
+      it "does nothing", ->
+        window.Yumster.Locations.Map.fitMapToBounds.callCount.should.equal 0
+        @locations.searchHere.callCount.should.equal 0

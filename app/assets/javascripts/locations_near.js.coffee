@@ -114,6 +114,12 @@ class LocationsNear
   urlParam: (name, address = window.location.href) ->
     results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(address)
     if results then results[1] else null
+  urlParamToFloat: (name) ->
+    val = @urlParam(name)
+    if val
+      if parseFloat(val)
+        return parseFloat(val)
+    return null
 
   boundsChanged: ->
     $('#map_reload').removeClass('disabled')
@@ -151,7 +157,17 @@ class LocationsNear
     window.Yumster.Locations.Near.map.setCenter(loc)
     window.Yumster.Locations.Near.searchMap()
 
+  getMapParamsFromURL: () ->
+    lat = @urlParamToFloat('lat')
+    lng = @urlParamToFloat('lng')
+    span = @urlParamToFloat('span')
+    return [lat, lng, span]
+
   pageLoad: () ->
+    [lat, lng, span] = @getMapParamsFromURL()
+    if lat and lng and span
+      window.Yumster.Locations.Map.fitMapToBounds lat, lng, span
+      @searchHere()
 
 $ ->
   window.Yumster.Locations.Near = new LocationsNear
