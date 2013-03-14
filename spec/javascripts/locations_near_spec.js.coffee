@@ -253,48 +253,6 @@ describe "window.Yumster.Locations.Near", ->
     it "clears the location manager", ->
       window.Yumster.LocationManager.clear.callCount.should.equal 1
 
-  describe "searchMap()", ->
-    beforeEach ->
-      @map = {}
-      @map =
-        getCenter: () ->
-          lat: () -> 666
-          lng: () -> 667
-        getBounds: () ->
-          toSpan: () ->
-            lat: () -> 2
-            lng: () -> 3
-      window.Yumster.Locations.Near.map = @map
-      $('#map_reload').removeClass('disabled')
-      sinon.stub(@locations, "fillNearbyLocations")
-      sinon.stub(@locations, "updateURL")
-      sinon.stub(@locations, "emptyCurrentResults")
-      @locations.searchMap()
-    afterEach ->
-      @locations.fillNearbyLocations.restore()
-      @locations.updateURL.restore()
-      @locations.emptyCurrentResults.restore()
-    it "should clear any current results", ->
-      @locations.emptyCurrentResults.callCount.should.equal 1
-    it "should search for nearby locations", ->
-      @locations.fillNearbyLocations.callCount.should.equal 1
-      @locations.fillNearbyLocations.firstCall.args[0].should.equal 666
-      @locations.fillNearbyLocations.firstCall.args[1].should.equal 667
-      @locations.fillNearbyLocations.firstCall.args[2].should.equal 2
-    it "should update the URL", ->
-      @locations.updateURL.callCount.should.equal 1
-      @locations.updateURL.firstCall.args[0].should.equal 666
-      @locations.updateURL.firstCall.args[1].should.equal 667
-      @locations.updateURL.firstCall.args[2].should.equal 2
-    context "when getBounds returns undefined", ->
-      beforeEach ->
-        @map.getBounds = () ->
-          undefined
-        @locations.searchMap()
-      it "fills in span with a reasonable default", ->
-        @locations.updateURL.secondCall.args[2].should.equal window.Yumster.Locations.Near.defaultSpan
-
-
   describe "mapCallback(result)", ->
     beforeEach ->
       @location = {}
@@ -304,13 +262,15 @@ describe "window.Yumster.Locations.Near", ->
       @map =
         setCenter: sinon.spy()
       window.Yumster.Locations.Near.map = @map
-      @locations.searchMap = sinon.spy()
+      sinon.stub @locations, "searchHere"
       @locations.mapCallback(result)
-    it "should move the map to the location", ->
+    afterEach ->
+      @locations.searchHere.restore()
+    xit "should move the map to the location", ->
       @map.setCenter.callCount.should.equal 1
       @map.setCenter.firstCall.args[0].should.equal @location
     it "should reload the map in this new location", ->
-      @locations.searchMap.callCount.should.equal 1
+      @locations.searchHere.callCount.should.equal 1
 
   describe "retrieving map parameters from the URL", ->
     beforeEach ->

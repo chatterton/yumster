@@ -109,19 +109,10 @@ class LocationsNear
     window.Yumster.Locations.Map.clear()
     window.Yumster.LocationManager.clear()
 
-  searchMap: ->
-    @emptyCurrentResults()
-    span = @defaultSpan
-    if window.Yumster.Locations.Near.map.getBounds()
-      span = window.Yumster.Locations.Near.map.getBounds().toSpan().lat()
-    center = window.Yumster.Locations.Near.map.getCenter()
-    @fillNearbyLocations(center.lat(), center.lng(), span)
-    @updateURL(center.lat(), center.lng(), span)
-
   mapCallback: (result) ->
     loc = result.geometry.location
-    window.Yumster.Locations.Near.map.setCenter(loc)
-    window.Yumster.Locations.Near.searchMap()
+    #window.Yumster.Locations.Near.map.setCenter(loc)
+    window.Yumster.Locations.Near.searchHere()
 
   getMapParamsFromURL: () ->
     lat = @urlParamToFloat('lat')
