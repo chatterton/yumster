@@ -1,5 +1,6 @@
 #= require spec_helper
 #= require locations_near
+#= require google_maker
 
 describe "window.Yumster.Locations.Near", ->
 
@@ -17,6 +18,8 @@ describe "window.Yumster.Locations.Near", ->
       </ul>
     ''')
     window.Yumster.Locations.Map or= {}
+    @gm = new window.Yumster._GoogleMaker
+    @locations.gm = @gm
 
   describe "fillNearbyLocations(lat, long, span)", ->
     beforeEach ->
@@ -54,35 +57,35 @@ describe "window.Yumster.Locations.Near", ->
     beforeEach ->
       sinon.stub(@locations, "createLocationHTML").returns($("<i>OK!</i>"))
       sinon.stub(@locations, "putMarkerOnMap")
-      sinon.stub(@locations, "makeClickLinkListener")
+      sinon.stub(@locations, "setClickLinkListener")
       window.Yumster.MarkerSprite.makeMarkerImage = sinon.stub().returns {}
       @locations.showMarkers ["location1", "location2"]
     afterEach ->
       @locations.createLocationHTML.restore()
       @locations.putMarkerOnMap.restore()
-      @locations.makeClickLinkListener.restore()
+      @locations.setClickLinkListener.restore()
     it "creates a marker for each location", ->
       @locations.putMarkerOnMap.callCount.should.equal 2
     it "populates #nearby_results with locations", ->
       container = $('#nearby_results').html()
       container.should.have.string("OK!")
     it "puts a link listener on each marker", ->
-      @locations.makeClickLinkListener.callCount.should.equal 2
+      @locations.setClickLinkListener.callCount.should.equal 2
 
   describe "showClusters(clusterLocations)", ->
     beforeEach ->
       sinon.stub(@locations, "putMarkerOnMap")
-      sinon.stub(@locations, "makeClickZoomListener")
+      sinon.stub(@locations, "setClickZoomListener")
       window.Yumster._MarkerSprite or= {}
       window.Yumster._MarkerSprite.MARKER_CLUSTER_ORDINAL or= 999
       @locations.showClusters ["cluster1", "cluster2"]
     afterEach ->
       @locations.putMarkerOnMap.restore()
-      @locations.makeClickZoomListener.restore()
+      @locations.setClickZoomListener.restore()
     it "creates a marker for each location", ->
       @locations.putMarkerOnMap.callCount.should.equal 2
     it "puts a zoom listener on each marker", ->
-      @locations.makeClickZoomListener.callCount.should.equal 2
+      @locations.setClickZoomListener.callCount.should.equal 2
 
   describe "fillNearbyLocationsSuccess(data)", ->
     beforeEach ->
@@ -342,10 +345,10 @@ describe "window.Yumster.Locations.Near", ->
         getPosition: () -> "marker1"
       m2 =
         getPosition: () -> "marker2"
-      sinon.stub(@locations, 'makeLatLngBounds').returns(@bounds)
+      sinon.stub(@gm, 'makeLatLngBounds').returns(@bounds)
       @locations.fitMapToMarkers(@map, [m1, m2])
     afterEach ->
-      @locations.makeLatLngBounds.restore()
+      @gm.makeLatLngBounds.restore()
     it 'fits map bounds to collection of marker positions', ->
       @bounds.extend.callCount.should.equal 2
       @bounds.extend.firstCall.args[0].should.equal "marker1"

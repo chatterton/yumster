@@ -13,25 +13,25 @@ class LocationsNear
     @markersOnMap = []
     @fitMapToSearchResults = true
     @defaultSpan = .025
+    @gm = window.Yumster.GoogleMaker
 
   createLocationHTML: (location) ->
     $(@templates['templates/nearby_location_item'](location))
 
-  makeLatLng: (latitude, longitude) ->
-    new google.maps.LatLng latitude, longitude
-  makeMarker: (config) ->
-    new google.maps.Marker config
-  makeClickLinkListener: (marker, link) ->
-    google.maps.event.addListener marker, 'click', ->
+
+  setClickLinkListener: (marker, link) ->
+    @gm.addMarkerListener marker, 'click', ->
       window.location.href = link
-  makeClickZoomListener: (marker) ->
-    google.maps.event.addListener marker, 'click', ->
+
+  setClickZoomListener: (marker) ->
+    @gm.addMarkerListener marker, 'click', ->
       window.Yumster.Locations.Near.map.setZoom(window.Yumster.Locations.Near.map.getZoom() + 1)
       window.Yumster.Locations.Near.map.setCenter marker.getPosition()
       window.Yumster.Locations.Near.searchHere()
+
   putMarkerOnMap: (lat, lng, ord) ->
-    marker = @makeMarker {
-      position: @makeLatLng(lat, lng)
+    marker = @gm.makeMarker {
+      position: @gm.makeLatLng(lat, lng)
       map: window.Yumster.Locations.Near.map
       icon: window.Yumster.MarkerSprite.makeMarkerIcon(ord)
     }
@@ -42,7 +42,7 @@ class LocationsNear
     container = $('#nearby_results')
     for location, i in markerLocations when i < @alphabet.length
       marker = @putMarkerOnMap(location.latitude, location.longitude, i)
-      @makeClickLinkListener(marker, '/locations/'+location.id)
+      @setClickLinkListener(marker, '/locations/'+location.id)
       location.letter = @alphabet[i]
       loc = @createLocationHTML(location)
       loc.appendTo(container)
@@ -50,7 +50,7 @@ class LocationsNear
   showClusters: (clusterLocations) ->
     for cluster in clusterLocations
       marker = @putMarkerOnMap(cluster.latitude, cluster.longitude, window.Yumster._MarkerSprite.MARKER_CLUSTER_ORDINAL)
-      @makeClickZoomListener(marker)
+      @setClickZoomListener(marker)
 
   fillNearbyLocationsSuccess: (data, lat, long, span) ->
     @emptyCurrentResults()
@@ -143,11 +143,8 @@ class LocationsNear
     @fillNearbyLocations(center.lat(), center.lng(), span)
     @updateURLLatLong(center.lat(), center.lng(), span)
 
-  makeLatLngBounds: () ->
-    new google.maps.LatLngBounds
-
   fitMapToMarkers: (map, markers) ->
-    bounds = @makeLatLngBounds()
+    bounds = @gm.makeLatLngBounds()
     bounds.extend(marker.getPosition()) for marker in markers
     map.fitBounds(bounds)
 
