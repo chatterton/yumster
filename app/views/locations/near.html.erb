@@ -32,7 +32,6 @@ var addPositionIndicator = function(map) {
     geoMarker.setMap(map)
   }
   google.maps.event.addListenerOnce(geoMarker, 'position_changed', function() {
-    console.log('position changed: ', geoMarker.getPosition())
     pos = geoMarker.getPosition()
     window.Yumster.Locations.Near.geolocationCallback(pos.lat(), pos.lng())
   })
@@ -72,7 +71,7 @@ $(function() {
   window.Yumster.Locations.initializeAddressSearch(
     '#map_address_input',
     '#map_address_button',
-    window.Yumster.Locations.Map.addressSearch)
+    window.Yumster.Locations.Near.geolocationCallback)
 })
 
   </script>

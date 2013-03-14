@@ -85,6 +85,7 @@ class LocationsNear
   urlParam: (name, address = window.location.href) ->
     results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(address)
     if results then results[1] else null
+
   urlParamToFloat: (name) ->
     val = @urlParam(name)
     if val

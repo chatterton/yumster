@@ -116,7 +116,7 @@ var addPositionIndicator = function(map) {
   }
   google.maps.event.addListenerOnce(geoMarker, 'position_changed', function() {
     pos = geoMarker.getPosition()
-    window.Yumster.Locations.New.geolocationCallback(pos)
+    window.Yumster.Locations.New.geolocationCallback(pos.lat(), pos.lng())
   })
 }
 

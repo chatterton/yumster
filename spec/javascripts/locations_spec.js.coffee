@@ -42,8 +42,20 @@ describe "window.Yumster.Locations", ->
         console.log.callCount.should.equal 1
         @callback.callCount.should.equal 0
     context "with status OK and a few results", ->
+      beforeEach ->
+        first =
+          geometry:
+            location:
+              lat: () -> 1
+              lng: () -> 2
+        second =
+          geometry:
+            location:
+              lat: () -> 3
+              lng: () -> 4
+        @locations.loadAddressCallback([first, second], "OK")
       it "calls the map callback with the first result", ->
-        @locations.loadAddressCallback(["first", "second"], "OK")
         @callback.callCount.should.equal 1
-        @callback.firstCall.args[0].should.equal "first"
+        @callback.firstCall.args[0].should.equal 1
+        @callback.firstCall.args[1].should.equal 2
 

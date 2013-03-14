@@ -223,7 +223,7 @@ describe "window.Yumster.Locations.Near", ->
     it "clears the location manager", ->
       window.Yumster.LocationManager.clear.callCount.should.equal 1
 
-  describe "geolocationCallback(result)", ->
+  describe "geolocationCallback(lat, lng)", ->
       sinon.stub @locations, "searchHere"
       window.Yumster.Locations.Map.fitMapToBounds = sinon.spy()
       @locations.geolocationCallback 90210, 92102

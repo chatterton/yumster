@@ -19,7 +19,9 @@ class Locations
     unless results.length > 0
       console.log "Error, Google geocoder found no results"
       return
-    window.Yumster.Locations.geolocationCallback(results[0])
+    lat = results[0].geometry.location.lat()
+    lng = results[0].geometry.location.lng()
+    window.Yumster.Locations.geolocationCallback(lat, lng)
 
   initializeAddressSearch: (inputId, buttonId, addressCallback) ->
     addressSearchClick = ->
