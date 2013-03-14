@@ -10,7 +10,6 @@ class LocationsNear
 
   constructor: (@templates = window.JST) ->
     @alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    @fitMapToSearchResults = true
     @defaultSpan = .025
     @gm = window.Yumster.GoogleMaker
     @markersOnMap = []
@@ -22,10 +21,9 @@ class LocationsNear
     @gm.addMarkerListener marker, 'click', ->
       window.location.href = link
 
-  setClickZoomListener: (marker) ->
+  setClickZoomListener: (marker, lat, lng) ->
     @gm.addMarkerListener marker, 'click', ->
-      window.Yumster.Locations.Near.map.setZoom(window.Yumster.Locations.Near.map.getZoom() + 1)
-      window.Yumster.Locations.Near.map.setCenter marker.getPosition()
+      window.Yumster.Locations.Map.zoomInAndRecenter lat, lng
       window.Yumster.Locations.Near.searchHere()
 
   showMarkers: (markerLocations) ->
@@ -42,7 +40,7 @@ class LocationsNear
     for cluster in clusterLocations
       icon = window.Yumster.MarkerSprite.makeMarkerIcon(window.Yumster._MarkerSprite.MARKER_CLUSTER_ORDINAL)
       marker = window.Yumster.Locations.Map.putMarkerOnMap(cluster.latitude, cluster.longitude, icon)
-      @setClickZoomListener(marker)
+      @setClickZoomListener(marker, cluster.latitude, cluster.longitude)
 
   fillNearbyLocationsSuccess: (data, lat, long, span) ->
     @emptyCurrentResults()
@@ -56,8 +54,6 @@ class LocationsNear
       @showMarkers(markers)
       clusters = window.Yumster.LocationManager.getClusterLocations(lat, long, span)
       @showClusters(clusters)
-      if @fitMapToSearchResults
-        @fitMapToMarkers(window.Yumster.Locations.Near.map, @markersOnMap)
 
   fillNearbyLocationsFailure: (status, error) ->
     if status is 500 and error is "Too many locations returned"
@@ -137,7 +133,6 @@ class LocationsNear
     map.fitBounds(bounds)
 
   mapCallback: (result) ->
-    @fitMapToSearchResults = true
     loc = result.geometry.location
     window.Yumster.Locations.Near.map.setCenter(loc)
     window.Yumster.Locations.Near.searchMap()

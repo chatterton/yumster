@@ -60,3 +60,15 @@ describe "window.Yumster.Locations.Map", ->
           getBounds: () -> null
         [lat, lng, span] = @lm.getBoundsFromMap()
         assert.isNull(lat or lng or span)
+
+  describe "zoom in and recenter", ->
+    beforeEach ->
+      window.Yumster.Locations.Map.map.getZoom = () -> 321
+      window.Yumster.Locations.Map.map.setZoom = sinon.spy()
+      window.Yumster.Locations.Map.map.setCenter = sinon.spy()
+      @lm.gm.makeLatLng = sinon.stub().returns("yep")
+      @lm.zoomInAndRecenter 16, 17
+    it "sets the map zoom +1", ->
+      window.Yumster.Locations.Map.map.setZoom.firstCall.args[0].should.equal 322
+    it "recenters the map", ->
+      window.Yumster.Locations.Map.map.setCenter.firstCall.args[0].should.equal "yep"

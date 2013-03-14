@@ -41,6 +41,10 @@ class LocationsMap
     center = window.Yumster.Locations.Map.map.getCenter()
     return [center.lat(), center.lng(), bounds.toSpan().lat()]
 
+  zoomInAndRecenter: (lat, lng) ->
+    window.Yumster.Locations.Map.map.setZoom(window.Yumster.Locations.Map.map.getZoom() + 1)
+    window.Yumster.Locations.Map.map.setCenter @gm.makeLatLng(lat, lng)
+
 $ ->
   window.Yumster.Locations.Map = new LocationsMap
   window.Yumster.Locations._Map = LocationsMap
