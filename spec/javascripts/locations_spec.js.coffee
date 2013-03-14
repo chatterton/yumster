@@ -21,13 +21,13 @@ describe "window.Yumster.Locations", ->
         @geocoder.geocode.firstCall.args[0].address.should.equal "this is an address"
       it "holds on to a copy of the callback", ->
         @locations.loadAddress("this is an address", "callbacco")
-        @locations.mapCallback.should.equal "callbacco"
+        @locations.geolocationCallback.should.equal "callbacco"
 
   describe "loadAddressCallback(results, status)", ->
     beforeEach ->
       sinon.spy(console, "log")
       @callback = sinon.spy()
-      @locations.mapCallback = @callback
+      @locations.geolocationCallback = @callback
     afterEach ->
       console.log.restore()
     context "when the status is not OK", ->
@@ -42,7 +42,20 @@ describe "window.Yumster.Locations", ->
         console.log.callCount.should.equal 1
         @callback.callCount.should.equal 0
     context "with status OK and a few results", ->
+      beforeEach ->
+        first =
+          geometry:
+            location:
+              lat: () -> 1
+              lng: () -> 2
+        second =
+          geometry:
+            location:
+              lat: () -> 3
+              lng: () -> 4
+        @locations.loadAddressCallback([first, second], "OK")
       it "calls the map callback with the first result", ->
-        @locations.loadAddressCallback(["first", "second"], "OK")
         @callback.callCount.should.equal 1
-        @callback.firstCall.args[0].should.equal "first"
+        @callback.firstCall.args[0].should.equal 1
+        @callback.firstCall.args[1].should.equal 2
+

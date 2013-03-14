@@ -107,13 +107,17 @@
   <%= javascript_include_tag 'geolocationmarker.js' %>
   <script type="text/javascript" charset="utf-8">
 
-var GeoMarker
+var geoMarker
 var addPositionIndicator = function(map) {
-  if(!GeoMarker) {
-    GeoMarker = new GeolocationMarker()
-    GeoMarker.setCircleOptions({fillColor: '#808080'})
-    GeoMarker.setMap(map)
+  if(!geoMarker) {
+    geoMarker = new GeolocationMarker()
+    geoMarker.setCircleOptions({fillColor: '#808080'})
+    geoMarker.setMap(map)
   }
+  google.maps.event.addListenerOnce(geoMarker, 'position_changed', function() {
+    pos = geoMarker.getPosition()
+    window.Yumster.Locations.New.geolocationCallback(pos.lat(), pos.lng())
+  })
 }
 
 var map
@@ -126,6 +130,7 @@ var init = function() {
   map = new google.maps.Map(document.getElementById('map_canvas'), {
     zoom: 18,
     mapTypeId: google.maps.MapTypeId.HYBRID,
+    center: new google.maps.LatLng(0, 0),
     tilt: 0 // turn of 45-degree imagery
   })
   addPositionIndicator(map)
@@ -133,14 +138,6 @@ var init = function() {
   $(control).append($('#pushpin_img'))
   map.controls[google.maps.ControlPosition.TOP_CENTER].push(control)
   google.maps.event.addListener(map, 'center_changed', center_changed)
-  var success = function(latitude, longitude, coordinatesOnURL) {
-    var loc = new google.maps.LatLng(latitude, longitude)
-    map.setCenter(loc)
-  }
-  var failure = function(error) {
-    console.log("Error placing map: ", error)
-  }
-  window.Yumster.Locations.Near.getMapCenter(success, failure)
   window.Yumster.Locations.New.map = map
 }
 google.maps.event.addDomListener(window, 'load', init)
@@ -150,7 +147,7 @@ $(function() {
   window.Yumster.Locations.initializeAddressSearch(
     '#map_address_input',
     '#map_address_button',
-    window.Yumster.Locations.New.mapCallback)
+    window.Yumster.Locations.New.geolocationCallback)
 })
 
   </script>
