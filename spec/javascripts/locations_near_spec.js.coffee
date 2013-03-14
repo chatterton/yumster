@@ -90,8 +90,6 @@ describe "window.Yumster.Locations.Near", ->
       sinon.stub(@locations, "showClusters")
       sinon.stub(@locations, "emptyCurrentResults")
       @marker = {}
-      window.Yumster.Locations.Near.map =
-        getBounds: () -> "bounds"
       window.Yumster.LocationManager.addLocations = sinon.stub()
       window.Yumster.LocationManager.getClusterLocations = sinon.stub().returns ["clusters"]
       window.Yumster.LocationManager.getMarkerLocations = sinon.stub().returns ["markers"]
@@ -181,34 +179,6 @@ describe "window.Yumster.Locations.Near", ->
       new_address.should.have.string("41.111111")
       new_address.should.not.have.string("41.1111111")
 
-  describe "geolocate(success, failure)", ->
-    beforeEach ->
-      @keepFunction = navigator.geolocation.getCurrentPosition
-      @success = sinon.spy()
-      @failure = sinon.spy()
-    afterEach ->
-      navigator.geolocation.getCurrentPosition = @keepFunction
-    context "when the user allows geolocation", ->
-      beforeEach ->
-        navigator.geolocation.getCurrentPosition = (f1, f2) ->
-          f1({
-            coords:
-              latitude: 5
-              longitude: 6
-          })
-      it "calls success on coordinates", ->
-        @locations.geolocate(@success, @failure)
-        @success.callCount.should.equal 1
-        @failure.callCount.should.equal 0
-    context "when the user does not allow geolocation", ->
-      beforeEach ->
-        navigator.geolocation.getCurrentPosition = (f1, f2) ->
-          f2({})
-      it "calls failure callback", ->
-        @locations.geolocate(@success, @failure)
-        @success.callCount.should.equal 0
-        @failure.callCount.should.equal 1
-
   describe "urlParam(name)", ->
     it "returns parameters from query string", ->
       address = "http://whatever?foo=ONE&bar=TWO"
@@ -253,22 +223,19 @@ describe "window.Yumster.Locations.Near", ->
     it "clears the location manager", ->
       window.Yumster.LocationManager.clear.callCount.should.equal 1
 
-  describe "mapCallback(result)", ->
-    beforeEach ->
-      @location = {}
-      result =
-        geometry:
-          location: @location
-      @map =
-        setCenter: sinon.spy()
-      window.Yumster.Locations.Near.map = @map
+  describe "geolocationCallback(result)", ->
       sinon.stub @locations, "searchHere"
-      @locations.mapCallback(result)
+      window.Yumster.Locations.Map.fitMapToBounds = sinon.spy()
+      @locations.geolocationCallback 90210, 92102
+      @args = window.Yumster.Locations.Map.fitMapToBounds.firstCall.args
     afterEach ->
       @locations.searchHere.restore()
-    xit "should move the map to the location", ->
-      @map.setCenter.callCount.should.equal 1
-      @map.setCenter.firstCall.args[0].should.equal @location
+    it "should move the map to the location", ->
+      window.Yumster.Locations.Map.fitMapToBounds.callCount.should.equal 1
+      @args[0].should.equal 90210
+      @args[1].should.equal 92102
+    it "fills in a default span", ->
+      @args[2].should.be.at.least .001
     it "should reload the map in this new location", ->
       @locations.searchHere.callCount.should.equal 1
 

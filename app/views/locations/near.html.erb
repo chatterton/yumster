@@ -48,6 +48,13 @@ var init = function() {
   // Get coordinates from URL, etc
   window.Yumster.Locations.Near.pageLoad()
 
+  // Geolocate if necessary
+  var failure = function() {}
+  window.Yumster.Locations.geolocate(
+    window.Yumster.Locations.Near.geolocationCallback,
+    failure
+  )
+
   // Wait for map idle
   google.maps.event.addListenerOnce(map, 'idle', function() {
     // Add bounds changed listener

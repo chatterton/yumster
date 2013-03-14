@@ -7,10 +7,10 @@ window.Yumster.LocationManager or= {}
 window.Yumster.Locations.Near or= {}
 
 class LocationsNear
+  @DEFAULT_SPAN: .018
 
   constructor: (@templates = window.JST) ->
     @alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    @defaultSpan = .025
     @gm = window.Yumster.GoogleMaker
 
   createLocationHTML: (location) ->
@@ -78,18 +78,9 @@ class LocationsNear
     url += "&span=#{span.toFixed(6)}"
     url
 
-  updateURL: (lat, long, span) ->
-    state = @createURLParams(lat, long, span)
+  updateURL: (lat, lng, span) ->
+    state = @createURLParams(lat, lng, span)
     window.History.replaceState {}, null, state
-
-  geolocate: (success, failure) ->
-    if navigator.geolocation
-      navigator.geolocation.getCurrentPosition (position) ->
-        success(position.coords.latitude, position.coords.longitude, false)
-      , ->
-        return failure("User did not allow geolocation")
-    else
-      return failure("Browser does not support geolocation")
 
   urlParam: (name, address = window.location.href) ->
     results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(address)
@@ -109,9 +100,8 @@ class LocationsNear
     window.Yumster.Locations.Map.clear()
     window.Yumster.LocationManager.clear()
 
-  mapCallback: (result) ->
-    loc = result.geometry.location
-    #window.Yumster.Locations.Near.map.setCenter(loc)
+  geolocationCallback: (lat, lng) ->
+    window.Yumster.Locations.Map.fitMapToBounds lat, lng, LocationsNear.DEFAULT_SPAN
     window.Yumster.Locations.Near.searchHere()
 
   getMapParamsFromURL: () ->

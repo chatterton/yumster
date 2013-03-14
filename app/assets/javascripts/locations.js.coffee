@@ -4,12 +4,12 @@ window.Yumster.Locations or= {}
 class Locations
 
   constructor: (@geocoder = new google.maps.Geocoder()) ->
-    window.Yumster.Locations.mapCallback = null
+    window.Yumster.Locations.geolocationCallback = null
 
   loadAddress: (address, callback) ->
     unless address and callback
       return
-    window.Yumster.Locations.mapCallback = callback
+    window.Yumster.Locations.geolocationCallback = callback
     @geocoder.geocode { 'address', address }, @loadAddressCallback
 
   loadAddressCallback: (results, status) ->
@@ -19,7 +19,7 @@ class Locations
     unless results.length > 0
       console.log "Error, Google geocoder found no results"
       return
-    window.Yumster.Locations.mapCallback(results[0])
+    window.Yumster.Locations.geolocationCallback(results[0])
 
   initializeAddressSearch: (inputId, buttonId, addressCallback) ->
     addressSearchClick = ->
@@ -32,6 +32,15 @@ class Locations
       if event.which is 13
         event.preventDefault()
         addressSearchClick()
+
+  geolocate: (success, failure) ->
+    if navigator.geolocation
+      navigator.geolocation.getCurrentPosition (position) ->
+        success(position.coords.latitude, position.coords.longitude, false)
+      , ->
+        return failure("User did not allow geolocation")
+    else
+      return failure("Browser does not support geolocation")
 
 $ ->
   unless typeof google is "undefined"
