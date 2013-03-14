@@ -178,19 +178,19 @@ describe "window.Yumster.Locations.Near", ->
     it "returns a jquery html object", ->
       @html.should.be.an.instanceof jQuery
 
-  describe "updateURLLatLong(lat, long, span)", ->
+  describe "updateURL(lat, long, span)", ->
     beforeEach ->
       sinon.stub window.History, "replaceState"
     afterEach ->
       window.History.replaceState.restore()
     it "updates the address bar with latitude, longitude, and span", ->
-      @locations.updateURLLatLong(41.001, 42.002, 33)
+      @locations.updateURL(41.001, 42.002, 33)
       new_address = window.History.replaceState.getCall(0).args[2]
       new_address.should.have.string("41.001")
       new_address.should.have.string("42.002")
       new_address.should.have.string("span=33")
     it "shortens long floats to six decimal places", ->
-      @locations.updateURLLatLong(41.111111111111, 42.002, 1)
+      @locations.updateURL(41.111111111111, 42.002, 1)
       new_address = window.History.replaceState.getCall(0).args[2]
       new_address.should.have.string("41.111111")
       new_address.should.not.have.string("41.1111111")
@@ -293,12 +293,12 @@ describe "window.Yumster.Locations.Near", ->
       window.Yumster.Locations.Near.map = @map
       $('#map_reload').removeClass('disabled')
       sinon.stub(@locations, "fillNearbyLocations")
-      sinon.stub(@locations, "updateURLLatLong")
+      sinon.stub(@locations, "updateURL")
       sinon.stub(@locations, "emptyCurrentResults")
       @locations.searchMap()
     afterEach ->
       @locations.fillNearbyLocations.restore()
-      @locations.updateURLLatLong.restore()
+      @locations.updateURL.restore()
       @locations.emptyCurrentResults.restore()
     it "should clear any current results", ->
       @locations.emptyCurrentResults.callCount.should.equal 1
@@ -308,17 +308,17 @@ describe "window.Yumster.Locations.Near", ->
       @locations.fillNearbyLocations.firstCall.args[1].should.equal 667
       @locations.fillNearbyLocations.firstCall.args[2].should.equal 2
     it "should update the URL", ->
-      @locations.updateURLLatLong.callCount.should.equal 1
-      @locations.updateURLLatLong.firstCall.args[0].should.equal 666
-      @locations.updateURLLatLong.firstCall.args[1].should.equal 667
-      @locations.updateURLLatLong.firstCall.args[2].should.equal 2
+      @locations.updateURL.callCount.should.equal 1
+      @locations.updateURL.firstCall.args[0].should.equal 666
+      @locations.updateURL.firstCall.args[1].should.equal 667
+      @locations.updateURL.firstCall.args[2].should.equal 2
     context "when getBounds returns undefined", ->
       beforeEach ->
         @map.getBounds = () ->
           undefined
         @locations.searchMap()
       it "fills in span with a reasonable default", ->
-        @locations.updateURLLatLong.secondCall.args[2].should.equal window.Yumster.Locations.Near.defaultSpan
+        @locations.updateURL.secondCall.args[2].should.equal window.Yumster.Locations.Near.defaultSpan
 
 
   describe "fitMapToMarkers(map, markers)", ->
@@ -404,4 +404,30 @@ describe "window.Yumster.Locations.Near", ->
         @locations.pageLoad()
       it "does nothing", ->
         window.Yumster.Locations.Map.fitMapToBounds.callCount.should.equal 0
+        @locations.fillNearbyLocations.callCount.should.equal 0
+
+  describe "user hits the 'search here' button", ->
+    beforeEach ->
+      sinon.stub(@locations, "fillNearbyLocations")
+      window.Yumster.Locations.Map.getBoundsFromMap = sinon.stub().returns [31, 32, 33]
+      sinon.stub(@locations, "updateURL")
+      @locations.searchHere()
+    afterEach ->
+      @locations.fillNearbyLocations.restore()
+      @locations.updateURL.restore()
+    it "updates the URL from the map", ->
+      @locations.updateURL.callCount.should.equal 1
+      @locations.updateURL.firstCall.args[0].should.equal 31
+      @locations.updateURL.firstCall.args[1].should.equal 32
+      @locations.updateURL.firstCall.args[2].should.equal 33
+    it "loads and displays locations", ->
+      @locations.fillNearbyLocations.callCount.should.equal 1
+    context "when the bounds are no good", ->
+      beforeEach ->
+        @locations.fillNearbyLocations.reset()
+        @locations.updateURL.reset()
+        window.Yumster.Locations.Map.getBoundsFromMap = sinon.stub().returns [31, 32, null]
+        @locations.searchHere()
+      it "does nothing", ->
+        @locations.updateURL.callCount.should.equal 0
         @locations.fillNearbyLocations.callCount.should.equal 0

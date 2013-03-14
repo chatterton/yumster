@@ -34,3 +34,29 @@ describe "window.Yumster.Locations.Map", ->
       @lm.markersOnMap.should.contain "mmmarker"
     it "returns the marker", ->
       @check.should.equal "mmmarker"
+
+  describe "get the map's current boundaries", ->
+    beforeEach ->
+      window.Yumster.Locations.Map.map =
+        getBounds: () ->
+          toSpan: () ->
+            lat: () -> .42
+        getCenter: () ->
+          lat: () -> 22
+          lng: () -> 33
+    it "returns lat, lng, and span from the map", ->
+      [lat, lng, span] = @lm.getBoundsFromMap()
+      lat.should.equal 22
+      lng.should.equal 33
+      span.should.equal .42
+    context "when the map is null", ->
+      it "returns nulls", ->
+        window.Yumster.Locations.Map.map = null
+        [lat, lng, span] = @lm.getBoundsFromMap()
+        assert.isNull(lat or lng or span)
+    context "when the map boundary is null", ->
+      it "returns nulls", ->
+        window.Yumster.Locations.Map.map =
+          getBounds: () -> null
+        [lat, lng, span] = @lm.getBoundsFromMap()
+        assert.isNull(lat or lng or span)

@@ -83,7 +83,7 @@ class LocationsNear
     url += "&span=#{span.toFixed(6)}"
     url
 
-  updateURLLatLong: (lat, long, span) ->
+  updateURL: (lat, long, span) ->
     state = @createURLParams(lat, long, span)
     window.History.replaceState {}, null, state
 
@@ -129,7 +129,7 @@ class LocationsNear
       span = window.Yumster.Locations.Near.map.getBounds().toSpan().lat()
     center = window.Yumster.Locations.Near.map.getCenter()
     @fillNearbyLocations(center.lat(), center.lng(), span)
-    @updateURLLatLong(center.lat(), center.lng(), span)
+    @updateURL(center.lat(), center.lng(), span)
 
   fitMapToMarkers: (map, markers) ->
     bounds = @gm.makeLatLngBounds()
@@ -155,6 +155,12 @@ class LocationsNear
       @fillNearbyLocations lat, lng, span
 
   searchHere: ->
+    [lat, lng, span] = window.Yumster.Locations.Map.getBoundsFromMap()
+    unless lat and lng and span
+      return
+    @updateURL lat, lng, span
+    @fillNearbyLocations lat, lng, span
+
 
 $ ->
   window.Yumster.Locations.Near = new LocationsNear

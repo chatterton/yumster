@@ -32,6 +32,15 @@ class LocationsMap
     @markersOnMap.push marker
     marker
 
+  getBoundsFromMap: () ->
+    unless window.Yumster.Locations.Map.map
+      return [null, null, null]
+    bounds = window.Yumster.Locations.Map.map.getBounds()
+    unless bounds
+      return [null, null, null]
+    center = window.Yumster.Locations.Map.map.getCenter()
+    return [center.lat(), center.lng(), bounds.toSpan().lat()]
+
 $ ->
   window.Yumster.Locations.Map = new LocationsMap
   window.Yumster.Locations._Map = LocationsMap
