@@ -82,13 +82,6 @@ class LocationsNear
     state = @createURLParams(lat, long, span)
     window.History.replaceState {}, null, state
 
-  getMapCenter: (success, failure) ->
-    lat = if @urlParam("lat") then parseFloat(@urlParam("lat")) else null
-    lng = if @urlParam("lng") then parseFloat(@urlParam("lng")) else null
-    if lat and lng
-      return success(lat, lng, true)
-    @geolocate(success, failure)
-
   geolocate: (success, failure) ->
     if navigator.geolocation
       navigator.geolocation.getCurrentPosition (position) ->
