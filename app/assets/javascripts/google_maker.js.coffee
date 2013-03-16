@@ -12,8 +12,14 @@ class GoogleMaker
   makeLatLngBounds: () ->
     new google.maps.LatLngBounds
 
-  addMarkerListener: (marker, action, callback) ->
-    google.maps.event.addListener marker, action, callback
+  addEventListener: (object, action, callback) ->
+    google.maps.event.addListener object, action, callback
+
+  addDOMListener: (object, action, callback) ->
+    google.maps.event.addDomListener object, action, callback
+
+  getControlPosition: () ->
+    return google.maps.ControlPosition
 
 $ ->
   window.Yumster.GoogleMaker = new GoogleMaker

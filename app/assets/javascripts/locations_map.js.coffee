@@ -49,6 +49,12 @@ class LocationsMap
     while marker = @markersOnMap.pop()
       marker.setMap(null)
 
+  recenterWithGeoMarker: (button, geoMarker) ->
+    @gm.addDOMListener button, 'click', ->
+      window.Yumster.Locations.Map.map.panTo geoMarker.getPosition()
+    window.Yumster.Locations.Map.map.controls[@gm.getControlPosition().TOP_RIGHT].push button
+
+
 $ ->
   window.Yumster.Locations.Map = new LocationsMap
   window.Yumster.Locations._Map = LocationsMap

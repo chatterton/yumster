@@ -17,11 +17,11 @@ class LocationsNear
     $(@templates['templates/nearby_location_item'](location))
 
   setClickLinkListener: (marker, link) ->
-    @gm.addMarkerListener marker, 'click', ->
+    @gm.addEventListener marker, 'click', ->
       window.location.href = link
 
   setClickZoomListener: (marker, lat, lng) ->
-    @gm.addMarkerListener marker, 'click', ->
+    @gm.addEventListener marker, 'click', ->
       window.Yumster.Locations.Map.zoomInAndRecenter lat, lng
       window.Yumster.Locations.Near.searchHere()
 
