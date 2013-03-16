@@ -15,6 +15,9 @@ class GoogleMaker
   addEventListener: (object, action, callback) ->
     google.maps.event.addListener object, action, callback
 
+  addDOMListener: (object, action, callback) ->
+    google.maps.event.addDomListener object, action, callback
+
   getControlPosition: () ->
     return google.maps.ControlPosition
 

@@ -50,6 +50,8 @@ class LocationsMap
       marker.setMap(null)
 
   recenterWithGeoMarker: (button, geoMarker) ->
+    @gm.addDOMListener button, 'click', ->
+      window.Yumster.Locations.Map.map.panTo geoMarker.getPosition()
     window.Yumster.Locations.Map.map.controls[@gm.getControlPosition().TOP_RIGHT].push button
 
 

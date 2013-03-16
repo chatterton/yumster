@@ -90,6 +90,7 @@ describe "window.Yumster.Locations.Map", ->
       @map.controls = []
       @lm.gm.getControlPosition = () ->
         TOP_RIGHT: 123
+      @lm.gm.addDOMListener = () ->
       @map.controls[123] =
         push: sinon.spy()
       @lm.recenterWithGeoMarker({}, {})
