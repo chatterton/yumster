@@ -98,6 +98,18 @@
 
 <% end %>
 
+<% unless user_signed_in? %>
+  <br>
+  <p class="alert alert-info">
+    <small>
+      <strong>Note:</strong>
+      You are submitting this location anonymously.
+      To prevent spam, it will not show up in searches until a moderator has approved it.
+    </small>
+  </p>
+  <br>
+<% end %>
+
 <div style="display: none">
   <div id="map_recenter"><%= image_tag "recenter.png" %></div>
   <%= image_tag 'red-pushpin.png', :id => 'pushpin_img' %>

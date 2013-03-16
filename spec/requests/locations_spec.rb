@@ -35,9 +35,25 @@ describe "Locations pages" do
   end
 
   describe "new page" do
-    it 'should show a form' do
+    before do
       visit new_location_path
+    end
+    it 'should show a form' do
       page.should have_selector("form")
+    end
+    it 'should show a moderation warning' do
+      page.should have_selector "p.alert-info"
+      page.should have_content "anonymously"
+    end
+    context 'when a user has signed in' do
+      before do
+        log_in_a_user
+        visit new_location_path
+      end
+      it "should not show the moderation warning" do
+        page.should_not have_selector "p.alert-info"
+        page.should_not have_content "anonymously"
+      end
     end
   end
 
