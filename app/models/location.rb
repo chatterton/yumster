@@ -58,7 +58,7 @@ class Location < ActiveRecord::Base
     if (location_size > Location::MAX_LOCATIONS)
       raise "Too many locations returned"
     end
-    locations = Location.within_bounding_box(box)
+    locations = Location.where(:approved => true).within_bounding_box(box)
     return locations
   end
 

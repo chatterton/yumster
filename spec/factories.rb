@@ -6,6 +6,10 @@ FactoryGirl.define do
     longitude 11.4
     category "Dumpster"
     user
+    after_create do |loc|
+      loc.approved = true
+      loc.save
+    end
   end
 
   factory :user do
