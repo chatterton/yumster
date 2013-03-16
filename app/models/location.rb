@@ -43,8 +43,6 @@ class Location < ActiveRecord::Base
   CATEGORIES = %w( Plant Dumpster Organization )
   validates_inclusion_of :category, :in => CATEGORIES
 
-  validates :user_id, presence: true
-
   NEARBY_DISTANCE_MI = 0.75
   MAX_LOCATIONS = 1000
   MILES_IN_A_DEGREE = 69.1

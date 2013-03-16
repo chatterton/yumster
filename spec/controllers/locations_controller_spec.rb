@@ -21,9 +21,6 @@ describe LocationsController do
   end
 
   describe "POST 'create'" do
-    before do
-      sign_in_user
-    end
     it "returns http success" do
       post 'create'
       response.should be_success

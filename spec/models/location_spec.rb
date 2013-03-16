@@ -99,7 +99,7 @@ describe Location do
     before do
       @location.user_id = nil
     end
-    it { should_not be_valid }
+    it { should be_valid }
   end
 
   describe "description length" do
