@@ -4,9 +4,10 @@ describe LocationsController do
 
   describe "GET 'new'" do
     context "when there is no user logged in" do
-      it "redirects to login page" do
+      it "returns http success" do
         get 'new'
-        response.should redirect_to new_user_session_path
+        response.should be_success
+        response.should render_template('new')
       end
     end
     context "when there is a user logged in" do
@@ -14,6 +15,7 @@ describe LocationsController do
         sign_in_user
         get 'new'
         response.should be_success
+        response.should render_template('new')
       end
     end
   end

@@ -8,12 +8,6 @@ describe "Locations pages" do
     before do
       log_in_a_user
     end
-    describe "new page" do
-      it 'should show a form' do
-        visit new_location_path
-        page.should have_selector("form")
-      end
-    end
     describe "invalid form contents" do
       it "should not increase the location count" do
         visit new_location_path
@@ -37,6 +31,13 @@ describe "Locations pages" do
         click_button "Create location"
         page.should have_content "123 Streetname"
       end
+    end
+  end
+
+  describe "new page" do
+    it 'should show a form' do
+      visit new_location_path
+      page.should have_selector("form")
     end
   end
 
