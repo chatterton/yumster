@@ -66,7 +66,7 @@ LocationsNew = class LocationsNew
 
   geolocationCallback: (lat, lng) ->
     pos = window.Yumster.GoogleMaker.makeLatLng lat, lng
-    window.Yumster.Locations.New.map.setCenter(pos)
+    window.Yumster.Locations.Map.map.setCenter(pos)
 
 $ ->
   window.Yumster.Locations.New = new LocationsNew

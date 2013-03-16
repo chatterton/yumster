@@ -12,10 +12,6 @@
   <% end %>
 </div>
 
-<div style="display: none;">
-  <%= image_tag 'red-pushpin.png', :id => 'pushpin_img' %>
-</div>
-
 <br>
 <%= form_for(@location) do |f| %>
   <%= f.hidden_field :latitude %>
@@ -102,6 +98,12 @@
 
 <% end %>
 
+<div style="display: none">
+  <div id="map_recenter"><%= image_tag "recenter.png" %></div>
+  <%= image_tag 'red-pushpin.png', :id => 'pushpin_img' %>
+</div>
+
+
 <% content_for :scripts do %>
   <script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
   <%= javascript_include_tag 'geolocationmarker.js' %>
@@ -120,14 +122,13 @@ var addPositionIndicator = function(map) {
   })
 }
 
-var map
 var center_changed = function() {
-  lctn = map.getCenter()
+  lctn = window.Yumster.Locations.Map.map.getCenter()
   window.Yumster.Locations.New.current_location(lctn.lat(), lctn.lng())
 }
 
 var init = function() {
-  map = new google.maps.Map(document.getElementById('map_canvas'), {
+  var map = new google.maps.Map(document.getElementById('map_canvas'), {
     zoom: 18,
     mapTypeId: google.maps.MapTypeId.HYBRID,
     center: new google.maps.LatLng(0, 0),
@@ -135,12 +136,18 @@ var init = function() {
     mapTypeControl: false,
     tilt: 0 // turn of 45-degree imagery
   })
+  window.Yumster.Locations.Map.map = map
+
+  // add position indicator
   addPositionIndicator(map)
+
+  // put recenter widget on map
+  window.Yumster.Locations.Map.recenterWithGeoMarker(document.getElementById("map_recenter"), geoMarker)
+
   var control = document.createElement('div')
   $(control).append($('#pushpin_img'))
   map.controls[google.maps.ControlPosition.TOP_CENTER].push(control)
   google.maps.event.addListener(map, 'center_changed', center_changed)
-  window.Yumster.Locations.New.map = map
 }
 google.maps.event.addDomListener(window, 'load', init)
 
