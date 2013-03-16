@@ -15,6 +15,9 @@ class GoogleMaker
   addMarkerListener: (marker, action, callback) ->
     google.maps.event.addListener marker, action, callback
 
+  getControlPosition: () ->
+    return google.maps.ControlPosition
+
 $ ->
   window.Yumster.GoogleMaker = new GoogleMaker
   window.Yumster._GoogleMaker = GoogleMaker

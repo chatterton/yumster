@@ -17,7 +17,10 @@
   </div>
 </div>
 
-<%= link_to "", near_locations_path, :id => "nearby_ajax_address" %>
+<div style="display: none">
+  <div id="map_recenter"><%= image_tag "recenter.png" %></div>
+  <%= link_to "", near_locations_path, :id => "nearby_ajax_address" %>
+</div>
 
 <% content_for :scripts do %>
   <script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
@@ -63,6 +66,11 @@ var init = function() {
 
   // add position indicator
   addPositionIndicator(map)
+
+  // put recenter widget on map
+  //window.Yumster.Locations.Map.recenterWithGeoMarker($('#map_recenter'), geoMarker)
+  //window.Yumster.Locations.Map.recenterWithGeoMarker($('#map_recenter'), {})
+  window.Yumster.Locations.Map.recenterWithGeoMarker(document.getElementById("map_recenter"), {})
 
   // Wait for map idle
   google.maps.event.addListenerOnce(map, 'idle', function() {

@@ -84,3 +84,14 @@ describe "window.Yumster.Locations.Map", ->
       assert.isNull(@m2.setMap.firstCall.args[0])
     it "empties the markers array", ->
       @lm.markersOnMap.should.be.empty
+
+  describe "adding a recenter widget to the map", ->
+    beforeEach ->
+      @map.controls = []
+      @lm.gm.getControlPosition = () ->
+        TOP_RIGHT: 123
+      @map.controls[123] =
+        push: sinon.spy()
+      @lm.recenterWithGeoMarker({}, {})
+    it "places the widget in the upper right-hand corner", ->
+      @map.controls[123].push.callCount.should.equal 1

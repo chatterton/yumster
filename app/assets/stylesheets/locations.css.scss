@@ -42,6 +42,49 @@
   }
 }
 
+#nearby_results {
+  list-style: none;
+  margin-left: 0px;
+  border-top: 2px solid $COLOR_WELL_WHITE;
+  clear: both; // makes the <ul> stop eating the map
+}
+
+#map_reload {
+  float: right;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  @media screen and (max-width: $BREAKPOINT) {
+    margin-top: 0px;
+  }
+}
+
+#map_recenter {
+  padding: 8px;
+  img {
+    width: 32px;
+    height: auto;
+  }
+}
+
+/////////////////////
+//// SEARCH BY ADDRESS
+
+.map_address_search {
+  margin-bottom: 10px;
+}
+.map_address_search_bottom {
+  margin-top: 10px;
+}
+#map_address_input {
+  width: 79%;
+}
+#map_address_button {
+  width: 50px;
+}
+
+/////////////////////
+//// NEW LOCATION FORM
+
 .form-section-index {
   font-size: 4em;
   padding-top: .20em;
@@ -62,40 +105,11 @@
     margin-left: 3em;
   }
 }
-#nearby_results {
-  list-style: none;
-  margin-left: 0px;
-  border-top: 2px solid $COLOR_WELL_WHITE;
-  clear: both; // makes the <ul> stop eating the map
-}
-
-#map_reload {
-  float: right;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  @media screen and (max-width: $BREAKPOINT) {
-    margin-top: 0px;
-  }
-}
-
-.map_address_search {
-  margin-bottom: 10px;
-}
-.map_address_search_bottom {
-  margin-top: 10px;
-}
-#map_address_input {
-  width: 79%;
-}
-#map_address_button {
-  width: 50px;
-}
 
 #character_count {
   font-size: $FONT_SIZE_SMALL;
   margin-left: 10px;
 }
-
 .character_count_red {
   color: $COLOR_APPLE_RED;
 }
