@@ -11,8 +11,10 @@ class LocationsController < ApplicationController
   def create
     if user_signed_in?
       @location = current_user.locations.build(params[:location])
+      @location.approved = true
     else
       @location = Location.new(params[:location])
+      @location.approved = false
     end
     if @location.save
       @location.reverse_geocode

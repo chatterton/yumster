@@ -46,6 +46,18 @@ describe LocationsController do
       it "reverse geolocates the model" do
         Location.last.address.should == 'Las Vegas, NV'
       end
+      it "the location should go to moderation" do
+        Location.last.approved.should be_false
+      end
+      context "when a user is logged in" do
+        before do
+          sign_in_user
+        end
+        it "the location should not need moderation" do
+          post 'create', { location: FactoryGirl.attributes_for(:location, :latitude => 1.5, :longitude => 1.8) }
+          Location.last.approved.should be_true
+        end
+      end
     end
   end
 
