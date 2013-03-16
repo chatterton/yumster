@@ -12,8 +12,8 @@ class GoogleMaker
   makeLatLngBounds: () ->
     new google.maps.LatLngBounds
 
-  addMarkerListener: (marker, action, callback) ->
-    google.maps.event.addListener marker, action, callback
+  addEventListener: (object, action, callback) ->
+    google.maps.event.addListener object, action, callback
 
   getControlPosition: () ->
     return google.maps.ControlPosition
