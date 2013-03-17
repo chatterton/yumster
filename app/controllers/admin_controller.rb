@@ -2,6 +2,7 @@ class AdminController < ApplicationController
   before_filter :authenticate_admin
 
   def locations
+    @locations = Location.find_unapproved
   end
 
   protected

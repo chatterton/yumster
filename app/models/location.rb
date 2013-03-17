@@ -62,4 +62,8 @@ class Location < ActiveRecord::Base
     return locations
   end
 
+  def self.find_unapproved
+    return Location.where(:approved => false)
+  end
+
 end

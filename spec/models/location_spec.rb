@@ -207,4 +207,20 @@ describe Location do
       miles.should == Location::MILES_IN_A_DEGREE
     end
   end
+
+  describe "unapproved locations finder" do
+    before do
+      @location1 = FactoryGirl.create :location
+      @location1.approved = false
+      @location1.save
+      @location2 = FactoryGirl.create :location
+      @location2.approved = true
+      @location2.save
+    end
+    it "returns only unapproved locations" do
+      check = Location.find_unapproved
+      check.should include(@location1)
+      check.should_not include(@location2)
+    end
+  end
 end

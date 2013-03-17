@@ -17,12 +17,19 @@ describe AdminController do
       end
     end
     context "when an admin is logged in" do
-      it "returns http success" do
+      before do
         user = sign_in_user
         user.admin = true
         user.save
+        Location.stub(:find_unapproved) { ["foo"] }
+      end
+      it "returns http success" do
         get 'locations'
         response.should be_success
+      end
+      it "assigns @locations with all unapproved locations" do
+        get 'locations'
+        assigns(:locations).should == ["foo"]
       end
     end
   end
