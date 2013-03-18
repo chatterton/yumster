@@ -99,7 +99,7 @@ describe Location do
     before do
       @location.user_id = nil
     end
-    it { should_not be_valid }
+    it { should be_valid }
   end
 
   describe "description length" do
@@ -173,6 +173,20 @@ describe Location do
         @json.should_not =~ /Mac counter at macy's/
       end
     end
+    context "when the location is not approved" do
+      before do
+        location2 = FactoryGirl.create :location, description: "el portal", latitude: 47.6196396566275, longitude: -122.302057587033, user_id: 12
+        location4 = FactoryGirl.create :location, description: "portal dos", latitude: 47.6196396566275, longitude: -122.302057587033, user_id: 12
+        location4.approved = false
+        location4.save
+        @locations = Location.find_near('47.6187812537455', '-122.302367052115', Location::NEARBY_DISTANCE_MI * 2)
+        @json = @locations.to_json
+      end
+      it "should not contain that location" do
+        @json.should =~ /el portal/
+        @json.should_not =~ /portal dos/
+      end
+    end
     context "with more than a thousand entries" do
       before do
         locations = []
@@ -191,6 +205,22 @@ describe Location do
     it "converts degrees to miles" do
       miles = Location.deg_to_mi(1)
       miles.should == Location::MILES_IN_A_DEGREE
+    end
+  end
+
+  describe "unapproved locations finder" do
+    before do
+      @location1 = FactoryGirl.create :location
+      @location1.approved = false
+      @location1.save
+      @location2 = FactoryGirl.create :location
+      @location2.approved = true
+      @location2.save
+    end
+    it "returns only unapproved locations" do
+      check = Location.find_unapproved
+      check.should include(@location1)
+      check.should_not include(@location2)
     end
   end
 end

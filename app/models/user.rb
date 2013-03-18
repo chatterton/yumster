@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
          :confirmable
 
   attr_accessible :email, :password, :password_confirmation, :remember_me, :username
+  attr_protected :admin
   has_many :locations
   has_many :tips
   has_many :tip_locations, :through => :tips, :class_name => 'Location', :source => :location

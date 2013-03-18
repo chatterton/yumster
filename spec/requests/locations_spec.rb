@@ -8,12 +8,6 @@ describe "Locations pages" do
     before do
       log_in_a_user
     end
-    describe "new page" do
-      it 'should show a form' do
-        visit new_location_path
-        page.should have_selector("form")
-      end
-    end
     describe "invalid form contents" do
       it "should not increase the location count" do
         visit new_location_path
@@ -36,6 +30,29 @@ describe "Locations pages" do
       it "reverse geolocates for the address" do
         click_button "Create location"
         page.should have_content "123 Streetname"
+      end
+    end
+  end
+
+  describe "new page" do
+    before do
+      visit new_location_path
+    end
+    it 'should show a form' do
+      page.should have_selector("form")
+    end
+    it 'should show a moderation warning' do
+      page.should have_selector "p.alert-info"
+      page.should have_content "anonymously"
+    end
+    context 'when a user has signed in' do
+      before do
+        log_in_a_user
+        visit new_location_path
+      end
+      it "should not show the moderation warning" do
+        page.should_not have_selector "p.alert-info"
+        page.should_not have_content "anonymously"
       end
     end
   end

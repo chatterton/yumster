@@ -37,4 +37,13 @@ describe User do
     end
   end
 
+  describe "admin flag" do
+    it "should default to false" do
+      @user.admin.should == false
+    end
+    it "should be protected" do
+      @user.class.accessible_attributes.should_not include :admin
+    end
+  end
+
 end

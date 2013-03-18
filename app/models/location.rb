@@ -1,6 +1,6 @@
 class Location < ActiveRecord::Base
   attr_accessible :description, :latitude, :longitude, :category
-  attr_protected :address, :street, :city, :state, :state_code, :postal_code, :country, :country_code, :user_id, :neighborhood
+  attr_protected :address, :street, :city, :state, :state_code, :postal_code, :country, :country_code, :user_id, :neighborhood, :approved
   belongs_to :user
   has_many :tips
   has_many :users, :through => :tips
@@ -43,8 +43,6 @@ class Location < ActiveRecord::Base
   CATEGORIES = %w( Plant Dumpster Organization )
   validates_inclusion_of :category, :in => CATEGORIES
 
-  validates :user_id, presence: true
-
   NEARBY_DISTANCE_MI = 0.75
   MAX_LOCATIONS = 1000
   MILES_IN_A_DEGREE = 69.1
@@ -60,8 +58,12 @@ class Location < ActiveRecord::Base
     if (location_size > Location::MAX_LOCATIONS)
       raise "Too many locations returned"
     end
-    locations = Location.within_bounding_box(box)
+    locations = Location.where(:approved => true).within_bounding_box(box)
     return locations
+  end
+
+  def self.find_unapproved
+    return Location.where(:approved => false)
   end
 
 end
