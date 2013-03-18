@@ -1,5 +1,14 @@
 <h2><%= @location.description %></h2>
 <br>
+<% unless @location.approved %>
+  <p class="alert alert-info">
+    <small>
+      <strong>Note:</strong>
+      This location was submitted anonymously.
+      It will not show up in searches until approved by a moderator.
+    </small>
+  </p>
+<% end %>
 <div class="row-fluid">
   <div class="span6 pull-right">
     <div class="map_container">
