@@ -4,9 +4,10 @@ describe LocationsController do
 
   describe "GET 'new'" do
     context "when there is no user logged in" do
-      it "redirects to login page" do
+      it "returns http success" do
         get 'new'
-        response.should redirect_to new_user_session_path
+        response.should be_success
+        response.should render_template('new')
       end
     end
     context "when there is a user logged in" do
@@ -14,14 +15,12 @@ describe LocationsController do
         sign_in_user
         get 'new'
         response.should be_success
+        response.should render_template('new')
       end
     end
   end
 
   describe "POST 'create'" do
-    before do
-      sign_in_user
-    end
     it "returns http success" do
       post 'create'
       response.should be_success
@@ -46,6 +45,18 @@ describe LocationsController do
       end
       it "reverse geolocates the model" do
         Location.last.address.should == 'Las Vegas, NV'
+      end
+      it "the location should go to moderation" do
+        Location.last.approved.should be_false
+      end
+      context "when a user is logged in" do
+        before do
+          sign_in_user
+        end
+        it "the location should not need moderation" do
+          post 'create', { location: FactoryGirl.attributes_for(:location, :latitude => 1.5, :longitude => 1.8) }
+          Location.last.approved.should be_true
+        end
       end
     end
   end

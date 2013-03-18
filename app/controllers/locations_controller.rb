@@ -1,12 +1,21 @@
 class LocationsController < ApplicationController
-  before_filter :authenticate_user!, :only => [:new, :create]
 
   def new
-    @location = current_user.locations.build
+    if user_signed_in?
+      @location = current_user.locations.build
+    else
+      @location = Location.new
+    end
   end
 
   def create
-    @location = current_user.locations.build(params[:location])
+    if user_signed_in?
+      @location = current_user.locations.build(params[:location])
+      @location.approved = true
+    else
+      @location = Location.new(params[:location])
+      @location.approved = false
+    end
     if @location.save
       @location.reverse_geocode
       @location.save

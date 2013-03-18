@@ -5,6 +5,7 @@ describe "locations/new" do
     @location = mock_model Location
     assign(:location, @location)
     assign(:g4r_options, {})
+    view.stub(:user_signed_in?).and_return false
     render
   end
 

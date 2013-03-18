@@ -76,4 +76,19 @@ describe "locations/show" do
     end
   end
 
+  describe "when the location is not approved" do
+    it "shows a warning" do
+      @location.approved = false
+      render
+      rendered.should =~ /was submitted anonymously/
+    end
+  end
+  describe "when the location is approved" do
+    it "does not show the warning" do
+      @location.approved = true
+      render
+      rendered.should_not =~ /was submitted anonymously/
+    end
+  end
+
 end
