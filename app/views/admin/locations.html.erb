@@ -1,2 +1,12 @@
-<h1>Admin#locations</h1>
-<p>Find me in app/views/admin/locations.html.erb</p>
+<h2>Approve Locations</h2>
+<br>
+<% for loc in @locations %>
+  <p>
+    <%= link_to loc.description, loc %>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <%= link_to 'approve', approve_location_path(loc), :method => :put, :class => 'btn btn-success' %>
+    <br>
+    <%= loc.category %><br>
+    <%= loc.address %>
+  </p>
+<% end %>

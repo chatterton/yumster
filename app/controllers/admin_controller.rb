@@ -5,6 +5,13 @@ class AdminController < ApplicationController
     @locations = Location.find_unapproved
   end
 
+  def approve
+    @location = Location.find(params[:id])
+    @location.approved = true
+    @location.save
+    redirect_to admin_locations_path
+  end
+
   protected
   def authenticate_admin
     unless current_user and current_user.admin
