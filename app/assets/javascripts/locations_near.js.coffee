@@ -9,6 +9,10 @@ window.Yumster.Locations.Near or= {}
 class LocationsNear
   @DEFAULT_SPAN: .018
 
+  ## Use slightly smaller bounds in the URL than the map returns, to make
+  ## map scaling more predictable
+  @BOUNDS_FACTOR: .75
+
   constructor: (@templates = window.JST) ->
     @alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     @gm = window.Yumster.GoogleMaker
@@ -114,13 +118,14 @@ class LocationsNear
   pageLoad: () ->
     [lat, lng, span] = @getMapParamsFromURL()
     if lat and lng and span
-      window.Yumster.Locations.Map.fitMapToBounds lat, lng, span
+      window.Yumster.Locations.Map.fitMapToBounds lat, lng, span * LocationsNear.BOUNDS_FACTOR
       @fillNearbyLocations lat, lng, span
 
   searchHere: ->
     [lat, lng, span] = window.Yumster.Locations.Map.getBoundsFromMap()
     unless lat and lng and span
       return
+    #span = span * LocationsNear.BOUNDS_FACTOR
     @updateURL lat, lng, span
     @fillNearbyLocations lat, lng, span
 
