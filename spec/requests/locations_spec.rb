@@ -65,6 +65,10 @@ describe "Locations pages" do
     it 'should show the description' do
       page.should have_content("zippy's pizza")
     end
+
+    it 'should use the description in the page title' do
+      page.should have_xpath '//title', :text => "zippy's pizza"
+    end
   end
 
   describe "near page json" do
@@ -99,6 +103,15 @@ describe "Locations pages" do
       location["user_id"].should_not be
       location["created_at"].should_not be
       location["updated_at"].should_not be
+    end
+  end
+
+  describe "near page html" do
+    before do
+      visit near_locations_path
+    end
+    it "sets the page title correctly for an html response" do
+      page.should have_xpath '//title', :text => "Nearby Locations"
     end
   end
 

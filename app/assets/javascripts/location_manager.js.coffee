@@ -4,7 +4,7 @@ window.Yumster.LocationManager or= {}
 
 class LocationManager
 
-  @CLUSTER_PERCENT = .2
+  @CLUSTER_PERCENT = .15
 
   constructor: () ->
     @clear()

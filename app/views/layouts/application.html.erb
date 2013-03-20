@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Yumster</title>
+  <% if(@title) %>
+    <title>Yumster | <%= @title %></title>
+  <% else %>
+    <title>Yumster, Your Urban Foraging Resource</title>
+  <% end %>
   <meta charset="UTF-8">
   <%= stylesheet_link_tag "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
