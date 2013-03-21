@@ -24,6 +24,11 @@ describe "locations/show" do
     rendered.should have_selector '.map_container #map_canvas'
   end
 
+  it 'links to directions on google' do
+    render
+    rendered.should have_link "", :href => 'https://maps.google.com/maps?daddr=40.0,42.0'
+  end
+
   context 'when there is an address' do
     before do
       @location.stub(:address).and_return('somewheresville, UT')

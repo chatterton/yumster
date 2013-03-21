@@ -20,10 +20,13 @@
     <p>
     This location is a <%= @location.category %>.
     </p>
-    <p>
     <% if @location.address %>
+    <p>
     It is located near <%= @location.address %>.
+    </p>
     <% end %>
+    <p>
+    <%= link_to "Get directions", "https://maps.google.com/maps?daddr=#{@location.latitude},#{@location.longitude}" %>.
     </p>
 
     <%# show the tips form if necessary %>
