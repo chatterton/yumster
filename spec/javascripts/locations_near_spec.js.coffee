@@ -9,6 +9,7 @@ describe "window.Yumster.Locations.Near", ->
       'templates/nearby_location_item': () ->
       'templates/no_locations_found': () ->
       'templates/too_many_locations': () ->
+      'templates/cannot_determine_location': () ->
     @locations = new window.Yumster.Locations._Near(@templates)
     window.Yumster.Locations.Near = @locations
     $('body').append('''
@@ -224,6 +225,7 @@ describe "window.Yumster.Locations.Near", ->
       window.Yumster.LocationManager.clear.callCount.should.equal 1
 
   describe "geolocationCallback(lat, lng)", ->
+    beforeEach ->
       sinon.stub @locations, "searchHere"
       window.Yumster.Locations.Map.fitMapToBounds = sinon.spy()
       @locations.geolocationCallback 90210, 92102
@@ -309,3 +311,14 @@ describe "window.Yumster.Locations.Near", ->
       it "does nothing", ->
         @locations.updateURL.callCount.should.equal 0
         @locations.fillNearbyLocations.callCount.should.equal 0
+
+  describe "when geolocation fails", ->
+    beforeEach ->
+      @templates['templates/cannot_determine_location'] = ->
+        '<li>cannot determine loc template</li>'
+      @container = $('#nearby_results')
+      @container.empty()
+      @locations.geolocationFailure(1)
+    it "shows a friendly error message", ->
+      container = @container.html()
+      container.should.have.string "cannot determine loc template"

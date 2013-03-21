@@ -125,10 +125,12 @@ class LocationsNear
     [lat, lng, span] = window.Yumster.Locations.Map.getBoundsFromMap()
     unless lat and lng and span
       return
-    #span = span * LocationsNear.BOUNDS_FACTOR
     @updateURL lat, lng, span
     @fillNearbyLocations lat, lng, span
 
+  geolocationFailure: (code) ->
+    container = $('#nearby_results')
+    $(@templates['templates/cannot_determine_location'](null)).appendTo(container)
 
 $ ->
   window.Yumster.Locations.Near = new LocationsNear

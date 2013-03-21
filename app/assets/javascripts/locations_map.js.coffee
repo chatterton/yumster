@@ -54,7 +54,6 @@ class LocationsMap
       window.Yumster.Locations.Map.map.panTo geoMarker.getPosition()
     window.Yumster.Locations.Map.map.controls[@gm.getControlPosition().TOP_RIGHT].push button
 
-
 $ ->
   window.Yumster.Locations.Map = new LocationsMap
   window.Yumster.Locations._Map = LocationsMap

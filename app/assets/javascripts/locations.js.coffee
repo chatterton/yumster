@@ -14,10 +14,10 @@ class Locations
 
   loadAddressCallback: (results, status) ->
     unless status is "OK"
-      console.log "Error, Google geocoder returned status ", status
+      console.log "Error, geocoder returned status ", status
       return
     unless results.length > 0
-      console.log "Error, Google geocoder found no results"
+      console.log "Error, geocoder found no results"
       return
     lat = results[0].geometry.location.lat()
     lng = results[0].geometry.location.lng()

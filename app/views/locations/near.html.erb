@@ -35,6 +35,8 @@ var addPositionIndicator = function(map) {
     geoMarker.setCircleOptions({fillColor: '#808080'})
     geoMarker.setMap(map)
   }
+
+  // Listen for position to come in off of geomarker
   google.maps.event.addListenerOnce(geoMarker, 'position_changed', function() {
     // Return if map has been explicitly loaded at a location
     var urlparams = window.Yumster.Locations.Near.getMapParamsFromURL()
@@ -44,7 +46,14 @@ var addPositionIndicator = function(map) {
     // No URL location found. Get current position off geomarker
     // and move map to there.
     pos = geoMarker.getPosition()
+    console.log (pos)
     window.Yumster.Locations.Near.geolocationCallback(pos.lat(), pos.lng())
+  })
+
+  // Listen for geomarker to fail to locate position
+  google.maps.event.addListenerOnce(geoMarker, 'geolocation_error', function(error) {
+    console.log(error)
+    window.Yumster.Locations.Near.geolocationFailure(error.code)
   })
 }
 
