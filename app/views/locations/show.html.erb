@@ -1,7 +1,10 @@
 <% @title = @location.description %>
 <h2><%= @location.description %></h2>
 <% if http_referer_uri and refered_from_a_search? %>
-  <i class="icon-chevron-left"></i> <%= link_to "Return to search", http_referer_uri.request_uri %>
+  <div class="link_back_to_search">
+    <i class="icon-chevron-left"></i>
+    <%= link_to "Return to search", http_referer_uri.request_uri %>
+  </div>
 <% end %>
 <br>
 <% unless @location.approved %>
