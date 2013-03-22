@@ -25,10 +25,10 @@
       <div class="brand_inner_fp">
       <% end %>
         <ul class="brand_nav">
-          <li><%= link_to 'About', pages_about_path %></li>
+          <li><%= link_to 'About', main_app.pages_about_path %></li>
           <li class="divider-vertical"></li>
           <% if user_signed_in? %>
-            <li><%= link_to user_path(current_user.username) do %><i class="icon-user icon-large"></i><% end %></li>
+            <li><%= link_to main_app.user_path(current_user.username) do %><i class="icon-user icon-large"></i><% end %></li>
           <% else %>
             <li><%= link_to('Sign In', new_user_session_path) %></li>
           <% end %>
