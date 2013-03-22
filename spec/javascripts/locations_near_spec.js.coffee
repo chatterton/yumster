@@ -143,10 +143,12 @@ describe "window.Yumster.Locations.Near", ->
       @container.empty()
     context "on some random error", ->
       beforeEach ->
+        @templates['templates/generic_server_error'] = ->
+          '<li>generica</li>'
         @locations.fillNearbyLocationsFailure(501, "yogurt")
-      it "does nothing", ->
+      it "shows the generic server error template", ->
         container = @container.html()
-        container.should.equal ""
+        container.should.have.string "generica"
     context "on too many locations error", ->
       beforeEach ->
         @templates['templates/too_many_locations'] = ->

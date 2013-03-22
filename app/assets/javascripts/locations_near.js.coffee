@@ -60,7 +60,8 @@ class LocationsNear
 
   fillNearbyLocationsFailure: (status, error) ->
     if status is 500 and error is "Too many locations returned"
-      $(@templates['templates/too_many_locations'](null)).appendTo($('#nearby_results'))
+      return $(@templates['templates/too_many_locations'](null)).appendTo($('#nearby_results'))
+    $(@templates['templates/generic_server_error'](null)).appendTo($('#nearby_results'))
 
   fillNearbyLocations: (lat, long, span) ->
     path = $('#nearby_ajax_address').attr("href")
