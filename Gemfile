@@ -16,6 +16,10 @@ gem "devise"
 gem "font-awesome-rails"
 gem "font-awesome-sass-rails"
 
+# Message board needs
+gem 'forem', :git => "git://github.com/radar/forem.git"
+gem 'kaminari', '~> 0.13.0'
+
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets do
@@ -40,7 +44,9 @@ group :development, :test do
   gem 'rb-fsevent', '~> 0.9.1'
 
   gem 'konacha'
-  gem 'guard-konacha'
+  # Commented out for not working and dependency polution 20130322.
+  # Leaving this in because it would be nice to have.
+  #gem 'guard-konacha'
 end
 
 group :test do
