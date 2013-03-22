@@ -96,4 +96,41 @@ describe "locations/show" do
     end
   end
 
+  describe "link back to search results" do
+    before do
+      @uri = {}
+      view.stub(:http_referer_uri).and_return @uri
+    end
+    context "when the page was refered from a search" do
+      before do
+        @uri.stub(:request_uri).and_return "earl"
+        view.stub(:refered_from_a_search?).and_return true
+      end
+      it "displays the link" do
+        render
+        rendered.should =~ /earl/
+      end
+    end
+    context "when there is no referer" do
+      before do
+        view.stub(:http_referer_uri).and_return nil
+        view.stub(:refered_from_a_search?).and_return true
+      end
+      it "does not display the link" do
+        render
+        rendered.should_not =~ /earl/
+      end
+    end
+    context "when the referer is not a search" do
+      before do
+        view.stub(:http_referer_uri).and_return "earl"
+        view.stub(:refered_from_a_search?).and_return false
+      end
+      it "does not display the link" do
+        render
+        rendered.should_not =~ /earl/
+      end
+    end
+  end
+
 end
