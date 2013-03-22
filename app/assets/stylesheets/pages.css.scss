@@ -14,15 +14,14 @@ img.brand_tagline {
 }
 
 img.illustration {
-  @media screen and (max-width: $BREAKPOINT) {
-    width: 132px;
-    float: left;
-  }
+  width: 132px;
+  float: left;
 }
 
 .main_activity {
   h3 {
     text-align: center;
+    font-size: 1.5em;
     a {
       color: $COLOR_PRIMARY_GREEN;
     }
@@ -41,6 +40,7 @@ img.illustration {
 .main_activity p {
   margin-left: 35px;
   margin-right: 20px;
+  font-size: .9em;
   @media screen and (max-width: $BREAKPOINT) {
     padding-left: 0px;
     padding-right: 0px;
