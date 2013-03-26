@@ -1,3 +1,5 @@
+@import 'globals';
+
 $default-text: #444;
 $lighter-text: #888;
 $bar1-midbg: #222;
@@ -55,7 +57,8 @@ label {
   }
   .description{
     color: $lighter-text;
-    font-style: oblique;
+    font-style: italic;
+    font-size: 90%;
   }
   menu{
     padding-left: 0;
@@ -339,6 +342,24 @@ i.forum_separator {
   margin-right: -7px;
 }
 
+// make the main content take up most of the row
 .desc-and-last-post, .byline {
   width: 90%;
+}
+
+.forum_width_resize {
+  width: 50%;
+  @media screen and (max-width: $BREAKPOINT) {
+    width: 95%;
+  }
+}
+
+#topic_subject {
+  @extend .forum_width_resize;
+}
+
+.forum_textarea {
+  @extend .forum_width_resize;
+  height: 100px;
+  box-sizing: border-box;
 }

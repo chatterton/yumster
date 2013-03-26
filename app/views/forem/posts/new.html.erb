@@ -1,18 +1,18 @@
 <%= render :partial => 'forem/forums/head', :locals => { :forum => @topic.forum } %>
 
-<h2><%= t("forem.post.new") %></h2>
 
 <% if @reply_to_post %>
+  <p><%= t("forem.post.new") %></p>
   <div id='posts'>
     <%= render 'reply_to_post', :post => @reply_to_post %>
   </div>
 <% else %>
-  <h3 class='topic_subject'>
-    <%= @topic.subject %>
-  </h3>
+  <p><%= t("forem.post.new") %> "<%= @topic.subject %>"</p>
 <% end %>
 
 <%= simple_form_for [forem, @topic, @post] do |f| %>
   <%= render :partial => "form", :locals => { :f => f } %>
-  <%= f.submit t("forem.post.buttons.reply") %>
+  <%= f.submit t("forem.post.buttons.reply"), :class => 'btn' %>
 <% end %>
+
+<%= render :partial => 'forem/forms/forum_textarea' %>
