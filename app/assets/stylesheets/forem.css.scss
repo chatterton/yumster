@@ -29,8 +29,10 @@ label {
 }
 
 #forums, .topics {
+  border: 1px solid #ddd;
+
   .title {
-    font-size: 175%;
+    font-size: 150%;
   }
 
   thead tr th {
@@ -269,7 +271,7 @@ table.subdued{
   thead{
     th{
       background-color: $bar1-midbg;
-      font-weight: normal;
+      font-weight: bold;
       text-align: left;
     }
   }
@@ -291,9 +293,8 @@ table.subdued{
         }
       }
     }
-    .posts-count, .views-count{
-      font-size: .8em;
-      width: 80px;
+    .posts-count, .topics-count, .views-count{
+      font-size: .9em;
     }
   }
 }
@@ -336,4 +337,8 @@ table.subdued{
 i.forum_separator {
   margin-left: 3px;
   margin-right: -7px;
+}
+
+.desc-and-last-post, .byline {
+  width: 90%;
 }
