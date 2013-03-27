@@ -1,17 +1,11 @@
 <a name='post-<%= post.id %>'></a>
-<div id='post_<%= post_counter + 1 %>' class="row-fluid post_reactive <%= cycle('odd', 'even') -%>">
+<div id='post_<%= post_counter + 1 %>' class="row-fluid post_responsive <%= cycle('odd', 'even') -%>">
+
   <div class="span2">
-    <%= link_to main_app.user_path post.user.username do %>
-      <div class='user'>
-        <div class='username'>
-          <%= post.user %>
-        </div>
-        <div class='icon'><%= gravatar_for post.user %></div>
-      </div>
-    <% end %>
+    <%= render "forem/user", :user => post.user %>
   </div>
 
-  <div class="span8">
+  <div class="span8 content">
     <% if post.pending_review? %>
       <div class='moderation'>
         <%= t(".pending_review") %>
@@ -27,18 +21,10 @@
       </div>
     <% end %>
 
-    <a href='#post-<%= post.id %>'>
-      <time datetime="<%= post.created_at.to_s(:db) -%>"><%= "#{time_ago_in_words(post.created_at)} #{t("ago")}" %></time>
-    </a>
-    <% if post.reply_to %>
-      <span class='in_reply_to'>
-        —
-        <%= link_to "#{t("forem.post.in_reply_to")} #{post.reply_to.user}", "#post-#{post.reply_to.id}" %>
-      </span>
-    <% end %>
-
-    <%= forem_format(post.text) %>
-
+    <div class="post_text">
+      <%= forem_format(post.text) %>
+    </div>
+    <%= render 'forem/post_details', :post => post %>
   </div>
 
   <div class="span2">
@@ -46,17 +32,17 @@
       <ul class="action_buttons">
       <% if can?(:reply, post.topic) %>
         <% if post.topic.can_be_replied_to? %>
-          <li><%= link_to t('reply', :scope => 'forem.topic'), forem.new_topic_post_path(post.topic, :reply_to_id => post.id), :class => 'btn' %></li>
+          <li><%= link_to t('reply', :scope => 'forem.topic'), forem.new_topic_post_path(post.topic, :reply_to_id => post.id), :class => 'btn btn-small' %></li>
         <% end %>
         <% if post.topic.can_be_replied_to? %>
-          <li><%= link_to t('quote', :scope => 'forem.topic'), forem.new_topic_post_path(post.topic, :reply_to_id => post.id, :quote => true), :class => 'btn' %></li>
+          <li><%= link_to t('quote', :scope => 'forem.topic'), forem.new_topic_post_path(post.topic, :reply_to_id => post.id, :quote => true), :class => 'btn btn-small' %></li>
         <% end %>
       <% end %>
       <% if post.owner_or_admin?(forem_user) %>
         <% if can?(:edit_post, post.topic.forum) %>
-          <li><%= link_to t('edit', :scope => 'forem.post'), forem.edit_topic_post_path(post.topic, post), :class => 'btn' %></li>
+          <li><%= link_to t('edit', :scope => 'forem.post'), forem.edit_topic_post_path(post.topic, post), :class => 'btn btn-small' %></li>
         <% end %>
-        <li><%= link_to t('delete', :scope => 'forem.topic'), forem.topic_post_path(post.topic, post), :method => :delete, :confirm => t("are_you_sure"), :class => 'btn' %></li>
+        <li><%= link_to t('delete', :scope => 'forem.topic'), forem.topic_post_path(post.topic, post), :method => :delete, :confirm => t("are_you_sure"), :class => 'btn btn-small' %></li>
       <% end %>
       </ul>
     <% end %>

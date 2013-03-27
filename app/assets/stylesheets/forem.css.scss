@@ -94,17 +94,18 @@ form {
   padding: 5px;
 }
 
-.post_reactive.odd {
+.post_responsive.odd {
   background-color: white;
 }
-.post_reactive.even {
+.post_responsive.even {
   background-color: $COLOR_WELL_WHITE;
 }
-.post_reactive {
+.post_responsive {
   padding-top: .25em;
   padding-right: .5em;
-  padding-bottom: .5em;
+  padding-bottom: .25em;
   padding-left: .5em;
+
   .username {
     font-size: .8em;
   }
@@ -131,6 +132,23 @@ form {
     font-size: .7em;
     padding-bottom: 6px;
     color: $COLOR_TEXT_GREY;
+  }
+  .post_text {
+    padding-bottom: 10px;
+    // hack to make this obey the bootstrap column size
+    padding-right: 1px;
+  }
+  .user {
+    display: inline-block;
+    text-align: center;
+  }
+  .content {
+    position: relative;
+    min-height: 100%;
+  }
+  .post_details {
+    position: absolute;
+    bottom: 0;
   }
 }
 
