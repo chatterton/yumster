@@ -3,17 +3,17 @@
 
   <menu>
     <% if @topic.can_be_replied_to? && can?(:reply, @topic) %>
-      <%= link_to t(".reply"), forem.new_topic_post_path(@topic) %>
-    <% end %>
-    <% if @topic.user == forem_user || forem_admin? %>
-      <%= link_to t(".delete"), forem.forum_topic_path(@forum, @topic), :method => :delete, :confirm => t("are_you_sure") %>
+      <%= link_to t(".reply"), forem.new_topic_post_path(@topic), :class => 'btn btn-small' %>
     <% end %>
     <% if forem_user %>
       <% if !@topic.subscriber?(forem_user.id) %>
-        <%= link_to t(".subscribe"), forem.subscribe_forum_topic_path(@forum, @topic) %>
+        <%= link_to t(".subscribe"), forem.subscribe_forum_topic_path(@forum, @topic), :class => 'btn btn-small' %>
       <% else %>
-        <%= link_to t(".unsubscribe"), forem.unsubscribe_forum_topic_path(@forum, @topic) %>
+        <%= link_to t(".unsubscribe"), forem.unsubscribe_forum_topic_path(@forum, @topic), :class => 'btn btn-small' %>
       <% end %>
+    <% end %>
+    <% if @topic.user == forem_user || forem_admin? %>
+      <%= link_to t(".delete"), forem.forum_topic_path(@forum, @topic), :method => :delete, :confirm => t("are_you_sure"), :class => 'btn btn-small btn-danger' %>
     <% end %>
   </menu>
 
@@ -21,6 +21,8 @@
     <%= link_to t(".hide.#{@topic.hidden}"), forem.toggle_hide_admin_topic_path(@topic), :method => :put %> | 
     <%= link_to t(".lock.#{@topic.locked}"), forem.toggle_lock_admin_topic_path(@topic), :method => :put %> |
     <%= link_to t(".pin.#{@topic.pinned}"), forem.toggle_pin_admin_topic_path(@topic), :method => :put %>
+    <br>
+    <br>
   <% end %>
 
   <% if @topic.pending_review? %>

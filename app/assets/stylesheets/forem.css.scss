@@ -8,6 +8,10 @@ label {
   border: 1px solid $COLOR_WELL_WHITE;
 }
 
+#posts {
+  border-top: 2px solid $COLOR_CYAN;
+}
+
 #forums, .topics {
   border: 1px solid $COLOR_WELL_WHITE;
 
@@ -21,7 +25,8 @@ label {
     }
   }
   .last_post {
-    font-size: 80%;
+    font-size: .7em;
+    line-height: .7em;
   }
 
   thead tr th {
@@ -49,6 +54,9 @@ label {
   }
   menu {
     padding-left: 0;
+    a {
+      margin-right: 4px;
+    }
   }
 }
 
