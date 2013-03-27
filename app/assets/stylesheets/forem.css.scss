@@ -12,7 +12,16 @@ label {
   border: 1px solid $COLOR_WELL_WHITE;
 
   .title {
-    font-size: 150%;
+    font-weight: bold;
+  }
+  .description {
+    p {
+      font-size: 95%;
+      margin-bottom: 0;
+    }
+  }
+  .last_post {
+    font-size: 80%;
   }
 
   thead tr th {
