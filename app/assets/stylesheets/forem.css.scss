@@ -1,37 +1,26 @@
-@import 'globals';
+@import 'constants';
 
-$default-text: #444;
-$lighter-text: #888;
-$bar1-midbg: #222;
-$bar1-bottombg: #222;
-$light-bg1: #111;
-$mid-bg1: #ababab;
-$mid-bg1-highlight: #a9a9a9;
-$visited-text: black;
-
-body{
+/*
+body {
   font: 12pt "Helvetica Neue", Helvetica;
-  color: $default-text;
+  color: $COLOR_TEXT_BROWN;
   margin-left: 20%;
   margin-right: 20%;
-  background: #fff;
+  background: white;
   line-height: 120%;
 }
-
-a {
-  color: #0074FF;
-}
+*/
 
 label {
   display: block;
 }
 
 #forums {
-  border: 1px solid #ddd;
+  border: 1px solid $COLOR_WELL_WHITE;
 }
 
 #forums, .topics {
-  border: 1px solid #ddd;
+  border: 1px solid $COLOR_WELL_WHITE;
 
   .title {
     font-size: 150%;
@@ -50,62 +39,43 @@ label {
 
 #forum, #topic {
   position: relative;
-  .secondary-nav{
+  .secondary-nav {
     position: absolute;
     right: 0;
     top: 0;
   }
-  .description{
-    color: $lighter-text;
+  .description {
+    color: $COLOR_TEXT_GREY;
     font-style: italic;
     font-size: 90%;
   }
-  menu{
+  menu {
     padding-left: 0;
-    a{
-      border: 1px solid #ddd;
-      background: #eee;
-      padding: .35em;
-      display: inline-block;
-      -webkit-border-radius: 5px;
-      color: #0074FF;
-      font-weight: bold;
-      text-decoration: none;
-      margin: 0;
-      &:hover{
-        background-color: #0074FF;
-        color: #eee;
-        border: 1px solid #0258BF;
-      }
-    }
   }
 }
 
 #topic, #forum {
-  h2{
+  h2 {
     padding: 0.5em 0;
     position: relative;
-    color: #232323;
+    color: $COLOR_TEXT_BROWN;
     margin: 0;
-    a{
+    a {
       text-decoration: none;
-      color: #232323;
-      &:hover{
+      color: $COLOR_TEXT_BROWN;
+      &:hover {
         text-decoration: underline;
       }
     }
-    a.reply{
+    a.reply {
       margin-right: 1em;
       font-weight: normal;
       position: absolute;
       right: 0;
       padding: .5em;
-      background-color: #fff;
+      background-color: white;
       font-size: .5em;
       text-decoration: none;
-      &:hover{
-        // background-color: $light-bg1;
-      }
     }
   }
 }
@@ -126,7 +96,7 @@ form {
 .moderation {
   clear: both;
   font-size: .8em;
-  background: #9C0000;
+  background: $COLOR_APPLE_RED;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   color: white;
@@ -135,18 +105,18 @@ form {
   padding: 5px;
 }
 
-#posts{
+#posts {
   // http://www.quirksmode.org/css/clearing.html
   overflow: hidden;
   width: 100%;
 
   .odd .contents {
-    background-color: #ffffff;
+    background-color: white;
   }
-  .even .contents{
-    background-color: #efefef;
+  .even .contents {
+    background-color: $COLOR_WELL_WHITE;
   }
-  .post{
+  .post {
     position: relative;
     margin-top: .5em;
     margin-bottom: .5em;
@@ -154,16 +124,16 @@ form {
     min-height: 75px;
     clear: both;
 
-    .user{
+    .user {
       float: left;
       font-size: .8em;
       min-width: 75px;
       min-height: 100px;
       padding: .5em 1em;
-      .username{
+      .username {
         padding-bottom: .7em;
       }
-      .icon{
+      .icon {
         background: transparent url(http://placekitten.com/50/50) no-repeat;
         width: 50px;
         height: 50px;
@@ -171,10 +141,10 @@ form {
         // display: inline-block;
       }
     }
-    .contents{
+    .contents {
       min-height: 100px;
       width: 80%;
-      border-left: 1px solid $mid-bg1;
+      border-left: 1px solid $COLOR_CYAN;
       padding: 1em 1em;
       float: right;
 
@@ -209,123 +179,100 @@ form {
 
       pre {
         width: 90%;
-        background: #dfdfdf;
+        background: white;
       }
 
-      time{
+      time {
         float: left;
         clear: both;
         padding: 5px;
-        color: $lighter-text;
+        color: $COLOR_TEXT_GREY;
         font-size: .7em;
         display: inline-block;
       }
 
-      &:hover .actions{
+      &:hover .actions {
       }
-      .actions{
+      .actions {
         position: absolute;
         top: -10px;
         right: 0px;
         float: right;
         -webkit-border-radius: 5px;
         list-style-type: none;
-        li{
-          a{
-            padding: .5em;
-            margin-bottom: .4em;
-            font-size: .7em;
-            text-align :center;
-            display: block;
-            border: 1px solid #ddd;
-            background: #eee;
-            -webkit-border-radius: 5px;
-            color: #0074FF;
-            font-weight: bold;
-            text-decoration: none;
-            &:hover{
-              background-color: #0074FF;
-              color: #eee;
-              border: 1px solid #0258BF;
-            }
-          }
-        }
       }
     }
   }
 }
 
-table.subdued{
+table.subdued {
   margin-top: 10px;
   margin-bottom: 10px;
   width: 100%;
-  a{
+  a {
     text-decoration: none;
-    &:visited{
-      color: $visited-text;
-    }
-    &:hover{
+    &:hover {
       text-decoration: underline;
     }
   }
-  td, th{
+  td, th {
     padding: .5em;
   }
-  thead{
-    th{
-      background-color: $bar1-midbg;
+  thead {
+    th {
+      background-color: $COLOR_TEXT_BROWN;
       font-weight: bold;
       text-align: left;
     }
   }
-  tbody{
-    color: $lighter-text;
-    .subject{
+  tbody {
+    color: $COLOR_TEXT_GREY;
+    .subject {
     }
-    .started-by{
+    .started-by {
       font-size: .7em;
-      color: $lighter-text;
+      color: $COLOR_TEXT_GREY;
     }
-    .latest-post{
+    .latest-post {
       font-size: .7em;
       width: 80px;
-      a{
+      a {
         text-decoration: none;
-        &:hover{
+        &:hover {
           text-decoration: underline;
         }
       }
     }
-    .posts-count, .topics-count, .views-count{
+    .posts-count, .topics-count, .views-count {
       font-size: .9em;
     }
   }
 }
 
-.pages{
-  .page{
+.pages {
+  .page {
     display: inline-block;
     padding: .25em;
-    &.current{
-      background-color: $light-bg1;
+    &.current {
+      background-color: $COLOR_CYAN;
     }
   }
-  a{
+  a {
     text-decoration: none;
-    &:hover{
+    &:hover {
       text-decoration: underline;
     }
   }
 }
 
-.lock.icon{
+.lock.icon {
   width: 24px;
   height: 24px;
   background: transparent url(/assets/forem/lock_icon.png) 0 0;
   display: inline-block;
 }
 
-.pin.icon{
+.pin.icon {
   width: 9px;
   height: 15px;
   background: transparent url(/assets/forem/pin_icon.png) 0 0;
