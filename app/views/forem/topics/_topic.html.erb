@@ -15,7 +15,7 @@
   <td class='byline'>
     <%= new_since_last_view_text(topic) %>
     <div class='subject'><%= link_to forem_emojify(topic.subject), forem.forum_topic_path(@forum, topic) %></div>
-    <div class='started-by'><%= t "started_by" %><%= relevant_posts(topic).first.user %></div>
+    <div class='started-by'><%= t "started_by" %><%= link_to main_app.user_path relevant_posts(topic).first.user.username do %><%= relevant_posts(topic).first.user %><% end %></div>
   </td>
   <td class='posts-count'><%= relevant_posts(topic).count %></td>
   <td class='views-count'><%= topic.views_count %></td>

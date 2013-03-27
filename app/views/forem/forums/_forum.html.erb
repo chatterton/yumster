@@ -6,7 +6,10 @@
       <%= t('forem.forums.index.last_post') -%>
       <span class='last_post'>
           <% if last_post = forum.last_post_for(forem_user) -%>
-            <%= link_to(forem_emojify(last_post.topic.subject), forem.forum_topic_path(forum, last_post.topic)) -%> <%= t('by') %> <%= last_post.user %> <%= t('time_ago_in_words', :time => time_ago_in_words(last_post.created_at)) -%>
+            <%= link_to(forem_emojify(last_post.topic.subject), forem.forum_topic_path(forum, last_post.topic)) -%> 
+            <%= t('by') %>
+            <%= link_to main_app.user_path last_post.user.username do %><%= last_post.user %><% end %>
+            <%= t('time_ago_in_words', :time => time_ago_in_words(last_post.created_at)) -%>
           <% else %>
             <%= t('forem.forums.index.none') -%>
           <% end %>

@@ -6,6 +6,8 @@ Forem.per_page = 15
 
 Forem.default_gravatar = 'identicon'
 
+Forem.user_profile_links = true
+
 # Rails.application.config.to_prepare do
 #   If you want to change the layout that Forem uses, uncomment and customize the next line:
 #   Forem::ApplicationController.layout "forem"
