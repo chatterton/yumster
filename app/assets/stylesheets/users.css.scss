@@ -1,3 +1,5 @@
+@import 'constants';
+
 .logout_button {
   margin-top: -.4em;
   float: right;
@@ -5,13 +7,19 @@
 
 $EMBIGGEN: 200%;
 
-.user_icon {
-  float: left;
-  font-size: $EMBIGGEN;
-  padding-right: .5em;
-}
-
 .user_name {
   font-size: $EMBIGGEN;
   font-weight: bold;
+  margin-left: 2px;
+  .user_icon_container {
+    img {
+      float: left;
+    }
+  }
+}
+
+.avatar_explanation {
+  margin-top: -12px;
+  margin-left: 6px;
+  color: $COLOR_TEXT_GREY;
 }

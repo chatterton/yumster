@@ -2,9 +2,13 @@
 <br>
 <div class="row-fluid">
   <div class="span12">
-    <i class="icon-user user_icon"></i> <span class="user_name"><%= @user.username %></span>
+    <span class="user_name"><%= gravatar_for @user %><%= @user.username %></span>
     <% if user_signed_in? && @user == current_user %>
       <%= link_to "Log out", destroy_user_session_path, :method => :delete, :class => 'btn btn-warning logout_button' %>
+      <br>
+      <small class="avatar_explanation">
+        Change your image at <%= link_to "Gravatar", "https://en.gravatar.com/site/login" %> using your email address, <%= @user.email %>.
+      </small>
     <% end %>
   </div>
 </div>
@@ -15,3 +19,7 @@ This user has posted <%= pluralize @user.locations.count, 'location' %>
 and <%= pluralize @user.tips.count, 'tip' %>.
 </p>
 
+<% if user_signed_in? && @user == current_user %>
+  <br><br>
+<p></p>
+<% end %>

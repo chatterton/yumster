@@ -4,4 +4,13 @@ module ApplicationHelper
     return params[:controller] == "pages" && params[:action] == "home"
   end
 
+  def gravatar_for(user)
+    unless user
+      return
+    end
+    img = forem_avatar user, :size => 80
+    puts "IMAGE #{img}"
+    content_tag :span, img, :class => "user_icon_container"
+  end
+
 end
