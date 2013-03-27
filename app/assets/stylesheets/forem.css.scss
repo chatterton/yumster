@@ -1,16 +1,5 @@
 @import 'constants';
 
-/*
-body {
-  font: 12pt "Helvetica Neue", Helvetica;
-  color: $COLOR_TEXT_BROWN;
-  margin-left: 20%;
-  margin-right: 20%;
-  background: white;
-  line-height: 120%;
-}
-*/
-
 label {
   display: block;
 }
@@ -105,96 +94,43 @@ form {
   padding: 5px;
 }
 
-#posts {
-  // http://www.quirksmode.org/css/clearing.html
-  overflow: hidden;
-  width: 100%;
-
-  .odd .contents {
-    background-color: white;
+.post_reactive.odd {
+  background-color: white;
+}
+.post_reactive.even {
+  background-color: $COLOR_WELL_WHITE;
+}
+.post_reactive {
+  padding-top: .25em;
+  padding-right: .5em;
+  padding-bottom: .5em;
+  padding-left: .5em;
+  .username {
+    font-size: .8em;
   }
-  .even .contents {
-    background-color: $COLOR_WELL_WHITE;
+  time {
+    color: $COLOR_TEXT_GREY;
+    font-size: .7em;
+    display: inline-block;
   }
-  .post {
-    position: relative;
-    margin-top: .5em;
-    margin-bottom: .5em;
-    min-width: 35em;
-    min-height: 75px;
-    clear: both;
-
-    .user {
-      float: left;
-      font-size: .8em;
-      min-width: 75px;
-      min-height: 100px;
-      padding: .5em 1em;
-      .username {
-        padding-bottom: .7em;
+  ul.action_buttons {
+    list-style-type: none;
+    text-align: center;
+    li {
+      margin-top: 6px;
+    }
+    @media screen and (max-width: $BREAKPOINT) {
+      width: 100%;
+      margin-left: -10px;
+      li {
+        display: inline;
       }
     }
-    .contents {
-      min-height: 100px;
-      width: 80%;
-      border-left: 1px solid $COLOR_CYAN;
-      padding: 1em 1em;
-      float: right;
-
-      span.in_reply_to {
-        font-size: 80%;
-      }
-
-      p, ul, pre, blockquote, span.in_reply_to {
-        clear: both;
-        float: left;
-        padding: 5px;
-      }
-
-      p {
-        margin: .5em 0em 0em 0em;
-      }
-
-      blockquote {
-        -webkit-border-radius: 5px;
-        padding: 0;
-        width: 83%;
-      }
-
-      ul {
-        margin-left: 2em;
-        p {
-          padding: 0;
-          margin: 0;
-          float: none;
-        }
-      }
-
-      pre {
-        width: 90%;
-        background: white;
-      }
-
-      time {
-        float: left;
-        clear: both;
-        padding: 5px;
-        color: $COLOR_TEXT_GREY;
-        font-size: .7em;
-        display: inline-block;
-      }
-
-      &:hover .actions {
-      }
-      .actions {
-        position: absolute;
-        top: -10px;
-        right: 0px;
-        float: right;
-        -webkit-border-radius: 5px;
-        list-style-type: none;
-      }
-    }
+  }
+  .in_reply_to {
+    font-size: .7em;
+    padding-bottom: 6px;
+    color: $COLOR_TEXT_GREY;
   }
 }
 
