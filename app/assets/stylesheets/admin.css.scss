@@ -4,6 +4,11 @@
 ul.users, ul.locations {
   list-style-type: none;
   li {
-    margin-bottom: 1em;
+    margin-bottom: 1.5em;
+    img {
+      margin-top: -3px;
+      margin-right: 3px;
+      float: left;
+    }
   }
 }

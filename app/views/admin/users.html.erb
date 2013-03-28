@@ -3,6 +3,7 @@
 <ul class="users">
 <% for user in @users %>
   <li>
+  <%= gravatar_for user %>
   User <%= user.id %>: <%= link_to user.username, user %> (<%= user.email %>) <br>
   Created at: <%= user.created_at %>, last signed in <%= user.last_sign_in_at %> <br>
   </li>
