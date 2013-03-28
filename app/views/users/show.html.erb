@@ -17,5 +17,6 @@ and <%= pluralize @user.tips.count, 'tip' %>.
 </p>
 
 <% if user_signed_in? && @user == current_user %>
+  <br>
   <%= link_to "Log out", destroy_user_session_path, :method => :delete, :class => 'btn btn-warning logout_button' %>
 <% end %>
