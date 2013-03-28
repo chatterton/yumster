@@ -88,14 +88,12 @@ label {
 
 form {
   label {
-    font-size: 80%;
-    abbr {
-      display: none;
-    }
+    font-size: 90%;
+    display: inline-block;
   }
   input, textarea {
-    padding: .5em;
     font-size: 110%;
+    display: inline-block;
   }
 }
 
@@ -109,6 +107,7 @@ form {
   width: 90%;
   font-weight: bold;
   padding: 5px;
+  margin: 5px;
 }
 
 .post_responsive.odd {
@@ -157,7 +156,7 @@ form {
   }
   .user {
     display: inline-block;
-    text-align: center;
+    //text-align: center;
   }
   .content {
     position: relative;
