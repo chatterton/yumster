@@ -9,7 +9,6 @@ module ApplicationHelper
       return
     end
     img = forem_avatar user, :size => 80
-    puts "IMAGE #{img}"
     content_tag :span, img, :class => "user_icon_container"
   end
 
