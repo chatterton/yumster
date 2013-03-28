@@ -24,4 +24,10 @@ class User < ActiveRecord::Base
   def to_s
     return self.username
   end
+
+  ## Link to username instead of id
+  def to_param
+    username
+  end
+
 end

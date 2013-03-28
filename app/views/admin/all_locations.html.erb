@@ -1,0 +1,15 @@
+<h2>All locations</h2>
+<br>
+<ul class="locations">
+<% for location in @locations %>
+  <li>
+  Location <%= location.id %>: <%= link_to location.description, location %> (<%= location.category %>) <br>
+  Created at: <%= location.created_at %> by 
+    <% if location.user_id %>
+      <%= link_to location.user.username, location.user %>.
+    <% else %>
+      anonymous.
+    <% end %><br>
+  </li>
+<% end %>
+</ul>
