@@ -1,0 +1,11 @@
+<div class="post_details">
+  <a href='#post-<%= post.id %>'>
+    <time datetime="<%= post.created_at.to_s(:db) -%>"><%= "#{time_ago_in_words(post.created_at)} #{t("ago")}" %></time>
+  </a>
+  <% if post.reply_to %>
+    <span class='in_reply_to'>
+      —
+      <%= link_to "#{t("forem.post.in_reply_to")} #{post.reply_to.user}", "#post-#{post.reply_to.id}" %>
+    </span>
+  <% end %>
+</div>

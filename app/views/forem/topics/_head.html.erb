@@ -1,0 +1,8 @@
+<strong>
+  <%= link_to forem_emojify(topic.forum.title), [forem, topic.forum] %>
+  <i class="icon-angle-right forum_separator"> </i>
+  <%= forem_emojify(topic.subject) %>
+</strong>
+<% if forem_admin? %>
+  <%= link_to t('forem.topic.links.edit'), forem.edit_admin_topic_path(topic) %>
+<% end %>

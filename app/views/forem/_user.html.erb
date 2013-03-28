@@ -1,0 +1,8 @@
+<div class='user'>
+  <%= link_to main_app.user_path user.username do %>
+    <div class='username'>
+      <%= user %>
+    </div>
+    <div class='icon'><%= gravatar_for user %></div>
+  <% end %>
+</div>

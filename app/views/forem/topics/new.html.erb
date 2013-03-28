@@ -1,0 +1,7 @@
+<%= render :partial => 'forem/forums/head', :locals => { :forum => @topic.forum } %>
+
+<p><%= t("forem.topic.new") %></p>
+
+<%= render "form" %>
+
+<%= render :partial => 'forem/forms/forum_textarea' %>

@@ -46,4 +46,10 @@ describe User do
     end
   end
 
+  describe "to string" do
+    it "should return the username" do
+      @user.to_s.should == @user.username
+    end
+  end
+
 end

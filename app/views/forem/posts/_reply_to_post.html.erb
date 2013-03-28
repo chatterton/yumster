@@ -1,0 +1,15 @@
+<a name='post-<%= post.id %>'></a>
+<div id='post_<%= post.id %>' class='row-fluid post_responsive'>
+
+  <div class="span2">
+    <%= render "forem/user", :user => post.user %>
+  </div>
+
+  <div class="span8 content">
+    <div class="post_text">
+      <%= forem_format(post.text) %>
+    </div>
+    <%= render 'forem/post_details', :post => post %>
+  </div>
+
+</div>

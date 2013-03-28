@@ -1,0 +1,275 @@
+@import 'constants';
+
+label {
+  display: block;
+}
+
+#forums {
+  border: 1px solid $COLOR_WELL_WHITE;
+}
+
+#posts {
+  border-top: 2px solid $COLOR_CYAN;
+}
+
+#forums, .topics {
+  border: 1px solid $COLOR_WELL_WHITE;
+
+  .title {
+    font-weight: bold;
+  }
+  .description {
+    p {
+      font-size: 95%;
+      margin-bottom: 0;
+    }
+  }
+  .last_post {
+    font-size: .7em;
+    line-height: .7em;
+  }
+
+  thead tr th {
+    color: white;
+    font-family: Helvetica;
+    font-weight: bold;
+  }
+
+  tbody td {
+    background: white;
+  }
+}
+
+#forum, #topic {
+  position: relative;
+  .secondary-nav {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .description {
+    color: $COLOR_TEXT_GREY;
+    font-style: italic;
+    font-size: 90%;
+  }
+  menu {
+    padding-left: 0;
+    a {
+      margin-right: 4px;
+    }
+  }
+}
+
+#topic, #forum {
+  h2 {
+    padding: 0.5em 0;
+    position: relative;
+    color: $COLOR_TEXT_BROWN;
+    margin: 0;
+    a {
+      text-decoration: none;
+      color: $COLOR_TEXT_BROWN;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+    a.reply {
+      margin-right: 1em;
+      font-weight: normal;
+      position: absolute;
+      right: 0;
+      padding: .5em;
+      background-color: white;
+      font-size: .5em;
+      text-decoration: none;
+    }
+  }
+}
+
+form {
+  label {
+    font-size: 90%;
+    display: inline-block;
+  }
+  input, textarea {
+    font-size: 110%;
+    display: inline-block;
+  }
+}
+
+.moderation {
+  clear: both;
+  font-size: .8em;
+  background: $COLOR_APPLE_RED;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  color: white;
+  width: 90%;
+  font-weight: bold;
+  padding: 5px;
+  margin: 5px;
+}
+
+.post_responsive.odd {
+  background-color: white;
+}
+.post_responsive.even {
+  background-color: $COLOR_WELL_WHITE;
+}
+.post_responsive {
+  padding-top: .25em;
+  padding-right: .5em;
+  padding-bottom: .25em;
+  padding-left: .5em;
+
+  .username {
+    font-size: .8em;
+  }
+  time {
+    color: $COLOR_TEXT_GREY;
+    font-size: .7em;
+    display: inline-block;
+  }
+  ul.action_buttons {
+    list-style-type: none;
+    text-align: center;
+    li {
+      margin-top: 6px;
+    }
+    @media screen and (max-width: $BREAKPOINT) {
+      width: 100%;
+      margin-left: -10px;
+      li {
+        display: inline;
+      }
+    }
+  }
+  .in_reply_to {
+    font-size: .7em;
+    padding-bottom: 6px;
+    color: $COLOR_TEXT_GREY;
+  }
+  .post_text {
+    padding-bottom: 10px;
+    // hack to make this obey the bootstrap column size
+    padding-right: 1px;
+  }
+  .user {
+    display: inline-block;
+    //text-align: center;
+  }
+  .content {
+    position: relative;
+    min-height: 100%;
+  }
+  .post_details {
+    position: absolute;
+    bottom: 0;
+  }
+}
+
+table.subdued {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+  a {
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  td, th {
+    padding: .5em;
+  }
+  thead {
+    th {
+      background-color: $COLOR_TEXT_BROWN;
+      font-weight: bold;
+      text-align: left;
+    }
+  }
+  tbody {
+    color: $COLOR_TEXT_GREY;
+    .subject {
+    }
+    .started-by {
+      font-size: .7em;
+      color: $COLOR_TEXT_GREY;
+    }
+    .latest-post {
+      font-size: .7em;
+      width: 80px;
+      a {
+        text-decoration: none;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+    .posts-count, .topics-count, .views-count {
+      font-size: .9em;
+    }
+  }
+}
+
+.pages {
+  .page {
+    display: inline-block;
+    padding: .25em;
+    &.current {
+      background-color: $COLOR_CYAN;
+    }
+  }
+  a {
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.lock.icon {
+  width: 24px;
+  height: 24px;
+  background: transparent url(/assets/forem/lock_icon.png) 0 0;
+  display: inline-block;
+}
+
+.pin.icon {
+  width: 9px;
+  height: 15px;
+  background: transparent url(/assets/forem/pin_icon.png) 0 0;
+  display: inline-block;
+}
+
+#admin_link {
+  text-align: center;
+}
+
+// new separator using font-awesome
+i.forum_separator {
+  margin-left: 3px;
+  margin-right: -7px;
+}
+
+// make the main content take up most of the row
+.desc-and-last-post, .byline {
+  width: 90%;
+}
+
+.forum_width_resize {
+  width: 50%;
+  @media screen and (max-width: $BREAKPOINT) {
+    width: 95%;
+  }
+}
+
+#topic_subject {
+  @extend .forum_width_resize;
+}
+
+.forum_textarea {
+  @extend .forum_width_resize;
+  height: 100px;
+  box-sizing: border-box;
+}

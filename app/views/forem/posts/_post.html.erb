@@ -1,0 +1,51 @@
+<a name='post-<%= post.id %>'></a>
+<div id='post_<%= post_counter + 1 %>' class="row-fluid post_responsive <%= cycle('odd', 'even') -%>">
+
+  <div class="span2">
+    <%= render "forem/user", :user => post.user %>
+  </div>
+
+  <div class="span8 content">
+    <% if post.pending_review? %>
+      <div class='moderation'>
+        <%= t(".pending_review") %>
+        <% if forem_admin_or_moderator?(post.topic.forum) %>
+          <% if local_assigns[:mass_moderation] %>
+            <%= render "forem/posts/moderation_tools", :post => post %>
+          <% else %>
+            <%= form_tag forem.forum_moderate_posts_path(post.topic.forum), :method => :put do %>
+              <%= render "forem/posts/moderation_tools", :post => post %>
+            <% end %>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <div class="post_text">
+      <%= forem_format(post.text) %>
+    </div>
+    <%= render 'forem/post_details', :post => post %>
+  </div>
+
+  <div class="span2">
+    <% if forem_user %>
+      <ul class="action_buttons">
+      <% if can?(:reply, post.topic) %>
+        <% if post.topic.can_be_replied_to? %>
+          <li><%= link_to t('reply', :scope => 'forem.topic'), forem.new_topic_post_path(post.topic, :reply_to_id => post.id), :class => 'btn btn-small' %></li>
+        <% end %>
+        <% if post.topic.can_be_replied_to? %>
+          <li><%= link_to t('quote', :scope => 'forem.topic'), forem.new_topic_post_path(post.topic, :reply_to_id => post.id, :quote => true), :class => 'btn btn-small' %></li>
+        <% end %>
+      <% end %>
+      <% if post.owner_or_admin?(forem_user) %>
+        <% if can?(:edit_post, post.topic.forum) %>
+          <li><%= link_to t('edit', :scope => 'forem.post'), forem.edit_topic_post_path(post.topic, post), :class => 'btn btn-small' %></li>
+        <% end %>
+        <li><%= link_to t('delete', :scope => 'forem.topic'), forem.topic_post_path(post.topic, post), :method => :delete, :confirm => t("are_you_sure"), :class => 'btn btn-small' %></li>
+      <% end %>
+      </ul>
+    <% end %>
+  </div>
+
+</div>
