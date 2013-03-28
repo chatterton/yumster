@@ -12,46 +12,63 @@ $iconWhiteSpritePath: '';
   max-width: 800px;
 }
 
-/*
-.brand_gradient {
-  background-image: -ms-linear-gradient(bottom, white 0%, $COLOR_BACKGROUND_WHITE 100%);
-  background-image: -moz-linear-gradient(bottom, white 0%, $COLOR_BACKGROUND_WHITE 100%);
-  background-image: -o-linear-gradient(bottom, white 0%, $COLOR_BACKGROUND_WHITE 100%);
-  background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0, white), color-stop(1, $COLOR_BACKGROUND_WHITE));
-  background-image: -webkit-linear-gradient(bottom, white 0%, $COLOR_BACKGROUND_WHITE 100%);
-  background-image: linear-gradient(to top, white 0%, $COLOR_BACKGROUND_WHITE 100%);
-}
-*/
-
-img.brand_image {
-  width: 120px;
-  float: left;
-}
-
-ul.brand_nav {
-  float: right;
-  list-style: none;
-  margin-top: 3px;
-}
-ul.brand_nav li {
-  display: inline;
-}
-
-.brand_header {
+header {
   top: 0px;
   margin-top: 12px;
   width: 100%;
   height: 75px;
-}
 
-.brand_inner {
-  height: 31px;
-  border-bottom: 2px solid $COLOR_WELL_WHITE;
-  margin-left: 70px;
-}
-.brand_inner_fp {
-  @extend .brand_inner;
-  margin-left: 0px;
+  img.brand_image {
+    width: 120px;
+    float: left;
+  }
+
+  ul.brand_nav {
+    float: right;
+    list-style: none;
+    margin-top: 3px;
+    margin-left: 0;
+  }
+
+  .brand_inner {
+    height: 31px;
+    border-bottom: 2px solid $COLOR_WELL_WHITE;
+    margin-left: 70px;
+  }
+  .brand_inner_fp {
+    @extend .brand_inner;
+    margin-left: 0px;
+  }
+
+  li {
+    display: inline;
+  }
+  li.divider-vertical {
+    border-right: 2px solid $COLOR_WELL_WHITE;
+  }
+  .mobile-only {
+    @media screen and (min-width: $BREAKPOINT) {
+      display: none;
+    }
+  }
+  .desktop-only {
+    @media screen and (max-width: $BREAKPOINT) {
+      display: none;
+    }
+  }
+
+  /* copied from bootstrap */
+  .brand_nav > li > a {
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size: 14px;
+    color: $COLOR_TEXT_BROWN;
+  }
+  .brand_nav > .active > a,
+  .brand_nav > .active > a:hover,
+  .brand_nav > .active > a:focus {
+    color: $COLOR_TEXT_BROWN;
+  }
 }
 
 .hover_container:hover {
@@ -61,22 +78,4 @@ ul.brand_nav li {
     color: $COLOR_TEXT_BROWN;
     text-decoration: underline;
   }
-}
-
-li.divider-vertical {
-  background-color: $COLOR_BACKGROUND_WHITE;
-  border-right: 2px solid $COLOR_WELL_WHITE;
-}
-
-/* copied from bootstrap */
-.brand_nav > li > a {
-  padding-left: 10px;
-  padding-right: 10px;
-  font-size: 14px;
-  color: $COLOR_TEXT_BROWN;
-}
-.brand_nav > .active > a,
-.brand_nav > .active > a:hover,
-.brand_nav > .active > a:focus {
-  color: $COLOR_TEXT_BROWN;
 }
