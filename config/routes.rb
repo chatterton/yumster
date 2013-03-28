@@ -12,6 +12,8 @@ Yumster::Application.routes.draw do
   put "admin/locations/:id/approve" => "admin#approve", :as => "approve_location"
   get "admin/home"
   get "admin/" => "admin#home"
+  get "admin/users"
+  get "admin/all_locations"
 
   devise_for :users
   get 'users/:username' => 'users#show', :as => 'user'

@@ -59,11 +59,38 @@ describe AdminController do
   describe 'get admin/home' do
     before do
       sign_in_admin
-      Location.stub(:find_unapproved) { ["foo"] }
     end
     it 'shows the admin home page' do
       get 'home'
       response.should be_success
+    end
+  end
+
+  describe 'get admin/users' do
+    before do
+      sign_in_admin
+      FactoryGirl.create :user
+      get 'users'
+    end
+    it 'shows the users page' do
+      response.should render_template("users")
+    end
+    it 'sets the users variable' do
+      assigns(:users).should_not be_nil
+    end
+  end
+
+  describe 'get admin/all_locations' do
+    before do
+      sign_in_admin
+      FactoryGirl.create :user
+      get 'all_locations'
+    end
+    it 'shows the all_locations page' do
+      response.should render_template("all_locations")
+    end
+    it 'sets the all_locations variable' do
+      assigns(:locations).should_not be_nil
     end
   end
 
