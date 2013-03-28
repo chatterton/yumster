@@ -9,6 +9,7 @@ describe "users/show" do
     assign(:user, @user)
     view.stub(:user_signed_in?).and_return(true)
     view.stub(:current_user).and_return(@user)
+    view.stub(:gravatar_for).and_return "avatar goes here"
   end
 
   it "should show the user's username" do
@@ -27,6 +28,10 @@ describe "users/show" do
       render
       rendered.should have_link '', href: destroy_user_session_path
     end
+    it "should show a link to gravatar" do
+      render
+      rendered.should have_link '', href: 'https://en.gravatar.com/site/login'
+    end
   end
   context "when a user is somebody else" do
     before do
@@ -37,6 +42,11 @@ describe "users/show" do
       render
       rendered.should_not have_link '', href: destroy_user_session_path
     end
+  end
+
+  it "should show the user's gravatar" do
+    render
+    rendered.should have_content "avatar goes here"
   end
 
 end

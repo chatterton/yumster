@@ -1,5 +1,5 @@
 /* Built with http://stylebootstrap.info/index.php?style=se8gYBdX7mh3b7Nzacp1D */
-@import 'globals';
+@import 'constants';
 
 body {
   margin: 0;
@@ -272,4 +272,13 @@ input[type="color"],
 
 a:hover {
   color: $COLOR_TEXT_BROWN;
+}
+
+.user_icon_container {
+  img {
+    @extend .img-rounded;
+    height: 40px;
+    width: 40px;
+    padding: 3px;
+  }
 }

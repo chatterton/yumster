@@ -21,4 +21,7 @@ class User < ActiveRecord::Base
     self.where("email = ?", conditions[:email]).limit(1).first
   end
 
+  def to_s
+    return self.username
+  end
 end

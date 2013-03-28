@@ -16,6 +16,9 @@ describe "static pages" do
     it 'should show the big tagline brand image' do
       page.should have_selector 'img.brand_tagline'
     end
+    it 'should link to the forums' do
+      page.should have_link "", :href => forem.root_path
+    end
   end
 
   describe "about page" do

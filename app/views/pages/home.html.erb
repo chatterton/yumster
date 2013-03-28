@@ -5,18 +5,26 @@
 </div>
 <br>
 <div class="row-fluid">
-  <div class="offset1 span5 hover_container main_activity" onclick="window.location.href = '<%= url_for near_locations_path %>'">
-    <h3><%= link_to "Find food nearby ...", near_locations_path %></h3>
+  <div class="span4 hover_container main_activity" onclick="window.location.href = '<%= url_for near_locations_path %>'">
+    <h3><%= link_to "Find food nearby", near_locations_path %></h3>
     <%= image_tag 'illo_dumpster.jpg', :class => 'illustration', :alt => "" %>
     <p>
     Find food nearby by determining your position and looking it up in our database.
     </p>
   </div>
-  <div class="span5 hover_container main_activity" onclick="window.location.href = '<%= url_for new_location_path %>'">
-    <h3><%= link_to "Add a new location ...", new_location_path %></h3>
+  <div class="span4 hover_container main_activity" onclick="window.location.href = '<%= url_for new_location_path %>'">
+    <h3><%= link_to "Add a new location", new_location_path %></h3>
     <%= image_tag 'illo_tree.jpg', :class => 'illustration', :alt => "" %>
     <p>
     Fruit and veggies, dumpsters, and charitable organizations are all fair game.
     </p>
   </div>
+  <div class="span4 hover_container main_activity" onclick="window.location.href = '<%= url_for forem.root_path %>'">
+    <h3><%= link_to "Join the discussion", forem.root_path %></h3>
+    <%= image_tag 'illo_forum.jpg', :class => 'illustration', :alt => "" %>
+    <p>
+    Share foraging and dumpstering insights with like-minded people.
+    </p>
+  </div>
 </div>
+

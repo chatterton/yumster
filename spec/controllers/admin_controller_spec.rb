@@ -56,4 +56,15 @@ describe AdminController do
     end
   end
 
+  describe 'get admin/home' do
+    before do
+      sign_in_admin
+      Location.stub(:find_unapproved) { ["foo"] }
+    end
+    it 'shows the admin home page' do
+      get 'home'
+      response.should be_success
+    end
+  end
+
 end

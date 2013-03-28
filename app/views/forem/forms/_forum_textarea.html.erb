@@ -1,0 +1,10 @@
+<% content_for :scripts do %>
+  <%= javascript_include_tag 'elastictxt.js' %>
+  <script type="text/javascript" charset="utf-8">
+
+$('.forum_textarea').each( function(index, element) {
+  new ElasticText({node: element, height: 100, minHeight: 100})
+})
+
+  </script>
+<% end %>

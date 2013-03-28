@@ -1,0 +1,18 @@
+<div id='forum'>
+  <strong>
+    <%= link_to forem_emojify(forum.category), [forem, forum.category] %>
+    <i class="icon-angle-right forum_separator"> </i>
+    <%= link_to forem_emojify(forum.title), [forem, forum] %>
+  </strong>
+  <span class='description'> — <%= forum.description %></span>
+  <menu id='forum_topic_links'>
+    <% unless @topic.try(:new_record?) %>
+      <% if can? :create_topic, @forum %>
+        <%= link_to t('forem.topic.links.new'), forem.new_forum_topic_path(forum), :class => 'btn btn-small' %>
+      <% end %>
+    <% end %>
+    <% if can? :moderate, @forum %>
+      <%= link_to t('forem.forum.moderator_tools'), forem.forum_moderator_tools_path(forum), :class => 'btn btn-small' %>
+    <% end %>
+  </menu>
+</div>
