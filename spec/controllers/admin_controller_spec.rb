@@ -80,4 +80,18 @@ describe AdminController do
     end
   end
 
+  describe 'get admin/all_locations' do
+    before do
+      sign_in_admin
+      FactoryGirl.create :user
+      get 'all_locations'
+    end
+    it 'shows the all_locations page' do
+      response.should render_template("all_locations")
+    end
+    it 'sets the all_locations variable' do
+      assigns(:locations).should_not be_nil
+    end
+  end
+
 end

@@ -1,7 +1,7 @@
 // Place all the styles related to the Admin controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
-ul.users {
+ul.users, ul.locations {
   list-style-type: none;
   li {
     margin-bottom: 1em;

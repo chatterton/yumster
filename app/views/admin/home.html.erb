@@ -1,15 +1,23 @@
 <% @title = "Site Administration" %>
 <h2><%= @title %></h2>
-<br><br>
+<br>
 
+<br>
 <p>
 <%= link_to "Approve locations", admin_locations_path %>
 </p>
+
 <br>
 <p>
 <%= link_to "Forum admin", forem.admin_root_url %>
 </p>
+
 <br>
 <p>
-<%= link_to "Users", admin_users_path %>
+<%= link_to "All Users", admin_users_path %>
+</p>
+
+<br>
+<p>
+<%= link_to "All Locations", admin_all_locations_path %>
 </p>

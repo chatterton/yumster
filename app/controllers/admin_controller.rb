@@ -19,6 +19,10 @@ class AdminController < ApplicationController
     @users = User.all :order => "id desc"
   end
 
+  def all_locations
+    @locations = Location.all :order => "id desc", :include => :user
+  end
+
   protected
   def authenticate_admin
     unless current_user and current_user.admin
