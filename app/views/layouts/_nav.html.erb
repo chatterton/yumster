@@ -7,7 +7,20 @@
   <% end %>
     <ul class="brand_nav mobile-only">
       <li class="divider-vertical"></li>
-      <li><a href=""><i class="icon-reorder icon-large"></i></a></li>
+      <li>
+        <div class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+            <i class="icon-reorder icon-large"></i>
+          </a>
+          <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="drop3">
+            <li role="presentation"><%= link_to "Find food nearby", main_app.near_locations_path, :role => "menuitem" %></li>
+            <li role="presentation"><%= link_to "Add a new location", main_app.new_location_path, :role => "menuitem" %></li>
+            <li role="presentation"><%= link_to "Join the discussion", forem.root_path, :role => "menuitem" %></li>
+            <li role="presentation" class="divider"></li>
+            <li role="presentation"><%= link_to "About Yumster", main_app.pages_about_path, :role => "menuitem" %></li>
+          </ul>
+        </div>
+      </li>
     </ul>
     <ul class="brand_nav">
       <li class="divider-vertical desktop-only"></li>
