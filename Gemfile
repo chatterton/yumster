@@ -4,8 +4,8 @@ gem 'rails', '3.2.13'
 
 gem 'jquery-rails'
 
-gem 'sass-rails',   '~> 3.2.4'
-gem 'bootstrap-sass', '~> 2.2.2.0'
+gem 'sass-rails',   '~> 3.2'
+gem 'bootstrap-sass', '~> 2.3'
 
 gem 'thin'
 

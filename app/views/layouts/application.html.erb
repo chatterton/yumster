@@ -8,6 +8,7 @@
   <% end %>
   <meta charset="UTF-8">
   <%= stylesheet_link_tag "application", :media => "all" %>
+  <%= stylesheet_link_tag "nav_header" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
@@ -17,29 +18,18 @@
 </head>
 <body>
   <div class="container">
-    <header class="brand_header">
-      <% if not on_front_page? %>
-        <a class="brand" href="/"><%= image_tag 'yumster_brand.png', :class => 'brand_image' %></a>
-      <div class="brand_inner">
-      <% else %>
-      <div class="brand_inner_fp">
-      <% end %>
-        <ul class="brand_nav">
-          <li><%= link_to 'About', main_app.pages_about_path %></li>
-          <li class="divider-vertical"></li>
-          <% if user_signed_in? %>
-            <li><%= link_to main_app.user_path(current_user.username) do %><i class="icon-user icon-large"></i><% end %></li>
-          <% else %>
-            <li><%= link_to('Sign In', main_app.new_user_session_path) %></li>
-          <% end %>
-        </ul>
-      </div>
-    </header>
+    <%= render 'layouts/nav_header' %>
     <% unless notice.blank? %><p class="alert alert-info"><%= notice %></p><br><% end %>
     <% unless alert.blank? %><p class="alert alert-error"><%= alert %></p><br><% end %>
     <%= yield %>
     <br><br>
+    <br><br>
+    <br><br>
   </div>
   <%= yield :scripts %>
+  <script type="text/javascript" charset="utf-8">
+    // Scroll to the top of the page, which hides the address bar on iPhone
+    $('body').scrollTop(1)
+  </script>
 </body>
 </html>
