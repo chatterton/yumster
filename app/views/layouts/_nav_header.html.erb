@@ -1,39 +1,41 @@
-<header class="brand_header">
+<header>
   <% if not on_front_page? %>
-    <a class="brand" href="/"><%= image_tag 'yumster_brand.png', :class => 'brand_image' %></a>
-    <div class="brand_inner">
+  <a href="/"><%= image_tag 'yumster_brand.png', :class => 'brand_image' %></a>
+  <div class="brand_inner">
   <% else %>
-    <div class="brand_inner_fp">
+  <div class="brand_inner_fp">
   <% end %>
-    <ul class="brand_nav mobile-only">
-      <li class="divider-vertical"></li>
-      <li class="dropdown">
-        <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
-          <i class="icon-reorder icon-large"></i>
-        </a>
-        <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="drop3">
-          <li role="presentation"><%= link_to "Find food nearby", main_app.near_locations_path, :role => "menuitem" %></li>
-          <li role="presentation"><%= link_to "Add a new location", main_app.new_location_path, :role => "menuitem" %></li>
-          <li role="presentation"><%= link_to "Join the discussion", forem.root_path, :role => "menuitem" %></li>
-          <li role="presentation" class="divider"></li>
-          <li role="presentation"><%= link_to "About Yumster", main_app.pages_about_path, :role => "menuitem" %></li>
-        </ul>
-      </li>
-    </ul>
-    <ul class="brand_nav">
-      <li class="divider-vertical desktop-only"></li>
-      <% if user_signed_in? %>
-        <li>
-          <%= link_to main_app.user_path(current_user.username) do %>
-          <i class="icon-user icon-large"></i>
-          <% end %>
+    <div class="navigation">
+      <ul class="desktop-only">
+        <li><%= link_to 'About', main_app.pages_about_path %></li>
+        <li class="divider-vertical"></li>
+      </ul>
+      <ul class="mobile-desktop">
+        <% if user_signed_in? %>
+          <li>
+            <%= link_to main_app.user_path(current_user.username) do %>
+            <i class="icon-user icon-large"></i>
+            <% end %>
+          </li>
+        <% else %>
+          <li><%= link_to('Sign In', main_app.new_user_session_path) %></li>
+        <% end %>
+      </ul>
+      <ul class="mobile-only">
+        <li class="divider-vertical"></li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
+            <i class="icon-reorder icon-large"></i>
+          </a>
+          <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="drop3">
+            <li role="presentation"><%= link_to "Find food nearby", main_app.near_locations_path, :role => "menuitem" %></li>
+            <li role="presentation"><%= link_to "Add a new location", main_app.new_location_path, :role => "menuitem" %></li>
+            <li role="presentation"><%= link_to "Join the discussion", forem.root_path, :role => "menuitem" %></li>
+            <li role="presentation" class="divider"></li>
+            <li role="presentation"><%= link_to "About Yumster", main_app.pages_about_path, :role => "menuitem" %></li>
+          </ul>
         </li>
-      <% else %>
-        <li><%= link_to('Sign In', main_app.new_user_session_path) %></li>
-      <% end %>
-    </ul>
-    <ul class="brand_nav desktop-only">
-      <li><%= link_to 'About', main_app.pages_about_path %></li>
-    </ul>
+      </ul>
+    </div>
   </div>
 </header>
