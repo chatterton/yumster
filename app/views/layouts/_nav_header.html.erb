@@ -7,6 +7,9 @@
   <% end %>
     <div class="navigation">
       <ul class="desktop-only">
+        <li class="navigational"><%= link_to "Find Food", main_app.near_locations_path %></li>
+        <li class="navigational"><%= link_to "Add A Location", main_app.new_location_path %></li>
+        <li class="navigational"><%= link_to "Forums", forem.root_path %></li>
         <li class="navigational"><%= link_to 'About', main_app.pages_about_path %></li>
         <li class="divider-vertical"></li>
       </ul>
@@ -28,9 +31,9 @@
             <i class="icon-reorder icon-large"></i>
           </a>
           <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="drop3">
-            <li role="presentation"><%= link_to "Find food nearby", main_app.near_locations_path, :role => "menuitem" %></li>
-            <li role="presentation"><%= link_to "Add a new location", main_app.new_location_path, :role => "menuitem" %></li>
-            <li role="presentation"><%= link_to "Join the discussion", forem.root_path, :role => "menuitem" %></li>
+            <li role="presentation"><%= link_to "Find Food", main_app.near_locations_path, :role => "menuitem" %></li>
+            <li role="presentation"><%= link_to "Add A Location", main_app.new_location_path, :role => "menuitem" %></li>
+            <li role="presentation"><%= link_to "Forums", forem.root_path, :role => "menuitem" %></li>
             <li role="presentation" class="divider"></li>
             <li role="presentation"><%= link_to "About Yumster", main_app.pages_about_path, :role => "menuitem" %></li>
           </ul>

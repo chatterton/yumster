@@ -46,6 +46,9 @@ header {
   }
   ul.desktop-only {
     @extend ul.mobile-desktop;
+    li.navigational {
+      padding-right: 4px;
+    }
     @media screen and (max-width: $BREAKPOINT) {
       display: none;
     }
