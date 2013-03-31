@@ -22,7 +22,13 @@
     <% unless alert.blank? %><p class="alert alert-error"><%= alert %></p><br><% end %>
     <%= yield %>
     <br><br>
+    <br><br>
+    <br><br>
   </div>
   <%= yield :scripts %>
+  <script type="text/javascript" charset="utf-8">
+    // Scroll to the top of the page, which hides the address bar on iPhone
+    $('body').scrollTop(1)
+  </script>
 </body>
 </html>
