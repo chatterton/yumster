@@ -7,23 +7,23 @@
   <% end %>
     <div class="navigation">
       <ul class="desktop-only">
-        <li><%= link_to 'About', main_app.pages_about_path %></li>
+        <li class="navigational"><%= link_to 'About', main_app.pages_about_path %></li>
         <li class="divider-vertical"></li>
       </ul>
       <ul class="mobile-desktop">
         <% if user_signed_in? %>
-          <li>
+          <li class="navigational">
             <%= link_to main_app.user_path(current_user.username) do %>
             <i class="icon-user icon-large"></i>
             <% end %>
           </li>
         <% else %>
-          <li><%= link_to('Sign In', main_app.new_user_session_path) %></li>
+          <li class="navigational"><%= link_to('Sign In', main_app.new_user_session_path) %></li>
         <% end %>
       </ul>
       <ul class="mobile-only">
         <li class="divider-vertical"></li>
-        <li class="dropdown">
+        <li class="navigational dropdown">
           <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
             <i class="icon-reorder icon-large"></i>
           </a>
