@@ -39,19 +39,22 @@ header {
     color: $COLOR_TEXT_BROWN;
   }
 
+  .brand_nav > li > a {
+    @extend .nav_link;
+    @extend .nav;
+  }
+
   li {
     display: inline;
-    div.dropdown {
-      display: inline;
-      a {
-        @extend .nav_link;
-        padding-right: 0px;
-      }
+    a {
+      @extend .nav_link;
+      padding-right: 0px;
     }
   }
   li.divider-vertical {
     border-right: 2px solid $COLOR_WELL_WHITE;
   }
+
   .mobile-only {
     @media screen and (min-width: $BREAKPOINT) {
       display: none;
@@ -63,8 +66,67 @@ header {
     }
   }
 
-  /* copied from bootstrap */
-  .brand_nav > li > a {
-    @extend .nav_link;
+  /////////////////////////////
+  // Dropdown menus
+  // copied & modified from bootstrap source
+
+  // Menu position and menu carets
+  .dropdown-menu {
+    top: 23px;
+    margin-right: -9px;
+    &:before {
+      content: '';
+      display: inline-block;
+      border-left:   7px solid transparent;
+      border-right:  7px solid transparent;
+      border-bottom: 7px solid #ccc;
+      position: absolute;
+      top: -7px;
+      left: 9px;
+    }
+    &:after {
+      content: '';
+      display: inline-block;
+      border-left:   6px solid transparent;
+      border-right:  6px solid transparent;
+      border-bottom: 6px solid white;
+      position: absolute;
+      top: -6px;
+      left: 10px;
+    }
   }
+
+  // Remove background color from open dropdown
+  li.dropdown.open > .dropdown-toggle,
+  li.dropdown.active > .dropdown-toggle,
+  li.dropdown.open.active > .dropdown-toggle {
+    text-decoration: none;
+  }
+  li.dropdown.open > .dropdown-toggle .caret,
+  li.dropdown.active > .dropdown-toggle .caret,
+  li.dropdown.open.active > .dropdown-toggle .caret {
+    border-top-color: $COLOR_TEXT_BROWN;
+    border-bottom-color: $COLOR_TEXT_BROWN;
+  }
+
+  // Right aligned menus need alt position
+  li > .dropdown-menu.pull-right {
+    left: auto;
+    right: 0;
+    &:before {
+      left: auto;
+      right: 12px;
+    }
+    &:after {
+      left: auto;
+      right: 13px;
+    }
+    .dropdown-menu {
+      left: auto;
+      right: 100%;
+      margin-left: 0;
+      margin-right: -1px;
+    }
+  }
+
 }
