@@ -1,0 +1,44 @@
+<header>
+  <% if not on_front_page? %>
+  <a href="/"><%= image_tag 'yumster_brand.png', :class => 'brand_image' %></a>
+  <div class="brand_inner">
+  <% else %>
+  <div class="brand_inner_fp">
+  <% end %>
+    <div class="navigation">
+      <ul class="desktop-only">
+        <li class="navigational"><%= link_to "Find Food", main_app.near_locations_path %></li>
+        <li class="navigational"><%= link_to "Add A Location", main_app.new_location_path %></li>
+        <li class="navigational"><%= link_to "Forums", forem.root_path %></li>
+        <li class="navigational"><%= link_to 'About', main_app.pages_about_path %></li>
+        <li class="divider-vertical"></li>
+      </ul>
+      <ul class="mobile-desktop">
+        <% if user_signed_in? %>
+          <li class="navigational">
+            <%= link_to main_app.user_path(current_user.username) do %>
+            <i class="icon-user icon-large"></i>
+            <% end %>
+          </li>
+        <% else %>
+          <li class="navigational"><%= link_to('Sign In', main_app.new_user_session_path) %></li>
+        <% end %>
+      </ul>
+      <ul class="mobile-only">
+        <li class="divider-vertical"></li>
+        <li class="navigational dropdown">
+          <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">
+            <i class="icon-reorder icon-large"></i>
+          </a>
+          <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="drop3">
+            <li role="presentation"><%= link_to "Find Food", main_app.near_locations_path, :role => "menuitem" %></li>
+            <li role="presentation"><%= link_to "Add A Location", main_app.new_location_path, :role => "menuitem" %></li>
+            <li role="presentation"><%= link_to "Forums", forem.root_path, :role => "menuitem" %></li>
+            <li role="presentation" class="divider"></li>
+            <li role="presentation"><%= link_to "About Yumster", main_app.pages_about_path, :role => "menuitem" %></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>
