@@ -274,11 +274,28 @@ a:hover {
   color: $COLOR_TEXT_BROWN;
 }
 
+//////////////////////////////////
+// Non-bootstrap Yumster styling starts here
+
 .user_icon_container {
   img {
     @extend .img-rounded;
     height: 40px;
     width: 40px;
     padding: 3px;
+  }
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 800px;
+}
+
+.hover_container:hover {
+  color: $COLOR_TEXT_BROWN;
+  cursor: pointer;
+  a {
+    color: $COLOR_TEXT_BROWN;
+    text-decoration: underline;
   }
 }
