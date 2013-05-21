@@ -35,6 +35,15 @@
     <%= link_to "Get directions", "https://maps.google.com/maps?daddr=#{@location.latitude},#{@location.longitude}" %>.
     </p>
 
+    <p>
+    Notes: <br>
+    <% if user_signed_in? and @location.user_id == current_user.id %>
+      <textarea><%= @location.notes %></textarea>
+    <% else %>
+      <%= @location.notes %>
+    <% end %>
+    </p>
+
     <%# show the tips form if necessary %>
     <% if user_signed_in? and current_user.tips.where(:location_id => @location.id).count < 1 %>
       <%= form_for(Tip.new) do |f| %>
