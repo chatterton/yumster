@@ -75,6 +75,20 @@ describe LocationsController do
     end
   end
 
+  describe "PUT 'update'" do
+    before do
+      @loc = FactoryGirl.create :location
+      put :update, :id => @loc.id, :notes => "updated notes"
+    end
+    it "should update the notes" do
+      check = Location.last
+      check.notes.should == "updated notes"
+    end
+    it "should show the location" do
+      response.should redirect_to Location.last
+    end
+  end
+
   describe "GET 'near'" do
     before do
       location1 = FactoryGirl.create :location, description: "Le Bus Stop", latitude: 47.6202762479463, longitude: -122.303993513106, user_id: 12

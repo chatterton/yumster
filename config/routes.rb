@@ -20,7 +20,7 @@ Yumster::Application.routes.draw do
 
   root :to => 'pages#home'
 
-  resources :locations, :only => [:new, :create, :show] do
+  resources :locations, :only => [:new, :create, :show, :update] do
     collection do
       get 'near'
     end
