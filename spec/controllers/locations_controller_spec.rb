@@ -80,7 +80,7 @@ describe LocationsController do
       before do
         @user = sign_in_user
         @loc = FactoryGirl.create :location, user_id: @user.id
-        put :update, :id => @loc.id, :notes => "updated notes"
+        put :update, :id => @loc.id, :location => { :notes => "updated notes" }
       end
       it "should update the notes" do
         check = Location.last

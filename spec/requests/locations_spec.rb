@@ -6,7 +6,7 @@ describe "Locations pages" do
 
   context "when a user is logged in" do
     before do
-      log_in_a_user
+      @user = log_in_a_user
     end
     describe "invalid form contents" do
       it "should not increase the location count" do
@@ -30,6 +30,18 @@ describe "Locations pages" do
       it "reverse geolocates for the address" do
         click_button "Create location"
         page.should have_content "123 Streetname"
+      end
+    end
+    describe "updating a locations notes" do
+      before do
+        @loc = FactoryGirl.create :location, :user_id => @user.id
+        visit location_path @loc
+        fill_in 'location_notes', with: 'doom'
+        click_button "save_notes"
+      end
+      it "saves the notes to the location" do
+        @check = Location.find @loc.id
+        @check.notes.should == "doom"
       end
     end
   end

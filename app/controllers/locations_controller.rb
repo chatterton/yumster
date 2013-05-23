@@ -36,7 +36,7 @@ class LocationsController < ApplicationController
       render :status => :forbidden, :text => "Update not allowed"
       return
     end
-    @location.notes = params[:notes]
+    @location.notes = params[:location][:notes]
     @location.save
     redirect_to :action => 'show', :id => params[:id]
   end
