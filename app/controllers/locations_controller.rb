@@ -32,6 +32,10 @@ class LocationsController < ApplicationController
 
   def update
     @location = Location.find(params[:id])
+    unless user_signed_in? and current_user.id == @location.user_id
+      render :status => :forbidden, :text => "Update not allowed"
+      return
+    end
     @location.notes = params[:notes]
     @location.save
     redirect_to :action => 'show', :id => params[:id]
