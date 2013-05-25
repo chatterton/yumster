@@ -9,6 +9,7 @@ guard 'rspec', :version => 2 do
   watch(%r{^app/views/(.+)/}) { |m| "spec/requests/#{m[1]}_spec.rb" }
 end
 
-#guard :konacha do
+guard :konacha do
+  ## specs seem to be found without the below line. 20130524
 #    watch(%r{^spec/javascripts/.+_spec(\.js|\.js\.coffee)$})
-#end
+end
