@@ -30,6 +30,17 @@ class LocationsController < ApplicationController
     @tips = Tip.where(:location_id => @location.id).order("created_at desc")
   end
 
+  def update
+    @location = Location.find(params[:id])
+    unless user_signed_in? and current_user.id == @location.user_id
+      render :status => :forbidden, :text => "Update not allowed"
+      return
+    end
+    @location.notes = params[:location][:notes]
+    @location.save
+    redirect_to :action => 'show', :id => params[:id]
+  end
+
   respond_to :json, :html
   def near
     if request.format.json?

@@ -35,12 +35,30 @@
     <%= link_to "Get directions", "https://maps.google.com/maps?daddr=#{@location.latitude},#{@location.longitude}" %>.
     </p>
 
+    <div class="notes">
+      <p>
+      Notes:
+      <% if user_signed_in? and @location.user_id == current_user.id %>
+        <a id="notes_edit_link" href="#" onclick="showNotesForm();">(edit)</a>
+      <% end %>
+      </p>
+      <%= form_for @location, :url => { :action => "update" }, :method => 'put' do |f| %>
+        <%= f.text_area :notes, :size => "40x4", :value => @location.notes %>
+        <br>
+        <%= f.submit "Save", :id => "save_notes", :class => 'btn' %>
+      <% end %>
+      <div class="notes_text">
+        <%= raw(h(@location.notes).gsub(/\n/, '<br>')) %>
+      </div>
+      <br>
+    </div>
+
     <%# show the tips form if necessary %>
     <% if user_signed_in? and current_user.tips.where(:location_id => @location.id).count < 1 %>
       <%= form_for(Tip.new) do |f| %>
         <%= f.hidden_field :location_id, :value => "#{@location.id}" %>
         <%= f.label :text do %><p>Leave a tip here:</p><% end %>
-        <%= f.text_area :text, :maxlength => 200 %>
+        <%= f.text_area :text, :size => "40x4", :maxlength => 200 %>
         <br>
         <%= f.submit "Done", class: "btn" %>
       <% end %>
@@ -65,9 +83,17 @@
   <%= javascript_include_tag 'elastictxt.js' %>
   <script type="text/javascript" charset="utf-8">
 
+// Switch from the text display to the edit form
+var showNotesForm = function() {
+  $('.notes .edit_location').css('display', 'block')
+  $('.notes .notes_text').css('display', 'none')
+  $('.notes #notes_edit_link').css('display', 'none')
+}
+
 // Add elastic text for tip box
 if ($('#tip_text').length) {
   new ElasticText({node: document.getElementById('tip_text')});
+  new ElasticText({node: document.getElementById('location_notes')});
 }
 
 // Put marker for location on map

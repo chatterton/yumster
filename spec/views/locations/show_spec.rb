@@ -133,4 +133,15 @@ describe "locations/show" do
     end
   end
 
+  describe 'notes' do
+    context 'when there are notes' do
+      it 'renders them on the page' do
+        @location.notes = 'some notes yo'
+        render
+        rendered.should =~ /Notes:/
+        rendered.should =~ /some notes yo/
+      end
+    end
+  end
+
 end
