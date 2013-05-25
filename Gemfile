@@ -9,15 +9,15 @@ gem 'bootstrap-sass', '~> 2.3'
 
 gem 'thin'
 
-gem "geocoder"
+gem 'geocoder'
 
-gem "devise"
+gem 'devise'
 
-gem "font-awesome-rails"
-gem "font-awesome-sass-rails"
+gem 'font-awesome-rails'
+gem 'font-awesome-sass-rails'
 
 # Message board needs
-gem 'forem', :git => "git://github.com/radar/forem.git"
+gem 'forem', :git => 'git://github.com/radar/forem.git'
 gem 'kaminari', '~> 0.13.0'
 
 # Gems used only for assets and not required
@@ -25,7 +25,9 @@ gem 'kaminari', '~> 0.13.0'
 group :assets do
   gem 'coffee-rails', '~> 3.2.2'
   gem 'uglifier', '>= 1.2.3'
-  gem "sprockets-dotjs"
+  ## Need older ruby racer for sprockets-dotjs as newer one will not build
+  gem 'therubyracer', '0.10.2'
+  gem 'sprockets-dotjs'
 end
 
 group :production, :development do
@@ -51,7 +53,8 @@ end
 
 group :test do
   gem 'capybara', '1.1.2'
-  gem 'sqlite3', '1.3.6'
+  ## Downgraded to this specific version to get the connector working, 20130506
+  gem 'sqlite3', '1.3.5'
   gem 'factory_girl_rails', '~> 1.4.0'
   gem 'json'
 end

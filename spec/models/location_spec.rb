@@ -13,6 +13,7 @@ describe Location do
     it { should respond_to(:latitude) }
     it { should respond_to(:longitude) }
     it { should respond_to(:category) }
+    it { should respond_to(:notes) }
     its(:user) { should == @user }
   end
 
@@ -223,4 +224,24 @@ describe Location do
       check.should_not include(@location2)
     end
   end
+
+  describe "setting notes on a location" do
+    before do
+      @ipsum = """Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+      enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
+      ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+      reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+      pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
+      culpa qui officia deserunt mollit anim id est laborum."""
+      loc = FactoryGirl.create :location
+      loc.notes = @ipsum
+      loc.save
+    end
+    it "should store the notes correctly" do
+      loc = Location.find :last
+      loc.notes.should == @ipsum
+    end
+  end
+
 end

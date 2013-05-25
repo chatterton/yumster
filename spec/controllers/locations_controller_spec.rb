@@ -75,6 +75,32 @@ describe LocationsController do
     end
   end
 
+  describe "PUT 'update'" do
+    context "when the post's owner is logged in" do
+      before do
+        @user = sign_in_user
+        @loc = FactoryGirl.create :location, user_id: @user.id
+        put :update, :id => @loc.id, :location => { :notes => "updated notes" }
+      end
+      it "should update the notes" do
+        check = Location.last
+        check.notes.should == "updated notes"
+      end
+      it "should show the location" do
+        response.should redirect_to Location.last
+      end
+    end
+    context "when the owner is not logged in" do
+      before do
+        @loc = FactoryGirl.create :location
+        put :update, :id => @loc.id, :notes => "updated notes"
+      end
+      it "errors" do
+        response.response_code.should == 403
+      end
+    end
+  end
+
   describe "GET 'near'" do
     before do
       location1 = FactoryGirl.create :location, description: "Le Bus Stop", latitude: 47.6202762479463, longitude: -122.303993513106, user_id: 12

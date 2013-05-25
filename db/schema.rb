@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130322221631) do
+ActiveRecord::Schema.define(:version => 20130507022604) do
 
   create_table "forem_categories", :force => true do |t|
     t.string   "name",       :null => false
@@ -127,6 +127,7 @@ ActiveRecord::Schema.define(:version => 20130322221631) do
     t.string   "street"
     t.string   "neighborhood"
     t.boolean  "approved",     :default => false
+    t.text     "notes"
   end
 
   add_index "locations", ["latitude"], :name => "index_locations_on_latitude"
