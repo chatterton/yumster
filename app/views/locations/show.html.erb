@@ -42,7 +42,7 @@
         <a id="notes_edit_link" href="#" onclick="showNotesForm();">(edit)</a>
       <% end %>
       </p>
-      <%= form_for @location, :url => { :action => "update" }, :method => 'put' do |f| %>
+      <%= form_for @location, :method => 'put' do |f| %>
         <%= f.text_area :notes, :size => "40x4", :value => @location.notes %>
         <br>
         <%= f.submit "Save", :id => "save_notes", :class => 'btn' %>
