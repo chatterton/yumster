@@ -41,20 +41,15 @@ end
 
 group :development, :test do
   gem 'rspec-rails', '~> 2.0'
-
   gem 'guard-rspec'
   gem 'rb-fsevent', '~> 0.9.1'
-
   gem 'konacha'
-  # Commented out for not working and dependency polution 20130322.
-  # Leaving this in because it would be nice to have.
-  #gem 'guard-konacha'
+  gem 'guard-konacha'
 end
 
 group :test do
-  gem 'capybara', '1.1.2'
-  ## Downgraded to this specific version to get the connector working, 20130506
-  gem 'sqlite3', '1.3.5'
+  gem 'capybara', '~> 1.1.2'
+  gem 'sqlite3', '~> 1.3'
   gem 'factory_girl_rails', '~> 1.4.0'
   gem 'json'
 end
