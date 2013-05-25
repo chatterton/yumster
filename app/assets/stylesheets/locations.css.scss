@@ -79,8 +79,25 @@
   box-sizing: border-box;
 }
 
+/////////////////////
+//// NOTES
+
 textarea#location_notes {
   @include elastic_textarea;
+}
+
+.notes .notes_text {
+  padding-left: 10px;
+  border-left: 2px solid $COLOR_WELL_WHITE;
+}
+
+.notes .edit_location {
+  display: none;
+}
+
+.notes #notes_edit_link {
+  color: $COLOR_APPLE_RED;
+  font-size: 80%;
 }
 
 /////////////////////

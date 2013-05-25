@@ -35,19 +35,23 @@
     <%= link_to "Get directions", "https://maps.google.com/maps?daddr=#{@location.latitude},#{@location.longitude}" %>.
     </p>
 
-    <p>
-    Notes: <br>
-    <% if user_signed_in? and @location.user_id == current_user.id %>
+    <div class="notes">
+      <p>
+      Notes:
+      <% if user_signed_in? and @location.user_id == current_user.id %>
+        <a id="notes_edit_link" href="#" onclick="showNotesForm();">(edit)</a>
+      <% end %>
+      </p>
       <%= form_for @location, :url => { :action => "update" }, :method => 'put' do |f| %>
         <%= f.text_area :notes, :size => "40x4", :value => @location.notes %>
         <br>
         <%= f.submit "Save", :id => "save_notes", :class => 'btn' %>
       <% end %>
-    <% else %>
-      <%= raw(h(@location.notes).gsub(/\n/, '<br>')) %>
-      <%= @location.notes %>
-    <% end %>
-    </p>
+      <div class="notes_text">
+        <%= raw(h(@location.notes).gsub(/\n/, '<br>')) %>
+      </div>
+      <br>
+    </div>
 
     <%# show the tips form if necessary %>
     <% if user_signed_in? and current_user.tips.where(:location_id => @location.id).count < 1 %>
@@ -78,6 +82,13 @@
   <script src="https://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
   <%= javascript_include_tag 'elastictxt.js' %>
   <script type="text/javascript" charset="utf-8">
+
+// Switch from the text display to the edit form
+var showNotesForm = function() {
+  $('.notes .edit_location').css('display', 'block')
+  $('.notes .notes_text').css('display', 'none')
+  $('.notes #notes_edit_link').css('display', 'none')
+}
 
 // Add elastic text for tip box
 if ($('#tip_text').length) {
