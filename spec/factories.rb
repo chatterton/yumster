@@ -23,4 +23,16 @@ FactoryGirl.define do
     location
     user
   end
+
+  factory :import do
+    sequence(:name) { |n| "data import ##{n}" }
+    import_type "import_type"
+    credit_line "import_credit_line"
+  end
+
+  factory :record do
+    sequence(:data_key) { |n| "datakey#{n}" }
+    location
+  end
+
 end

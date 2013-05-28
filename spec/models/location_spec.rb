@@ -244,4 +244,18 @@ describe Location do
     end
   end
 
+  describe "which is imported" do
+    before do
+      @record = FactoryGirl.create :record
+      imported = FactoryGirl.create :location
+      @record.location = imported
+      @record.save
+      imported.save
+    end
+    it "should refer back to its import record" do
+      imported = Location.find :last
+      imported.record.should == @record
+    end
+  end
+
 end
