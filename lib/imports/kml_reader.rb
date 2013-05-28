@@ -1,17 +1,18 @@
 require "rexml/document"
+require "open-uri"
 
 class KMLReader
   include ActionView::Helpers::SanitizeHelper
 
-  def initialize(filename, builder)
-    print "KMLReader reading in #{filename} ... "
-    @filename = filename
+  def initialize(file_or_uri, builder)
+    print "KMLReader reading in #{file_or_uri} ... "
+    @file_or_uri = file_or_uri
     @builder = builder
   end
 
   def read
-    file = File.new @filename
-    doc = REXML::Document.new file
+    data = open @file_or_uri
+    doc = REXML::Document.new data
     doc.elements.each("kml/Document/Placemark") do |e|
       process_placemark e
     end
