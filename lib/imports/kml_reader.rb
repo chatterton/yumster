@@ -22,8 +22,11 @@ class KMLReader
   def process_placemark(placemark)
     location = {}
     location[:name] = placemark.elements["name"].text
-    location[:notes] = strip_tags placemark.elements["description"].text
-    coords = placemark.elements["Point"].elements["coordinates"].text.split ','
+    notes = strip_tags placemark.elements["description"].text
+    notes = notes.gsub(/\n/, '<br>')
+    notes = notes.gsub(/&nbsp;/, ' ')
+    location[:notes] = notes
+    coords = placemark.elements["Point"].elements["coordinates"].text.strip.split ','
     location[:lat] = coords[1]
     location[:lng] = coords[0]
     @builder.add location
