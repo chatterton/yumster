@@ -1,7 +1,9 @@
-require "./lib/imports/location_builder"
+## Usage:
+## be rails runner lib/imports/kml_import.rb file.kml "import name" "info credit line"
+require "./lib/imports/location_importer"
 require "./lib/imports/kml_reader"
 
-builder = LocationBuilder.new ARGV[0], ARGV[1]
-reader = KMLReader.new ARGV[0], builder
+importer = LocationImporter.new ARGV[1], ARGV[2]
+reader = KMLReader.new ARGV[0], importer
 reader.read
-builder.write
+importer.write

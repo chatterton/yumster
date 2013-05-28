@@ -4,7 +4,7 @@ class KMLReader
   include ActionView::Helpers::SanitizeHelper
 
   def initialize(filename, builder)
-    puts "KMLReader on "+filename
+    print "KMLReader reading in #{filename} ... "
     @filename = filename
     @builder = builder
   end
@@ -15,6 +15,7 @@ class KMLReader
     doc.elements.each("kml/Document/Placemark") do |e|
       process_placemark e
     end
+    puts "done."
   end
 
   def process_placemark(placemark)
