@@ -48,7 +48,11 @@
         <%= f.submit "Save", :id => "save_notes", :class => 'btn' %>
       <% end %>
       <div class="notes_text">
-        <%= raw(h(@location.notes).gsub(/\n/, '<br>')) %>
+        <% if @location.record %>
+          <%= raw(@location.notes) %>
+        <% else %>
+          <%= raw(h(@location.notes).gsub(/\n/, '<br>')) %>
+        <% end %>
       </div>
       <br>
     </div>

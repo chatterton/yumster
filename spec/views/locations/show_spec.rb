@@ -134,12 +134,21 @@ describe "locations/show" do
   end
 
   describe 'notes' do
-    context 'when there are notes' do
-      it 'renders them on the page' do
-        @location.notes = 'some notes yo'
+    context 'when the notes are user-generated' do
+      it 'sanitizes them' do
+        @location.notes = "<a href=>some notes yo"
         render
         rendered.should =~ /Notes:/
-        rendered.should =~ /some notes yo/
+        rendered.should =~ /&lt;a href=&gt;some notes yo/
+      end
+    end
+    context 'when the notes are imported' do
+      it 'displays them as html' do
+        @location.notes = '<a href="">checkit</a>'
+        @location.record_id = 1
+        render
+        rendered.should =~ /Notes:/
+        rendered.should =~ /<a href="">checkit<\/a>/
       end
     end
   end

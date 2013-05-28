@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130507022604) do
+ActiveRecord::Schema.define(:version => 20130526225315) do
 
   create_table "forem_categories", :force => true do |t|
     t.string   "name",       :null => false
@@ -108,6 +108,14 @@ ActiveRecord::Schema.define(:version => 20130507022604) do
   add_index "forem_views", ["user_id"], :name => "index_forem_views_on_user_id"
   add_index "forem_views", ["viewable_id"], :name => "index_forem_views_on_topic_id"
 
+  create_table "imports", :force => true do |t|
+    t.string   "name"
+    t.string   "import_type"
+    t.text     "credit_line"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
+
   create_table "locations", :force => true do |t|
     t.string   "description"
     t.float    "latitude"
@@ -128,11 +136,22 @@ ActiveRecord::Schema.define(:version => 20130507022604) do
     t.string   "neighborhood"
     t.boolean  "approved",     :default => false
     t.text     "notes"
+    t.integer  "record_id"
   end
 
   add_index "locations", ["latitude"], :name => "index_locations_on_latitude"
   add_index "locations", ["longitude"], :name => "index_locations_on_longitude"
   add_index "locations", ["user_id"], :name => "index_locations_on_user_id"
+
+  create_table "records", :force => true do |t|
+    t.string   "data_key"
+    t.integer  "import_id"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "records", ["data_key"], :name => "index_records_on_data_key"
+  add_index "records", ["import_id"], :name => "index_records_on_import_id"
 
   create_table "tips", :force => true do |t|
     t.integer  "user_id"
