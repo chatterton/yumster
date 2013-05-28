@@ -23,6 +23,7 @@ class LocationImporter
         category: 'Plant',
         notes: hash[:notes] + @credit_line)
       location.approved = true
+      location.reverse_geocode
       location.save
       record.location = location
       record.save
