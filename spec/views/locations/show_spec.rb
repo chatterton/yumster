@@ -145,7 +145,7 @@ describe "locations/show" do
     context 'when the notes are imported' do
       it 'displays them as html' do
         @location.notes = '<a href="">checkit</a>'
-        @location.record_id = 1
+        @location.record = stub_model Record
         render
         rendered.should =~ /Notes:/
         rendered.should =~ /<a href="">checkit<\/a>/
