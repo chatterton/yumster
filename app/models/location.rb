@@ -27,6 +27,7 @@ class Location < ActiveRecord::Base
       loc.country_code = geo.country_code
     end
   end
+  geocoded_by :address
 
   validates :latitude, presence: true, :numericality => {
     :greater_than_or_equal_to => -90,
