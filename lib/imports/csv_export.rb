@@ -4,7 +4,7 @@ require 'csv'
 class CSVExport
   def export(import_id)
     csv_string = CSV.generate do |csv|
-      csv << ['id','original_id','latitude','longitude','latin_name','description','address','city','state','state_code','country','country_code']
+      csv << ['id','data_key','lat','lng','latin_name','description','address','city','state','state_code','country','country_code']
       import = Import.find ARGV[0]
       import.records.each do |record|
         location = record.location
