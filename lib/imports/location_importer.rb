@@ -19,16 +19,15 @@ class LocationImporter
 
       ## Necessary on all imports
       location = Location.new(
-        description: hash[:name],
-        latitude: hash[:lat],
-        longitude: hash[:lng],
+        description: hash[:description],
+        latitude: hash[:lat].to_f,
+        longitude: hash[:lng].to_f,
         category: 'Plant',
-        notes: hash[:notes] + @credit_line)
+        notes: "#{hash[:notes]} #{@credit_line}")
       location.approved = true
 
       ## Bring in geocoded values
       location.latin_name = hash[:latin_name]
-      location.description = hash[:description]
       location.address = hash[:address]
       location.city = hash[:city]
       location.state = hash[:state]
@@ -39,6 +38,10 @@ class LocationImporter
       ## Do not geocode if we already have geocoded values
       if options[:reverse_geocode]
         location.reverse_geocode
+      end
+
+      unless location.valid?
+        puts location.errors.to_json
       end
 
       location.save
