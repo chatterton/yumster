@@ -42,6 +42,7 @@ class LocationImporter
 
       unless location.valid?
         puts "LocationImporter dk=#{hash[:data_key]} error: #{location.errors.to_json}"
+        puts location.to_json
         next
       end
 

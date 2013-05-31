@@ -19,7 +19,7 @@ class CSVReader
 
   def create_hash(row)
     hash = {}
-    hash[:latitude] = row['longitude']
+    hash[:latitude] = row['latitude']
     hash[:longitude] = row['longitude']
     hash[:description] = row['description']
     hash[:data_key] = row['data_key']
