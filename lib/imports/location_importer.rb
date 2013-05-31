@@ -20,8 +20,8 @@ class LocationImporter
       ## Necessary on all imports
       location = Location.new(
         description: hash[:description],
-        latitude: hash[:lat].to_f,
-        longitude: hash[:lng].to_f,
+        latitude: hash[:latitude].to_f,
+        longitude: hash[:longitude].to_f,
         category: 'Plant',
         notes: "#{hash[:notes]}")
       location.approved = true
