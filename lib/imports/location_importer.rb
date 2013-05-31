@@ -23,7 +23,7 @@ class LocationImporter
         latitude: hash[:lat].to_f,
         longitude: hash[:lng].to_f,
         category: 'Plant',
-        notes: "#{hash[:notes]} #{@credit_line}")
+        notes: "#{hash[:notes]}")
       location.approved = true
 
       ## Bring in geocoded values
@@ -41,7 +41,8 @@ class LocationImporter
       end
 
       unless location.valid?
-        puts location.errors.to_json
+        puts "LocationImporter dk=#{hash[:data_key]} error: #{location.errors.to_json}"
+        next
       end
 
       location.save

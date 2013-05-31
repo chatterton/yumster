@@ -143,12 +143,21 @@ describe "locations/show" do
       end
     end
     context 'when the notes are imported' do
+      before do
+        @import = stub_model Import, :credit_line => 'checkline'
+        @record = stub_model Record, :import => @import
+        @location.record = @record
+      end
       it 'displays them as html' do
         @location.notes = '<a href="">checkit</a>'
-        @location.record = stub_model Record
         render
         rendered.should =~ /Notes:/
         rendered.should =~ /<a href="">checkit<\/a>/
+      end
+      it 'displays the credit line after the notes' do
+        @location.notes = 'checknotes'
+        render
+        rendered.should =~ /checknotes checkline/
       end
     end
   end

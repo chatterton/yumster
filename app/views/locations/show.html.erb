@@ -49,7 +49,7 @@
       <% end %>
       <div class="notes_text">
         <% if @location.record %>
-          <%= raw(@location.notes) %>
+          <%= raw(@location.notes) %> <%= raw(@location.record.import.credit_line) %>
         <% else %>
           <%= raw(h(@location.notes).gsub(/\n/, '<br>')) %>
         <% end %>
