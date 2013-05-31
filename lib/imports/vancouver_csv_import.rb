@@ -22,10 +22,16 @@ class VancouverCSVImport
 
   def geolocate_and_write(trees)
     print "Geolocating and writing models ... "
+    existing = Record.uniq.pluck(:data_key)
     import = Import.new(name: @name, credit_line: @credit_line, import_type: 'location')
     import.save
     for tree in trees
-      record = Record.new(data_key: tree['id'])
+      data_key = tree['id']
+      if existing.include? data_key
+        #puts "already done #{data_key}"
+        next
+      end
+      record = Record.new(data_key: data_key)
       location = Location.new(
         description: tree['commonname'],
         category: 'Plant',
@@ -50,6 +56,7 @@ class VancouverCSVImport
         puts "failed to geolocate id = #{tree['id']}"
       end
     end
+    puts "done."
   end
 
 end
