@@ -1,6 +1,6 @@
 class Location < ActiveRecord::Base
   attr_accessible :description, :latitude, :longitude, :category, :notes
-  attr_protected :address, :street, :city, :state, :state_code, :postal_code, :country, :country_code, :user_id, :neighborhood, :approved
+  attr_protected :address, :street, :city, :state, :state_code, :postal_code, :country, :country_code, :user_id, :neighborhood, :approved, :latin_name
   belongs_to :user
   belongs_to :record
   has_many :tips
@@ -27,6 +27,7 @@ class Location < ActiveRecord::Base
       loc.country_code = geo.country_code
     end
   end
+  geocoded_by :address
 
   validates :latitude, presence: true, :numericality => {
     :greater_than_or_equal_to => -90,

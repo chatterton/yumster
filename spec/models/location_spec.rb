@@ -15,6 +15,7 @@ describe Location do
     it { should respond_to(:category) }
     it { should respond_to(:notes) }
     its(:user) { should == @user }
+    it { should respond_to(:latin_name) }
   end
 
   it "should have the proper values" do
