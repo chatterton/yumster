@@ -90,10 +90,23 @@ describe LocationsController do
         response.should redirect_to Location.last
       end
     end
+    context "when an admin is logged in" do
+      before do
+        @user = sign_in_user
+        @user.admin = true
+        @user.save
+        @loc = FactoryGirl.create :location
+        put :update, :id => @loc.id, :location => { :notes => "admin updated notes" }
+      end
+      it "should update the notes" do
+        check = Location.last
+        check.notes.should == "admin updated notes"
+      end
+    end
     context "when the owner is not logged in" do
       before do
         @loc = FactoryGirl.create :location
-        put :update, :id => @loc.id, :notes => "updated notes"
+        put :update, :id => @loc.id, :location => { :notes => "failed update" }
       end
       it "errors" do
         response.response_code.should == 403

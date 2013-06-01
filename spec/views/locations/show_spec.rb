@@ -160,6 +160,40 @@ describe "locations/show" do
         rendered.should =~ /checknotes checkline/
       end
     end
+    describe 'edit links' do
+      context 'when nobody is logged in' do
+        it 'should not show an edit link' do
+          render
+          rendered.should_not have_link "(edit)"
+        end
+      end
+      context 'when the notes were made by the user' do
+        before do
+          view.stub(:user_signed_in?).and_return(true)
+          @user = FactoryGirl.create :user
+          view.stub(:current_user).and_return @user
+          @location.user_id = @user.id
+        end
+        it 'displays an edit link' do
+          render
+          rendered.should have_link "(edit)"
+        end
+      end
+      context 'when the page is being viewed by an admin' do
+        before do
+          view.stub(:user_signed_in?).and_return(true)
+          @user = FactoryGirl.create :user
+          @user.admin = true;
+          @user.save
+          view.stub(:current_user).and_return @user
+          @location.user_id = nil
+        end
+        it 'displays an admin edit link' do
+          render
+          rendered.should have_link "(admin edit)"
+        end
+      end
+    end
   end
 
 end

@@ -32,16 +32,33 @@ describe "Locations pages" do
         page.should have_content "123 Streetname"
       end
     end
-    describe "updating a locations notes" do
+    describe "updating a location's notes" do
       before do
         @loc = FactoryGirl.create :location, :user_id => @user.id
-        visit location_path @loc
-        fill_in 'location_notes', with: 'doom'
-        click_button "save_notes"
       end
-      it "saves the notes to the location" do
-        @check = Location.find @loc.id
-        @check.notes.should == "doom"
+      context "as the user who created the notes" do
+        before do
+          visit location_path @loc
+          fill_in 'location_notes', with: 'doom'
+          click_button "save_notes"
+        end
+        it "saves the notes to the location" do
+          @check = Location.find @loc.id
+          @check.notes.should == "doom"
+        end
+      end
+      context "as an admin user" do
+        before do
+          log_out_all_users
+          @user = log_in_an_admin
+          visit location_path @loc
+          fill_in 'location_notes', with: 'yummm'
+          click_button "save_notes"
+        end
+        it "saves the notes to the location" do
+          @check = Location.find @loc.id
+          @check.notes.should == "yummm"
+        end
       end
     end
   end

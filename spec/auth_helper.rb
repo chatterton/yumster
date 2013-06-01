@@ -1,10 +1,24 @@
 module AuthHelper
   include Warden::Test::Helpers
 
-  def log_in_a_user
+  def build_a_user
     user = FactoryGirl.create :user
     user.confirm!
+    user
+  end
+
+  def log_in_a_user
+    user = build_a_user
     log_in(user)
+    user
+  end
+
+  def log_in_an_admin
+    user = build_a_user
+    user.admin = true
+    user.save
+    log_in(user)
+    user
   end
 
   def log_in(user)

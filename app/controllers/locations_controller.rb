@@ -32,7 +32,7 @@ class LocationsController < ApplicationController
 
   def update
     @location = Location.find(params[:id])
-    unless user_signed_in? and current_user.id == @location.user_id
+    unless user_signed_in? and (current_user.id == @location.user_id or current_user.admin)
       render :status => :forbidden, :text => "Update not allowed"
       return
     end

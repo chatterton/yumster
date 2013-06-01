@@ -40,6 +40,8 @@
       Notes:
       <% if user_signed_in? and @location.user_id == current_user.id %>
         <a id="notes_edit_link" href="#" onclick="showNotesForm();">(edit)</a>
+      <% elsif user_signed_in? and current_user.admin %>
+        <a id="notes_edit_link" href="#" onclick="showNotesForm();">(admin edit)</a>
       <% end %>
       </p>
       <%= form_for @location, :method => 'put' do |f| %>
