@@ -32,32 +32,29 @@ class LocationsController < ApplicationController
 
   def update
     @location = Location.find(params[:id])
-    unless user_signed_in? and (current_user.id == @location.user_id or current_user.admin)
+    if user_signed_in? && (current_user.id == @location.user_id || current_user.admin)
+      @location.notes = params[:location][:notes]
+      @location.save
+      redirect_to :action => 'show', :id => params[:id]
+    else
       render :status => :forbidden, :text => "Update not allowed"
-      return
     end
-    @location.notes = params[:location][:notes]
-    @location.save
-    redirect_to :action => 'show', :id => params[:id]
   end
 
   respond_to :json, :html
   def near
     if request.format.json?
-      unless params[:lat] and params[:lng]
-        render :text => "No location given", :status => 500
-        return
-      end
-      begin
+      if params[:lat] && params[:lng]
         @locations = Location.find_near(params[:lat], params[:lng], params[:span])
-      rescue Exception => e
-        render :text => e.message, :status => 500
-        return
+        render :json => @locations.to_json(:only => [:id, :description, :latitude, :longitude, :category, :tips_count])
+      else
+        render :text => "No location given", :status => 500
       end
-      render :json => @locations.to_json(:only => [:id, :description, :latitude, :longitude, :category, :tips_count])
     else
       render 'near'
     end
+  rescue Exception => e
+    render :text => e.message, :status => 500
   end
 
 end

@@ -24,11 +24,10 @@ class AdminController < ApplicationController
   end
 
   protected
+
   def authenticate_admin
-    unless current_user and current_user.admin
+    unless current_user && current_user.admin
       render :file => "#{Rails.root}/public/404", :status => :not_found, :formats => :html, :layout => false
-      return false
     end
-    return true
   end
 end

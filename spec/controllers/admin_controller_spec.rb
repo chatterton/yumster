@@ -6,7 +6,7 @@ describe AdminController do
     user = sign_in_user
     user.admin = true
     user.save
-    return user
+    user
   end
 
   describe "GET 'locations'" do

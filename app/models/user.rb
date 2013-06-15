@@ -17,12 +17,12 @@ class User < ActiveRecord::Base
   # Allow username as valid login, per
   # http://stackoverflow.com/questions/2997179/ror-devise-sign-in-with-username-or-email
   def self.find_for_database_authentication(conditions={})
-    self.where("username = ?", conditions[:email]).limit(1).first ||
-    self.where("email = ?", conditions[:email]).limit(1).first
+    where("username = ?", conditions[:email]).limit(1).first ||
+    where("email = ?", conditions[:email]).limit(1).first
   end
 
   def to_s
-    return self.username
+    username
   end
 
   ## Link to username instead of id
