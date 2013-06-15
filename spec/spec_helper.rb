@@ -36,5 +36,5 @@ def sign_in_user
   user = FactoryGirl.create :user
   user.confirm!
   sign_in user
-  return user
+  user
 end

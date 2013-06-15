@@ -54,18 +54,17 @@ class Location < ActiveRecord::Base
   end
 
   def self.find_near(latitude, longitude, box_width)
-    radius_miles = self.deg_to_mi(box_width.to_f / 2)
+    radius_miles = deg_to_mi(box_width.to_f / 2)
     box = Geocoder::Calculations.bounding_box([latitude, longitude], radius_miles)
     location_size = Location.within_bounding_box(box).count
     if (location_size > Location::MAX_LOCATIONS)
       raise "Too many locations returned"
     end
-    locations = Location.where(:approved => true).within_bounding_box(box)
-    return locations
+    Location.where(:approved => true).within_bounding_box(box)
   end
 
   def self.find_unapproved
-    return Location.where(:approved => false)
+    Location.where(:approved => false)
   end
 
 end
