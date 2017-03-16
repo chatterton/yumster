@@ -17,7 +17,8 @@ gem 'font-awesome-rails'
 gem 'font-awesome-sass-rails'
 
 # Message board needs
-gem 'forem', :git => 'git://github.com/radar/forem.git'
+#gem 'forem', :git => 'git://github.com/radar/forem.git'
+gem 'forem', :github => "radar/forem", :branch => "rails3"
 gem 'kaminari', '~> 0.13.0'
 
 # Gems used only for assets and not required
@@ -26,7 +27,7 @@ group :assets do
   gem 'coffee-rails', '~> 3.2.2'
   gem 'uglifier', '>= 1.2.3'
   ## Need older ruby racer for sprockets-dotjs as newer one will not build
-  gem 'therubyracer', '0.10.2'
+  #gem 'therubyracer', '0.10.2'
   gem 'sprockets-dotjs'
 end
 
@@ -49,7 +50,8 @@ end
 
 group :test do
   gem 'capybara', '~> 1.1.2'
-  gem 'sqlite3', '~> 1.3'
+  #gem 'sqlite3', '~> 1.3'
+  gem 'sqlite3'
   gem 'factory_girl_rails', '~> 1.4.0'
   gem 'json'
 end
