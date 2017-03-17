@@ -2,15 +2,16 @@
 
 Check it: [http://www.yumster.co](http://www.yumster.co)
 
-## Shoutouts
+## Development
 
-Yumster is built with the [Ruby on Rails](http://rubyonrails.org/) framework.
+Start with `bundle install`
 
-Illustrations and logo care of the amazing [Ava Savitsky](http://www.avasavitsky.com/).
+Make sure postgres is installed, and create a development database:
+`createdb yumster_dev`
 
-Glyphs by [Font Awesome](http://fortawesome.github.com/Font-Awesome/).
+Create the database structure: `rake db:migrate`
 
-Maps by [Google](https://developers.google.com/maps/documentation/javascript/).
+List various rake tasks: `bundle exec rake --tasks`
 
 ## Deployment
 
@@ -28,6 +29,16 @@ You can setup a Heroku account for free at [https://devcenter.heroku.com/article
     heroku config:set SECRET_TOKEN={{your secret token}}
     git push heroku master
     heroku run rake db:migrate
+
+## Shoutouts
+
+Yumster is built with the [Ruby on Rails](http://rubyonrails.org/) framework.
+
+Illustrations and logo care of the amazing [Ava Savitsky](http://www.avasavitsky.com/).
+
+Glyphs by [Font Awesome](http://fortawesome.github.com/Font-Awesome/).
+
+Maps by [Google](https://developers.google.com/maps/documentation/javascript/).
 
 ## License
 
