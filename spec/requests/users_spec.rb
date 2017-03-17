@@ -28,7 +28,7 @@ describe "User pages" do
   describe "sign in" do
     let(:user) { FactoryGirl.create(:user) }
     before do
-      user.confirm!
+      user.confirm
       visit new_user_session_path
     end
     describe "signing in with an email" do

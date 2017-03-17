@@ -3,7 +3,7 @@ module AuthHelper
 
   def build_a_user
     user = FactoryGirl.create :user
-    user.confirm!
+    user.confirm
     user
   end
 

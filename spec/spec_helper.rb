@@ -34,7 +34,7 @@ end
 ## For controller specs
 def sign_in_user
   user = FactoryGirl.create :user
-  user.confirm!
+  user.confirm
   sign_in user
   user
 end

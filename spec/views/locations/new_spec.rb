@@ -27,7 +27,7 @@ describe "locations/new" do
   describe "when there are errors" do
     before do
       errors = double(:full_messages => ["error1","error2"], :any? => true).as_null_object
-      @location.stub!(:errors).and_return errors
+      @location.stub(:errors).and_return errors
     end
     it "displays them to the user" do
       render
